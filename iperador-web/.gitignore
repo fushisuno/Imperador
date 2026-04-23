@@ -1,0 +1,77 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# TypeScript
+dist/
+build/
+lib/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# VS Code
+.vscode/
+
+# Environment files
+.env
+.env.*
+
+# MacOS
+.DS_Store
+
+# Editors
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Optional test coverage
+coverage/
+
+# Build output
+dist/
+build/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Misc
+*.pem
+*.key
+
+# Parcel cache
+.cache/
+
+# Next.js
+.next/
+
+# Nuxt
+.nuxt/
+
+# Storybook
+storybook-static/
