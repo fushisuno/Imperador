@@ -127,7 +127,11 @@ function Header() {
               </Link>
 
               <motion.button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsMenuOpen(!isMenuOpen)
+                }}
                 className="lg:hidden p-2 relative overflow-hidden"
                 whileTap={{ scale: 0.95 }}
               >
@@ -164,7 +168,16 @@ function Header() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-40 lg:hidden"
               style={{ backgroundColor: 'rgba(13,10,4,0.8)', backdropFilter: 'blur(4px)' }}
-              onClick={() => setIsMenuOpen(false)}
+              onClick={(e) => {
+                e.preventDefault()
+                setIsMenuOpen(false)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setIsMenuOpen(false)
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Fechar menu"
             />
             <motion.nav
               initial="closed"
@@ -183,7 +196,12 @@ function Header() {
                     style={{ filter: 'brightness(0) saturate(100%) invert(80%) sepia(30%) hue-rotate(5deg)' }}
                   />
                   <button
-                    onClick={() => setIsMenuOpen(false)}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setIsMenuOpen(false)
+                    }}
                     className="p-2 rounded-lg transition-colors duration-300"
                     style={{ color: 'rgba(232,224,208,0.6)' }}
                   >
@@ -201,7 +219,11 @@ function Header() {
                     >
                       <Link
                         to={link.path}
-                        onClick={() => setIsMenuOpen(false)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setIsMenuOpen(false)
+                        }}
                         className="block px-4 py-3 font-medium transition-all duration-300 group"
                         style={{ 
                           fontFamily: 'Oswald, sans-serif',
