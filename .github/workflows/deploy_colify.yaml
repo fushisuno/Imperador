@@ -1,0 +1,13 @@
+name: Deploy Coolify
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    name: Deploy Coolify
+
+        run: |
+          curl --request GET '${{ secrets.COOLIFY_WEBHOOK1 }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
