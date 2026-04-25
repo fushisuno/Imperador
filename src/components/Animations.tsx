@@ -1,5 +1,36 @@
-import { useEffect, useRef, ReactNode } from 'react'
+import { useEffect, useRef, ReactNode, useState } from 'react'
 import { motion, useInView, useAnimation, MotionValue, useMotionValue } from 'framer-motion'
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  
+  return isMobile
+}
+
+function useReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReduced(mediaQuery.matches)
+    
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+  
+  return prefersReduced
+}
 
 interface FadeInProps {
   children: ReactNode
@@ -21,6 +52,10 @@ export function FadeIn({
   const ref = useRef(null)
   const isInView = useInView(ref, { once, margin: "-100px" })
   const controls = useAnimation()
+  const isMobile = useIsMobile()
+  const prefersReduced = useReducedMotion()
+
+  const shouldAnimate = !isMobile && !prefersReduced
 
   const directions = {
     up: { y: 60, x: 0 },
@@ -31,10 +66,16 @@ export function FadeIn({
   }
 
   useEffect(() => {
-    if (isInView) {
+    if (shouldAnimate && isInView) {
+      controls.start("visible")
+    } else if (!shouldAnimate) {
       controls.start("visible")
     }
-  }, [isInView, controls])
+  }, [isInView, controls, shouldAnimate])
+
+  if (!shouldAnimate) {
+    return <div className={className}>{children}</div>
+  }
 
   return (
     <motion.div
@@ -58,6 +99,7 @@ export function FadeIn({
         }
       }}
       className={className}
+      style={{ willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>
@@ -71,6 +113,14 @@ interface StaggerProps {
 }
 
 export function Stagger({ children, className = '', delay = 0.1 }: StaggerProps) {
+  const isMobile = useIsMobile()
+  const prefersReduced = useReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
+
+  if (!shouldAnimate) {
+    return <div className={className}>{children}</div>
+  }
+
   return (
     <motion.div
       className={className}
@@ -97,6 +147,14 @@ interface StaggerItemProps {
 }
 
 export function StaggerItem({ children, className = '' }: StaggerItemProps) {
+  const isMobile = useIsMobile()
+  const prefersReduced = useReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
+
+  if (!shouldAnimate) {
+    return <div className={className}>{children}</div>
+  }
+
   return (
     <motion.div
       variants={{
@@ -108,6 +166,7 @@ export function StaggerItem({ children, className = '' }: StaggerItemProps) {
         }
       }}
       className={className}
+      style={{ willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>
@@ -123,6 +182,13 @@ interface ScaleInProps {
 export function ScaleIn({ children, delay = 0, className = '' }: ScaleInProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
+  const isMobile = useIsMobile()
+  const prefersReduced = useReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
+
+  if (!shouldAnimate) {
+    return <div className={className}>{children}</div>
+  }
 
   return (
     <motion.div
@@ -131,6 +197,7 @@ export function ScaleIn({ children, delay = 0, className = '' }: ScaleInProps) {
       animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
       transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
+      style={{ willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>
@@ -144,7 +211,23 @@ interface TextRevealProps {
 }
 
 export function TextReveal({ text, className = '', delay = 0 }: TextRevealProps) {
+  const isMobile = useIsMobile()
+  const prefersReduced = useReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
+
   const words = text.split(' ')
+
+  if (!shouldAnimate) {
+    return (
+      <div className={className}>
+        {words.map((word, i) => (
+          <span key={i} style={{ display: 'inline-block', marginRight: '0.3em' }}>
+            {word}
+          </span>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <motion.div className={className}>
@@ -181,15 +264,25 @@ export function FloatingElement({
   duration = 6,
   delay = 0 
 }: FloatingElementProps) {
+  const isMobile = useIsMobile()
+  const prefersReduced = useReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
+
+  if (!shouldAnimate) {
+    return <div className={className}>{children}</div>
+  }
+
+  const mobileDuration = duration * 1.5
+
   return (
     <motion.div
       className={className}
       animate={{
-        y: [0, -20, 0],
-        rotate: [0, 5, -5, 0],
+        y: [0, -15, 0],
+        rotate: [0, 3, -3, 0],
       }}
       transition={{
-        duration,
+        duration: mobileDuration,
         delay,
         repeat: Infinity,
         ease: "easeInOut"
@@ -208,8 +301,11 @@ interface ParallaxSectionProps {
 export function ParallaxSection({ children, className = '' }: ParallaxSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
   const progress = useMotionValue(0)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
+    if (isMobile) return
+
     const element = ref.current
     if (!element) return
 
@@ -224,7 +320,15 @@ export function ParallaxSection({ children, className = '' }: ParallaxSectionPro
     handleScroll()
 
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [progress])
+  }, [progress, isMobile])
+
+  if (isMobile) {
+    return (
+      <div ref={ref} className={className}>
+        {children(progress)}
+      </div>
+    )
+  }
 
   return (
     <div ref={ref} className={className}>

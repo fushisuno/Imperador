@@ -1,7 +1,30 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { produtos } from '../data/produtos'
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
+
+function usePrefersReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReduced(mediaQuery.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+  return prefersReduced
+}
 
 const categorias = ['Todos', 'Chopp', 'Barril', 'Acessórios']
 
@@ -13,6 +36,9 @@ const categoryColors: Record<string, string> = {
 
 function Produtos() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
+  const isMobile = useIsMobile()
+  const prefersReduced = usePrefersReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
 
   const produtosFiltrados = categoriaSelecionada === 'Todos'
     ? produtos
@@ -22,16 +48,16 @@ function Produtos() {
     <div className="pt-20">
       {/* Hero Section */}
       <section className="relative bg-primary overflow-hidden">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           <motion.div 
-            className="absolute top-0 left-1/4 w-96 h-96 bg-cta rounded-full blur-3xl"
-            animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 6, repeat: Infinity }}
+            className="absolute top-0 left-1/4 w-96 h-96 bg-cta rounded-full md:blur-3xl blur-xl"
+            animate={shouldAnimate ? { scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] } : { opacity: 0.2 }}
+            transition={shouldAnimate ? { duration: 6, repeat: Infinity } : { duration: 0 }}
           />
           <motion.div 
-            className="absolute bottom-0 right-1/4 w-64 h-64 bg-cta-light rounded-full blur-3xl"
-            animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.2, 0.4] }}
-            transition={{ duration: 5, repeat: Infinity }}
+            className="absolute bottom-0 right-1/4 w-64 h-64 bg-cta-light rounded-full md:blur-3xl blur-xl"
+            animate={shouldAnimate ? { scale: [1.1, 1, 1.1], opacity: [0.4, 0.2, 0.4] } : { opacity: 0.15 }}
+            transition={shouldAnimate ? { duration: 5, repeat: Infinity } : { duration: 0 }}
           />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">

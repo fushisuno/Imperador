@@ -1,523 +1,1048 @@
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { FadeIn, FloatingElement, TextReveal } from '../components/Animations'
+import { motion } from 'framer-motion'
+import { FadeIn } from '../components/Animations'
+import { Carousel } from '../components/Carousel'
+import { useState } from 'react'
+import * as React from 'react'
 
-const features = [
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-      </svg>
-    ),
-    title: 'Chopp Premium',
-    description: 'Cerveja artesanal de alta qualidade, servida gelada na pressão para manter o sabor perfeito.',
-  },
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    title: 'Atendimento Especializado',
-    description: 'Equipe treinada para garantir a melhor experiência no seu evento.',
-  },
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: 'Entrega Pontual',
-    description: 'Compromisso com a pontualidade na entrega do produto e montagem do bar.',
-  },
-]
+function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState(false)
+  React.useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
 
-const services = [
-  {
-    title: 'Distribuidora',
-    description: 'Fornecemos chopp para bares e restaurantes. Qualidade garantida em cada entrega.',
-    link: '/contato',
-    cta: 'Ser Distribuidor',
-  },
-  {
-    title: 'Eventos',
-    description: 'Chopp completo para casamentos, festas corporativas e eventos particulares.',
-    link: '/venda',
-    cta: 'Solicitar Orçamento',
-  },
-]
+function usePrefersReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = React.useState(false)
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReduced(mediaQuery.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+  return prefersReduced
+}
+
+
 
 function Home() {
-  const { scrollY } = useScroll()
-  const y1 = useTransform(scrollY, [0, 500], [0, 150])
-  const y2 = useTransform(scrollY, [0, 500], [0, -100])
-  const opacity = useTransform(scrollY, [0, 300], [1, 0])
+  const isMobile = useIsMobile()
+  const prefersReduced = usePrefersReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
+  const [activeTab, setActiveTab] = useState<string>('social')
+
+  const eventTypes = [
+    { id: 'social', label: 'Eventos Sociais' },
+    { id: 'corporativo', label: 'Eventos Corporativos' },
+    { id: 'bares', label: 'Bares e Restaurantes' },
+    { id: 'casamentos', label: 'Casamentos' },
+  ]
+
+  const eventContent: Record<string, { badge: string; title: string; title2: string; description: string; benefits: string[]; cta: string }> = {
+    social: {
+      badge: 'Eventos Sociais',
+      title: 'Celebrações ',
+      title2: 'com Amigos e Família',
+      description: 'Transforme qualquer encontro em um momento memorável. Nosso chopp premium é perfeito para churrascos, aniversários e celebrações íntimas.',
+      benefits: ['Atendimento personalizado', 'Montagem completa do bar', 'Copos personalizados'],
+      cta: 'Solicitar Orçamento'
+    },
+    corporativo: {
+      badge: 'Eventos Corporativos',
+      title: 'Happy Hours ',
+      title2: 'e Confraternizações',
+      description: 'Fortalça o espírito de equipe com um happy hour diferenciado. Atendimento profissional e estrutura completa para seu evento corporativo.',
+      benefits: ['Atendimento profissional uniformizado', 'Estrutura para grandes grupos', 'Flexibilidade de horários'],
+      cta: 'Solicitar Orçamento'
+    },
+    bares: {
+      badge: 'Bares e Restaurantes',
+      title: 'Parceria ',
+      title2: 'B2B Profissional',
+      description: 'Fornecimento regular de chopp premium para seu estabelecimento. Qualidade consistente e suporte técnico especializado.',
+      benefits: ['Entrega regular programada', 'Suporte técnico especializado', 'Condições comerciais especiais'],
+      cta: 'Ser Parceiro'
+    },
+    casamentos: {
+      badge: 'Casamentos',
+      title: 'O Grande Dia ',
+      title2: 'Perfeito',
+      description: 'Faça do seu casamento uma celebração inesquecível. Decoração personalizada, atendimento premium e chopp de excelência.',
+      benefits: ['Decoração personalizada', 'Atendimento premium dedicado', 'Copos de cortesia para noivos'],
+      cta: 'Solicitar Orçamento'
+    }
+  }
+
+  const currentContent = eventContent[activeTab]
 
   return (
-    <div className="pt-20">
-      {/* Hero Section - Glassmorphism Fluido */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-primary">
-        {/* Background Elements */}
-        <div className="absolute inset-0">
-          <motion.div 
-            className="absolute top-20 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3]
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute bottom-20 right-1/4 w-[400px] h-[400px] rounded-full blur-[100px]"
-            style={{ background: 'radial-gradient(circle, #EAB308 0%, transparent 70%)' }}
-            animate={{ 
-              scale: [1.2, 1, 1.2],
-              opacity: [0.4, 0.2, 0.4]
-            }}
-            transition={{ duration: 6, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full blur-[80px]"
-            style={{ background: 'radial-gradient(circle, #44403C 0%, transparent 70%)' }}
-            animate={{ 
-              rotate: [0, 360]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          />
+    <div className="pt-0">
+      {/* Hero Section - Dark Premium Style */}
+      <section className="relative min-h-screen flex items-center overflow-hidden" style={{ backgroundColor: '#1a1208' }}>
+        {/* Noise Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }}></div>
+        
+        {/* Glow Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-0 w-[600px] h-[400px]" style={{ background: 'radial-gradient(ellipse at center bottom, rgba(200, 146, 30, 0.25) 0%, rgba(26, 18, 8, 0) 70%)' }}></div>
+          <div className="absolute top-1/2 right-0 w-[500px] h-[600px]" style={{ background: 'radial-gradient(ellipse at center, rgba(240, 168, 32, 0.15) 0%, rgba(26, 18, 8, 0) 70%)' }}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full opacity-30" style={{ background: 'radial-gradient(circle, #c8921e 0%, transparent 70%)', filter: 'blur(60px)' }}></div>
         </div>
 
-        {/* Floating Elements */}
-        <FloatingElement className="absolute top-32 left-[10%] w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm" duration={8} delay={0}>
-          <div className="w-full h-full rounded-2xl border border-white/20"></div>
-        </FloatingElement>
-        <FloatingElement className="absolute bottom-40 right-[15%] w-16 h-16 rounded-full bg-cta/20 backdrop-blur-sm" duration={7} delay={1}>
-          <div className="w-full h-full rounded-full border border-cta/30"></div>
-        </FloatingElement>
-        <FloatingElement className="absolute top-1/4 right-[20%] w-12 h-12 rounded-xl bg-white/5 backdrop-blur-sm" duration={9} delay={2}>
-          <div className="w-full h-full rounded-xl border border-white/10"></div>
-        </FloatingElement>
+        {/* Light Stripes at Bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none overflow-hidden">
+          <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(200, 146, 30, 0.3), transparent)' }}></div>
+          <div className="absolute bottom-8 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(200, 146, 30, 0.15), transparent)' }}></div>
+        </div>
 
         {/* Content */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div style={{ y: y1 }}>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-12 lg:gap-8 items-center">
+            {/* Left Column - Text */}
+            <div className="text-left">
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-sm rounded-full text-cta text-sm font-medium mb-6 border border-white/20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-8 border"
+                style={{ borderColor: 'rgba(200, 146, 30, 0.4)', backgroundColor: 'rgba(200, 146, 30, 0.1)', color: '#c8921e' }}
               >
-                <motion.span 
-                  className="w-2 h-2 bg-cta rounded-full"
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                Premium Quality
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c8921e' }}></span>
+                Tradição desde 2014
               </motion.div>
-              
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight">
-                <TextReveal text="O Melhor Chopp" delay={0.1} />
-                <span className="block text-gradient-gold mt-2">
-                  <TextReveal text="está aqui!" delay={0.3} />
-                </span>
+
+              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-normal tracking-tight leading-none mb-2" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                <span style={{ color: '#e8e0d0' }}>Imperador</span>
+                <br />
+                <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #d4860e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>do Chopp</span>
               </h1>
-              
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="mt-6 text-xl text-gray-300 max-w-xl leading-relaxed"
-              >
-                Distribuidora de chopp premium com tradição e qualidade. 
-                Atendemos Cascavel, Toledo e Maringá com excelência em cada dose.
-              </motion.p>
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.6 }}
-                className="mt-8 flex flex-col sm:flex-row gap-4"
-              >
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link to="/venda" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-cta text-white rounded-2xl font-semibold text-lg shadow-lg shadow-cta/30 hover:bg-cta-dark transition-all duration-300">
-                    Solicitar Orçamento
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link to="/produtos" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300">
+
+              <p className="text-lg sm:text-xl font-light mt-6 mb-10 max-w-lg" style={{ color: '#b8985a', fontFamily: 'Oswald, sans-serif', fontWeight: 300 }}>
+                A distribuidora de chopp premium que transforma seu evento em uma experiência imperial.
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <motion.a
+                  href="https://wa.me/5545998044188"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-semibold shadow-lg"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #f0a820 0%, #e8c040 50%, #d4860e 100%)',
+                    color: '#1a1208',
+                    clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))',
+                    boxShadow: '0 4px 20px rgba(200, 146, 30, 0.4)'
+                  }}
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  Solicitar Orçamento
+                </motion.a>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <Link 
+                    to="/produtos" 
+                    className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium transition-all duration-300 hover:opacity-70"
+                    style={{ color: '#b8985a', borderBottom: '2px solid #b8985a' }}
+                  >
                     Ver Produtos
                   </Link>
                 </motion.div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Side - Animated Beer Glass */}
-            <motion.div style={{ y: y2, opacity }} className="hidden lg:block">
-              <div className="relative">
-                <motion.div
-                  className="absolute -inset-16 bg-gradient-to-r from-cta/30 via-cta-light/20 to-cta/30 rounded-full blur-3xl"
-                  animate={{ 
-                    scale: [1, 1.1, 1],
-                    opacity: [0.5, 0.8, 0.5]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                />
-                <motion.div
-                  className="relative w-80 h-96 mx-auto"
-                  initial={{ opacity: 0, rotate: -10 }}
-                  animate={{ opacity: 1, rotate: 0 }}
-                  transition={{ duration: 1, delay: 0.3 }}
-                >
-                  {/* Beer Glass SVG */}
-                  <svg viewBox="0 0 200 300" className="w-full h-full">
-                    <defs>
-                      <linearGradient id="beerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#EAB308" />
-                        <stop offset="100%" stopColor="#CA8A04" />
-                      </linearGradient>
-                      <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
-                        <stop offset="50%" stopColor="rgba(255,255,255,0.1)" />
-                        <stop offset="100%" stopColor="rgba(255,255,255,0.2)" />
-                      </linearGradient>
-                      <filter id="glow">
-                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                        <feMerge>
-                          <feMergeNode in="coloredBlur"/>
-                          <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                      </filter>
-                    </defs>
-                    
-                    {/* Glass */}
-                    <path
-                      d="M40 20 L20 280 Q20 295 35 295 L165 295 Q180 295 180 280 L160 20 Q160 5 145 5 L55 5 Q40 5 40 20Z"
-                      fill="url(#glassGradient)"
-                      stroke="rgba(255,255,255,0.5)"
-                      strokeWidth="2"
-                    />
-                    
-                    {/* Beer */}
-                    <motion.path
-                      d="M45 50 L30 275 Q30 285 42 285 L158 285 Q170 285 170 275 L155 50 Q155 35 142 35 L58 35 Q45 35 45 50Z"
-                      fill="url(#beerGradient)"
-                      filter="url(#glow)"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 2, delay: 0.5 }}
-                    />
-                    
-                    {/* Foam */}
-                    <motion.g
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.5, duration: 0.8 }}
-                    >
-                      <ellipse cx="100" cy="35" rx="45" ry="15" fill="white" opacity="0.9" />
-                      <ellipse cx="70" cy="40" rx="25" ry="12" fill="white" opacity="0.8" />
-                      <ellipse cx="130" cy="40" rx="25" ry="12" fill="white" opacity="0.8" />
-                      <circle cx="60" cy="38" r="10" fill="white" opacity="0.7" />
-                      <circle cx="140" cy="38" r="10" fill="white" opacity="0.7" />
-                      <circle cx="100" cy="30" r="12" fill="white" opacity="0.8" />
-                    </motion.g>
-                    
-                    {/* Bubbles */}
-                    <motion.g>
-                      {[...Array(8)].map((_, i) => (
-                        <motion.circle
-                          key={i}
-                          cx={60 + Math.random() * 80}
-                          cy={100 + i * 20}
-                          r={2 + Math.random() * 3}
-                          fill="white"
-                          opacity={0.6}
-                          initial={{ y: 200, opacity: 0 }}
-                          animate={{ 
-                            y: [200, 50 + i * 10],
-                            opacity: [0, 0.6, 0]
-                          }}
-                          transition={{ 
-                            duration: 3 + Math.random() * 2,
-                            delay: 1 + i * 0.3,
-                            repeat: Infinity,
-                            ease: "easeOut"
-                          }}
-                        />
-                      ))}
-                    </motion.g>
-                  </svg>
-                </motion.div>
               </div>
-            </motion.div>
-          </div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div
-          style={{ opacity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2"
-          >
-            <motion.div 
-              className="w-1.5 h-3 bg-cta rounded-full"
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-          </motion.div>
-        </motion.div>
-      </section>
 
-      {/* Services Section - Fundo claro para alternar */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.div 
-            className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-        </div>
-        <div className="absolute inset-0">
-          <motion.div 
-            className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeIn direction="up">
-            <div className="text-center mb-16">
+              {/* Stats Bar */}
               <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-1.5 bg-cta/10 rounded-full text-cta text-sm font-medium mb-6"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="mt-16 pt-8 flex gap-8 lg:gap-12"
+                style={{ borderTop: '1px solid rgba(200, 146, 30, 0.2)' }}
               >
-                <span className="w-2 h-2 bg-cta rounded-full animate-pulse"></span>
-                O que oferecemos
-              </motion.div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-primary">
-                Nossos <span className="text-cta">Serviços</span>
-              </h2>
-              <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                Qualidade premium e tradição em cada atendimento. Veja o que temos para você.
-              </p>
-            </div>
-          </FadeIn>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Card Distribuidora */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ y: -5 }}
-              className="group relative bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 shadow-lg hover:shadow-2xl border border-gray-100 hover:border-cta/30 transition-all duration-500"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-cta/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
-              <div className="relative">
                 <motion.div 
-                  className="w-16 h-16 rounded-2xl gradient-gold flex items-center justify-center mb-6"
-                  whileHover={{ rotate: 15, scale: 1.1 }}
+                  className="cursor-pointer group relative"
+                  whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
+                  <div className="absolute -inset-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.2) 0%, transparent 70%)' }}></div>
+                  <div className="relative">
+                    <div className="text-4xl lg:text-5xl font-normal transition-colors duration-300 group-hover:text-[#d4a820]" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>10+</div>
+                    <div className="text-sm mt-1" style={{ color: '#8a7348' }}>Anos de Tradição</div>
+                  </div>
                 </motion.div>
-                
-                <h3 className="text-2xl font-bold text-primary mb-3">{services[0].title}</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">{services[0].description}</p>
-                
-                <Link
-                  to={services[0].link}
-                  className="inline-flex items-center gap-2 text-cta font-semibold group-hover:gap-3 transition-all duration-300"
-                >
-                  {services[0].cta}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Card Eventos */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ y: -5 }}
-              className="group relative bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 shadow-lg hover:shadow-2xl border border-gray-100 hover:border-cta/30 transition-all duration-500"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-cta/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
-              <div className="relative">
                 <motion.div 
-                  className="w-16 h-16 rounded-2xl gradient-gold flex items-center justify-center mb-6"
-                  whileHover={{ rotate: 15, scale: 1.1 }}
+                  className="cursor-pointer group relative"
+                  whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
+                  <div className="absolute -inset-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.2) 0%, transparent 70%)' }}></div>
+                  <div className="relative">
+                    <div className="text-4xl lg:text-5xl font-normal transition-colors duration-300 group-hover:text-[#d4a820]" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>5000+</div>
+                    <div className="text-sm mt-1" style={{ color: '#8a7348' }}>Eventos Servidos</div>
+                  </div>
                 </motion.div>
-                
-                <h3 className="text-2xl font-bold text-primary mb-3">{services[1].title}</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">{services[1].description}</p>
-                
-                <Link
-                  to={services[1].link}
-                  className="inline-flex items-center gap-2 text-cta font-semibold group-hover:gap-3 transition-all duration-300"
+                <motion.div 
+                  className="cursor-pointer group relative"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  {services[1].cta}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section - Fundo com tom dourado sutil */}
-      <section className="py-24 bg-gradient-to-b from-amber-50 to-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-cta/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-cta/5 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeIn direction="up">
-            <div className="text-center mb-16">
-              <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-1.5 bg-cta/10 rounded-full text-cta text-sm font-medium mb-6"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-              >
-                <span className="w-2 h-2 bg-cta rounded-full animate-pulse"></span>
-                Nossa qualidade
+                  <div className="absolute -inset-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.2) 0%, transparent 70%)' }}></div>
+                  <div className="relative">
+                    <div className="text-4xl lg:text-5xl font-normal transition-colors duration-300 group-hover:text-[#d4a820]" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>4°C</div>
+                    <div className="text-sm mt-1" style={{ color: '#8a7348' }}>Temperatura Ideal</div>
+                  </div>
+                </motion.div>
               </motion.div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-primary">
-                Por Que Escolher a <span className="text-cta">Imperador?</span>
-              </h2>
-              <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                Experiência premium e atendimento diferenciado para seu evento
-              </p>
             </div>
-          </FadeIn>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
+
+            {/* Right Column - Beer Image */}
+            <div className="relative hidden lg:block">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(200, 146, 30, 0.35) 0%, transparent 70%)', filter: 'blur(50px)' }}></div>
+              
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                whileHover={{ y: -8 }}
-                className="group relative bg-gradient-to-b from-gray-50 to-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-cta/30"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                className="relative w-full max-w-2xl -mr-16"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-cta/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-                
-                <div className="relative">
-                  <motion.div 
-                    className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cta to-cta-light flex items-center justify-center mb-6 shadow-lg shadow-cta/30"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                <img 
+                  src="/copos_chopp_hero.png" 
+                  alt="Imperador do Chopp - Copos de chopp premium"
+                  className="w-full h-auto"
+                  style={{ 
+                    filter: 'brightness(1.1) contrast(1.05) saturate(1.1) drop-shadow(0 0 40px rgba(200,146,30,0.4))'
+                  }}
+                />
+              </motion.div>
+
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-24 rounded-[100%]" style={{ background: 'linear-gradient(to bottom, rgba(200, 146, 30, 0.2), transparent)', filter: 'blur(15px)' }}></div>
+            </div>
+          </div>
+        </div>
+
+        {shouldAnimate && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-8 h-14 rounded-full border-2 flex justify-center pt-3"
+              style={{ borderColor: 'rgba(200, 146, 30, 0.4)' }}
+            >
+              <motion.div 
+                className="w-1.5 h-3 rounded-full"
+                style={{ backgroundColor: '#c8921e' }}
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </section>
+
+      {/* Event Types Section - Modern Light Theme */}
+      <section className="py-20 lg:py-32 relative overflow-hidden" style={{ backgroundColor: '#faf8f4' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="mb-12 flex items-center gap-4">
+            <div className="h-8 w-1" style={{ backgroundColor: '#c8921e' }}></div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#2a1f14' }}>Tipos de </span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Evento</span>
+            </h2>
+          </div>
+
+          {/* Main Container */}
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+            {/* Left Column - Tab Navigation */}
+            <div className="flex flex-col gap-3">
+              {eventTypes.map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full text-left px-6 py-5 font-medium cursor-pointer group relative overflow-hidden transition-all duration-300"
+                  style={{ 
+                    fontFamily: 'Oswald, sans-serif',
+                    letterSpacing: '1.5px',
+                    textTransform: 'uppercase',
+                    backgroundColor: activeTab === tab.id ? '#c8921e' : '#ffffff',
+                    border: activeTab === tab.id ? 'none' : '1px solid rgba(200,150,30,0.2)',
+                    color: activeTab === tab.id ? '#2a1f14' : '#2a1f14',
+                  }}
+                >
+                  {activeTab === tab.id && (
+                    <motion.div 
+                      className="absolute inset-0"
+                      style={{ background: 'linear-gradient(135deg, rgba(240,168,32,0.3) 0%, rgba(200,146,30,0) 100%)' }}
+                      layoutId="activeTab"
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center justify-between">
+                    {tab.label}
+                    <svg 
+                      className="w-5 h-5 transition-transform duration-300" 
+                      style={{ transform: activeTab === tab.id ? 'rotate(90deg)' : 'rotate(0deg)', color: activeTab === tab.id ? '#2a1f14' : 'rgba(200,146,30,0.5)' }}
+                      fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+
+            {/* Right Column - Content Panel */}
+            <motion.div 
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="relative p-8 lg:p-10"
+              style={{ 
+                backgroundColor: '#ffffff',
+                border: '1px solid rgba(200,150,30,0.15)',
+                boxShadow: '0 4px 30px rgba(42,31,20,0.05)',
+              }}
+            >
+              {/* Decorative Corner */}
+              <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden">
+                <div className="absolute top-0 right-0 w-[1px] h-12" style={{ background: 'linear-gradient(to bottom, #c8921e, transparent)' }}></div>
+                <div className="absolute top-0 right-0 w-12 h-[1px]" style={{ background: 'linear-gradient(to left, #c8921e, transparent)' }}></div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 h-full">
+                {/* Content */}
+                <div className="flex flex-col justify-center">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
                   >
-                    <div className="text-white">
-                      {feature.icon}
-                    </div>
+                    <span className="inline-block text-xs font-medium mb-4 px-3 py-1.5" style={{ 
+                      backgroundColor: 'rgba(200,146,30,0.1)', 
+                      color: '#c8921e', 
+                      fontFamily: 'Oswald, sans-serif', 
+                      letterSpacing: '2px',
+                      textTransform: 'uppercase'
+                    }}>
+                      {currentContent.badge}
+                    </span>
                   </motion.div>
                   
-                  <h3 className="text-xl font-bold text-primary mb-3 group-hover:text-cta transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <motion.h3 
+                    className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-6"
+                    style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    <span style={{ color: '#c8921e' }}>{currentContent.title}</span>
+                    <span style={{ color: '#2a1f14' }}>{currentContent.title2}</span>
+                  </motion.h3>
+                  
+                  <motion.p 
+                    className="mb-8 text-base leading-relaxed max-w-xl"
+                    style={{ color: 'rgba(42,31,20,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    {currentContent.description}
+                  </motion.p>
+                  
+                  <motion.ul 
+                    className="space-y-4 mb-8"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25 }}
+                  >
+                    {currentContent.benefits.map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 group">
+                        <div className="w-6 h-6 flex items-center justify-center" style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}>
+                          <svg className="w-4 h-4" fill="none" stroke="#c8921e" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span style={{ color: 'rgba(42,31,20,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item}</span>
+                      </li>
+                    ))}
+                  </motion.ul>
+                  
+                  <motion.a
+                    href={`https://wa.me/5545998044188?text=Olá! Gostaria de informações sobre ${currentContent.badge}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold w-fit transition-all duration-300 hover:shadow-lg"
+                    style={{ 
+                      backgroundColor: '#c8921e',
+                      color: '#2a1f14',
+                      fontFamily: 'Oswald, sans-serif',
+                      letterSpacing: '1px',
+                      clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)',
+                      boxShadow: '0 4px 15px rgba(200,146,30,0.3)',
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    {currentContent.cta}
+                  </motion.a>
                 </div>
-                
-                <motion.div 
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cta to-cta-light rounded-b-3xl"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.15 + 0.3, duration: 0.5 }}
-                  style={{ transformOrigin: 'left' }}
-                />
-              </motion.div>
-            ))}
+
+                {/* Visual */}
+                <div className="relative hidden lg:flex items-center justify-center">
+                  <div className="w-full h-full min-h-[300px] flex items-center justify-center relative" style={{ backgroundColor: 'rgba(200,146,30,0.05)' }}>
+                    {activeTab === 'social' && (
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-center"
+                      >
+                        <svg className="w-32 h-32 mx-auto mb-4" fill="none" stroke="#c8921e" strokeWidth="1" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span className="text-sm uppercase" style={{ color: 'rgba(200,146,30,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Eventos Sociais</span>
+                      </motion.div>
+                    )}
+                    {activeTab === 'corporativo' && (
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-center"
+                      >
+                        <svg className="w-32 h-32 mx-auto mb-4" fill="none" stroke="#c8921e" strokeWidth="1" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span className="text-sm uppercase" style={{ color: 'rgba(200,146,30,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Corporativo</span>
+                      </motion.div>
+                    )}
+                    {activeTab === 'bares' && (
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-center"
+                      >
+                        <svg className="w-32 h-32 mx-auto mb-4" fill="none" stroke="#c8921e" strokeWidth="1" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 75v-9a2 2 0 012-2h2a2 2 0 012 2v9M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                        </svg>
+                        <span className="text-sm uppercase" style={{ color: 'rgba(200,146,30,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Bares & Restaurantes</span>
+                      </motion.div>
+                    )}
+                    {activeTab === 'casamentos' && (
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-center"
+                      >
+                        <svg className="w-32 h-32 mx-auto mb-4" fill="none" stroke="#c8921e" strokeWidth="1" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        <span className="text-sm uppercase" style={{ color: 'rgba(200,146,30,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Casamentos</span>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Fundo branco para destacar do footer */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[100px]"
-            style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={{ 
-              scale: [1, 1.1, 1],
-              opacity: [0.1, 0.15, 0.1]
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
+      {/* Become Distributor Section */}
+      <section className="relative overflow-hidden" style={{ backgroundColor: '#4a3828', minHeight: '380px' }}>
+        {/* Diagonal contrast on right side */}
+        <div 
+          className="absolute top-0 right-0 h-full"
+          style={{ 
+            backgroundColor: '#1a1610',
+            clipPath: 'polygon(12% 0, 100% 0, 100% 100%, 0% 100%)',
+            width: '50%',
+          }}
+        />
+        
+        {/* Metallic edge lines */}
+        <div 
+          className="absolute top-0 h-full w-px"
+          style={{ 
+            left: '12%',
+            background: 'linear-gradient(to bottom, #c8921e, rgba(200,146,30,0.7), rgba(200,146,30,0.3))',
+          }}
+        />
+        <div 
+          className="absolute top-0 h-full w-px"
+          style={{ 
+            left: 'calc(12% + 3px)',
+            background: 'linear-gradient(to bottom, rgba(200,146,30,0.3), rgba(200,146,30,0.15), transparent)',
+          }}
+        />
+
+        <div className="relative max-w-7xl mx-auto px-12 lg:px-16 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Left Column - Text */}
+            <div className="flex flex-col justify-center">
+              {/* Eyebrow */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-6 h-px" style={{ backgroundColor: '#c8921e' }}></div>
+                <span className="text-xs font-medium" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px', textTransform: 'uppercase' }}>
+                  Oportunidade
+                </span>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-5xl lg:text-7xl font-normal leading-none mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                <span style={{ color: '#e8e0d0' }}>Seja um</span>
+                <br />
+                <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Distribuidor</span>
+              </h2>
+
+              {/* Separator */}
+              <div className="w-10 h-px mb-6" style={{ background: 'linear-gradient(to right, #c8921e, transparent)' }}></div>
+
+              {/* Description */}
+              <p className="text-sm mb-8 leading-7" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                Torne-se parte da maior rede de distribuição de chopp premium do Paraná. 
+                Oferecemos suporte completo, treinamento e condições exclusivas para parceiros.
+              </p>
+
+              {/* Benefits List */}
+              <ul className="space-y-4 mb-10">
+                {[
+                  { name: 'Margens', desc: 'competitivas' },
+                  { name: 'Suporte', desc: 'técnico especializado' },
+                  { name: 'Marca', desc: 'reconhecida no mercado' },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#c8921e', boxShadow: '0 0 8px rgba(200,146,30,0.6)' }}></div>
+                    <span style={{ color: 'rgba(200,185,145,0.75)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                      <strong style={{ color: '#d4a820' }}>{item.name}</strong> {item.desc}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="https://wa.me/5545998044188?text=Olá! Quero ser um distribuidor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:brightness-110"
+                  style={{ 
+                    backgroundColor: '#c8921e',
+                    color: '#2a1f14',
+                    clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)',
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  Quero Ser Distribuidor
+                </a>
+                <a
+                  href="/contato"
+                  className="inline-flex items-center text-base font-medium py-3 px-2"
+                  style={{ color: '#c8921e', borderBottom: '1px solid #c8921e' }}
+                >
+                  Falar com consultor
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column - Mockup Card */}
+            <motion.div 
+              className="flex items-center justify-center lg:justify-end group"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <div className="relative transition-all duration-500" style={{ maxWidth: '340px' }}>
+                {/* Glow effect on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ 
+                  background: 'radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 70%)',
+                  filter: 'blur(20px)',
+                  transform: 'scale(1.1)'
+                }}></div>
+                
+                {/* Corner decorations */}
+                <div className="absolute -top-1 -left-1 w-8 h-8 border-l-2 border-t-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
+                <div className="absolute -top-1 -right-1 w-8 h-8 border-r-2 border-t-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
+                <div className="absolute -bottom-1 -left-1 w-8 h-8 border-l-2 border-b-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 border-r-2 border-b-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
+                
+                {/* Card */}
+                <motion.div 
+                  className="p-6 transition-all duration-300 group-hover:shadow-2xl"
+                  style={{ backgroundColor: '#1a1610', border: '1px solid rgba(200,150,30,0.25)' }}
+                  whileHover={{ borderColor: 'rgba(200,146,30,0.5)' }}
+                >
+                  {/* Spotlight */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-12" style={{ background: 'linear-gradient(to bottom, #c8921e, transparent)' }}>
+                    <motion.div 
+                      className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full" 
+                      style={{ backgroundColor: '#c8921e', boxShadow: '0 0 10px #c8921e' }}
+                      animate={{ boxShadow: ['0 0 10px #c8921e', '0 0 20px #c8921e', '0 0 10px #c8921e'] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                  </div>
+
+                  {/* Header */}
+                  <div className="text-center mb-6 pt-4">
+                    <motion.div 
+                      className="text-3xl font-normal mb-2 transition-all duration-300"
+                      style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#e8e0d0' }}
+                      whileHover={{ color: '#c8921e' }}
+                    >
+                      IMPERADOR
+                    </motion.div>
+                    <span className="text-xs px-3 py-1 transition-all duration-300 hover:bg-[#c8921e] hover:text-[#2a1f14]" style={{ backgroundColor: 'rgba(200,146,30,0.2)', color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px', cursor: 'pointer' }}>
+                      50+ Unidades
+                    </span>
+                  </div>
+
+                  {/* Body */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="flex items-center justify-center p-4 transition-all duration-300 hover:bg-[#2a1f14]" style={{ backgroundColor: '#2a1f14' }}>
+                      <motion.span 
+                        className="text-2xl font-normal writing-vertical"
+                        style={{ 
+                          fontFamily: 'Bebas Neue, sans-serif', 
+                          color: 'rgba(200,185,145,0.5)',
+                          writingMode: 'vertical-rl',
+                          textOrientation: 'mixed',
+                          transform: 'rotate(180deg)'
+                        }}
+                      >
+                        IMPERADOR DO CHOPP
+                      </motion.span>
+                    </div>
+                    <motion.div 
+                      className="flex items-center justify-center p-4 transition-all duration-300"
+                      style={{ backgroundColor: '#221d16' }}
+                      whileHover={{ backgroundColor: 'rgba(200,146,30,0.1)' }}
+                    >
+                      <div className="text-center">
+                        <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.5rem', color: '#e8e0d0' }}>
+                          Descubra seu
+                        </span>
+                        <br />
+                        <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.5rem', background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                          chopp preferido
+                        </span>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="text-center">
+                    <div className="text-xs mb-3" style={{ color: '#b8985a', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                      Seja um parceiro
+                    </div>
+                    <motion.div 
+                      className="flex justify-center gap-2"
+                      animate={{ gap: [2, 4, 2] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <motion.div 
+                        className="w-2 h-2 rounded-full transition-all duration-300"
+                        style={{ backgroundColor: '#c8921e' }}
+                        whileHover={{ scale: 1.5 }}
+                      />
+                      <motion.div 
+                        className="w-2 h-2 rounded-full transition-all duration-300"
+                        style={{ backgroundColor: 'rgba(200,146,30,0.3)' }}
+                        whileHover={{ scale: 1.5, backgroundColor: '#c8921e' }}
+                      />
+                      <motion.div 
+                        className="w-2 h-2 rounded-full transition-all duration-300"
+                        style={{ backgroundColor: 'rgba(200,146,30,0.3)' }}
+                        whileHover={{ scale: 1.5, backgroundColor: '#c8921e' }}
+                      />
+                    </motion.div>
+                  </div>
+                </motion.div>
+
+                {/* Floating Stats */}
+                <motion.div 
+                  className="absolute -top-3 -left-8 px-4 py-2 cursor-pointer transition-all duration-300"
+                  style={{ backgroundColor: '#1a1610', border: '1px solid rgba(200,146,30,0.3)' }}
+                  whileHover={{ scale: 1.1, borderColor: '#c8921e' }}
+                >
+                  <div className="text-2xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#c8921e' }}>15+</div>
+                  <div className="text-[10px] uppercase" style={{ color: '#8a7348', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>Anos no mercado</div>
+                </motion.div>
+                <motion.div 
+                  className="absolute -bottom-3 -right-8 px-4 py-2 cursor-pointer transition-all duration-300"
+                  style={{ backgroundColor: '#1a1610', border: '1px solid rgba(200,146,30,0.3)' }}
+                  whileHover={{ scale: 1.1, borderColor: '#c8921e' }}
+                >
+                  <div className="text-2xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#c8921e' }}>4°C</div>
+                  <div className="text-[10px] uppercase" style={{ color: '#8a7348', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>Temperatura ideal</div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </div>
-        <div className="absolute inset-0">
-          <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[100px]"
-            style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={{ 
-              scale: [1, 1.1, 1],
-              opacity: [0.1, 0.15, 0.1]
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
+      </section>
+
+{/* Products Section - Lighter background for contrast */}
+      <section className="relative overflow-hidden" style={{ backgroundColor: '#faf8f4', minHeight: 'auto' }}>
+        <div className="px-4 py-10 lg:px-16 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
+            {/* Left Column - Text */}
+            <div className="flex flex-col justify-center">
+              {/* Eyebrow */}
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-6 h-px" style={{ backgroundColor: '#c8921e' }}></div>
+                <span className="text-xs font-medium" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px', textTransform: 'uppercase' }}>
+                  Catálogo
+                </span>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-5xl lg:text-6xl font-normal leading-none mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                <span style={{ color: '#1a1610' }}>Nossos</span>
+                <br />
+                <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontSize: '4rem', lineHeight: 1 }}>
+                  Produtos
+                </span>
+              </h2>
+
+              {/* Separator */}
+              <div className="w-9 h-px mb-6" style={{ background: 'linear-gradient(to right, #c8921e, rgba(200,146,30,0.3))' }}></div>
+
+              {/* Description */}
+              <p className="text-sm mb-8 leading-7" style={{ color: 'rgba(26,22,16,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                Linha completa de chopps artesanais premium. 
+                Cada品种 é produzida com ingredientes selecionados para garantir o melhor sabor.
+              </p>
+
+              {/* CTA Button */}
+              <a
+                href="/produtos"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:brightness-110 w-fit"
+                style={{ 
+                  backgroundColor: '#c8921e',
+                  color: '#2a1f14',
+                  fontFamily: 'Oswald, sans-serif',
+                  clipPath: 'polygon(7px 0%, 100% 0%, calc(100% - 7px) 100%, 0% 100%)',
+                }}
+              >
+                Ver Todos
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+
+            {/* Right Column - Products Carousel */}
+            <div className="pr-4 lg:pr-16 mt-6 lg:mt-0">
+              <div className="lg:h-auto">
+                <Carousel products={[
+                  { name: 'Chopp Pilsen', type: 'Clássica', highlight: false },
+                  { name: 'Chopp Weiss', type: 'Trigo', highlight: false },
+                  { name: 'Chopp Escuro', type: 'Stout', highlight: false },
+                  { name: 'Barril 30L', type: 'Evento', highlight: false },
+                  { name: 'Chopp Rosé', type: 'Frutada', highlight: false },
+                  { name: 'Chopp Lager', type: 'Premium', highlight: false },
+                  { name: 'Chopp IPA', type: 'Americano', highlight: false },
+                  { name: 'Chopp Puro Malte', type: 'Especial', highlight: false },
+                  { name: 'Chopp Red', type: 'Amber', highlight: false },
+                  { name: 'Chopp Black', type: 'Schwarzbier', highlight: false },
+                  { name: 'Chopp Honey', type: 'Com Mel', highlight: false },
+                  { name: 'Chopp Fruit', type: 'Frutas', highlight: false },
+                ]} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+{/* Sobre Section - Dark Gold Theme */}
+      <section className="py-16 lg:py-20 relative overflow-hidden" style={{ backgroundColor: '#2a1f14' }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)' }}></div>
         </div>
         
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <FadeIn direction="up">
-            <h2 className="text-4xl sm:text-5xl font-bold text-primary">
-              Pronto para tornar seu evento inesquecível?
+        <div className="px-6 lg:px-12 max-w-7xl mx-auto relative">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px" style={{ width: '40px', backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs font-medium uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>
+                Nossa história
+              </span>
+              <div className="h-px" style={{ width: '40px', backgroundColor: '#c8921e' }}></div>
+            </div>
+            <h2 className="text-5xl lg:text-6xl font-normal leading-none mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#e8e0d0' }}>Sobre o </span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Imperador</span>
             </h2>
-            <p className="mt-6 text-xl text-gray-600">
+            <p className="text-sm mx-auto leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300, maxWidth: '460px' }}>
+              Uma jornada de tradição e excelência no mundo do chopp premium, construindo memórias inesquecíveis em cada evento.
+            </p>
+          </div>
+
+          {/* Grid Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[3px]" style={{ backgroundColor: '#c8921e', padding: '1.5px' }}>
+            {/* Card 1 - Top Left: Tradição & Qualidade */}
+            <div className="relative overflow-hidden">
+              <div className="p-8 lg:p-10 h-full flex flex-col justify-between" style={{ backgroundColor: '#c8921e', minHeight: '280px' }}>
+                <div>
+                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(42,31,20,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Diferencial</span>
+                  <h3 className="text-3xl lg:text-4xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#2a1f14' }}>Tradição &amp; Qualidade</h3>
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(42,31,20,0.75)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Desde 2014 entregue excelência em cada chopeira, com ingredientes selecionados e processos rigorosos de qualidade.</p>
+                </div>
+                <a href="/sobre" className="inline-flex items-center gap-2 text-xs uppercase" style={{ color: '#2a1f14', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #2a1f14', paddingBottom: '2px' }}>
+                  Nossa história
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+              <div className="absolute bottom-0 right-0 w-0 h-0" style={{ borderLeft: '30px solid transparent', borderBottom: '30px solid #2a1f14' }}></div>
+            </div>
+
+            {/* Card 2 - Right Tall: Nossa Gente */}
+            <div className="relative overflow-hidden lg:row-span-2" style={{ minHeight: '400px' }}>
+              <img 
+                src="/produto_teste.png" 
+                alt="Nossa equipe" 
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ transform: 'scale(1)', transition: 'transform 0.5s ease' }}
+              />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(42,31,20,0.95) 0%, rgba(42,31,20,0.4) 50%, transparent 100%)' }}></div>
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <span className="text-xs uppercase block mb-2" style={{ color: 'rgba(200,185,145,0.8)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Equipe</span>
+                <h3 className="text-3xl lg:text-4xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                  <span style={{ color: '#e8e0d0' }}>Nossa </span>
+                  <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Gente</span>
+                </h3>
+                <p className="text-sm leading-relaxed mb-4 max-w-sm" style={{ color: 'rgba(200,185,145,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Profissionais treinados para oferecer o melhor atendimento, tornando cada momento único e especial.</p>
+                <a href="/sobre" className="inline-flex items-center gap-2 text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}>
+                  Saiba mais
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Card 3 - Bottom Left: Qualidade Garantida */}
+            <motion.div 
+              className="relative overflow-hidden group"
+              style={{ backgroundColor: '#3d2e1a', border: '1px solid rgba(200,150,30,0.15)' }}
+              whileHover={{ backgroundColor: '#4a3828', borderColor: 'rgba(200,146,30,0.3)' }}
+            >
+              <div className="p-8 lg:p-10 h-full flex flex-col justify-between transition-all duration-300" style={{ minHeight: '220px' }}>
+                <div>
+                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Certificação</span>
+                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                    <span style={{ color: '#e8c040' }}>Qualidade </span>
+                    <span style={{ color: '#e8e0d0' }}>Garantida</span>
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Processos certificados e inspeções rigorosas em cada etapa.</p>
+                </div>
+                <motion.a 
+                  href="/sobre" 
+                  className="inline-flex items-center gap-2 text-xs uppercase"
+                  style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
+                  whileHover={{ x: 4 }}
+                >
+                  Ver detalhes
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </motion.a>
+              </div>
+              <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-10 group-hover:h-10" style={{ borderBottom: '2px solid rgba(200,150,30,0.35)', borderRight: '2px solid rgba(200,150,30,0.35)' }}></div>
+            </motion.div>
+
+            {/* Row 2 - Card 4: Compromisso & Pontualidade */}
+            <motion.div 
+              className="relative overflow-hidden group"
+              style={{ backgroundColor: '#4a3828', border: '1px solid rgba(200,150,30,0.12)' }}
+              whileHover={{ backgroundColor: '#3d2e1a', borderColor: 'rgba(200,146,30,0.3)' }}
+            >
+              <div className="p-8 lg:p-10 h-full flex flex-col justify-between transition-all duration-300" style={{ minHeight: '200px' }}>
+                <div>
+                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Atendimento</span>
+                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                    <span style={{ color: '#e8e0d0' }}>Compromisso </span>
+                    <span style={{ color: '#d4a820' }}>&amp; Pontualidade</span>
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Entrega no prazo e temperatura perfeita para seu evento.</p>
+                </div>
+                <motion.a 
+                  href="/sobre" 
+                  className="inline-flex items-center gap-2 text-xs uppercase"
+                  style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
+                  whileHover={{ x: 4 }}
+                >
+                  Saiba mais
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </motion.a>
+              </div>
+              <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-10 group-hover:h-10" style={{ borderBottom: '2px solid rgba(200,150,30,0.35)', borderRight: '2px solid rgba(200,150,30,0.35)' }}></div>
+            </motion.div>
+
+            {/* Card 5: Tradição Regional */}
+            <motion.div 
+              className="relative overflow-hidden group"
+              style={{ backgroundColor: '#3d2e1a', border: '1px solid rgba(200,150,30,0.2)' }}
+              whileHover={{ backgroundColor: '#4a3828', borderColor: 'rgba(200,146,30,0.3)' }}
+            >
+              <div className="p-8 lg:p-10 h-full flex flex-col justify-between transition-all duration-300" style={{ minHeight: '200px' }}>
+                <div>
+                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Legacy</span>
+                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                    <span style={{ color: '#d4a820' }}>Tradição </span>
+                    <span style={{ color: '#e8e0d0' }}>Regional</span>
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Mais de uma década construindo reputação no Paraná.</p>
+                </div>
+                <motion.a 
+                  href="/sobre" 
+                  className="inline-flex items-center gap-2 text-xs uppercase"
+                  style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
+                  whileHover={{ x: 4 }}
+                >
+                  Nossa história
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </motion.a>
+              </div>
+              <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-10 group-hover:h-10" style={{ borderBottom: '2px solid rgba(200,150,30,0.35)', borderRight: '2px solid rgba(200,150,30,0.35)' }}></div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      
+
+      {/* CTA Section - Light Theme */}
+      <section className="relative overflow-hidden" style={{ backgroundColor: '#faf8f4' }}>
+        <motion.div 
+          className="absolute inset-0 pointer-events-none"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.08, 0.12, 0.08]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)' }}></div>
+        </motion.div>
+        
+        <motion.div 
+          className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <FadeIn direction="up">
+            <motion.h2 
+              className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-6" 
+              style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <span style={{ color: '#2a1f14' }}>Pronto para tornar seu evento</span>
+              <br />
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>inesquecível?</span>
+            </motion.h2>
+            <p className="text-lg mb-10 mx-auto leading-relaxed max-w-xl" style={{ color: 'rgba(42,31,20,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
               Entre em contato agora e solicite seu orçamento personalizado.
             </p>
           </FadeIn>
           
           <motion.div 
-            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-5 justify-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link to="/venda" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-cta text-white rounded-2xl font-semibold text-lg">
-                Solicitar Orçamento
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link to="/localizacao" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white border-2 border-primary rounded-2xl font-semibold text-lg hover:bg-secondary">
-                Ver Localização
+            <motion.a
+              href="https://wa.me/5545998044188"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center justify-center gap-3 px-10 py-5 text-lg font-semibold shadow-lg group"
+              style={{ 
+                background: 'linear-gradient(135deg, #f0a820 0%, #e8c040 50%, #d4860e 100%)',
+                color: '#2a1f14',
+                fontFamily: 'Oswald, sans-serif',
+                letterSpacing: '1px',
+                clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))',
+                boxShadow: '0 4px 20px rgba(200, 146, 30, 0.4)'
+              }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+              </motion.div>
+              <span>Solicitar Orçamento</span>
+            </motion.a>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Link 
+                to="/localizacao" 
+                className="inline-flex items-center justify-center gap-3 px-10 py-5 text-lg font-semibold transition-all duration-300 group"
+                style={{ 
+                  backgroundColor: 'transparent',
+                  color: '#c8921e',
+                  fontFamily: 'Oswald, sans-serif',
+                  letterSpacing: '1px',
+                  border: '2px solid #c8921e',
+                  clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))',
+                }}
+              >
+                <svg className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Ver Localização</span>
               </Link>
             </motion.div>
           </motion.div>
-        </div>
+        </motion.div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(200, 146, 30, 0.4), transparent)' }}></div>
       </section>
     </div>
   )

@@ -1,9 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { filiais, whatsappGeral } from '../data/filiais'
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
+
+function usePrefersReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReduced(mediaQuery.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+  return prefersReduced
+}
+
 function Contato() {
   const [hoveredContact, setHoveredContact] = useState<string | null>(null)
+  const isMobile = useIsMobile()
+  const prefersReduced = usePrefersReducedMotion()
+  const shouldAnimate = !isMobile && !prefersReduced
   
   const abrirWhatsApp = (mensagem?: string) => {
     const texto = mensagem ? encodeURIComponent(mensagem) : ''
@@ -21,18 +47,18 @@ function Contato() {
     <div className="pt-20">
       {/* Hero Section - Muito mais impactante */}
       <section className="relative bg-primary overflow-hidden min-h-[70vh] flex items-center">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px]"
+            className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full md:blur-[100px] blur-[50px]"
             style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 6, repeat: Infinity }}
+            animate={shouldAnimate ? { scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] } : { opacity: 0.2 }}
+            transition={shouldAnimate ? { duration: 6, repeat: Infinity } : { duration: 0 }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full blur-[80px]"
+            className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full md:blur-[80px] blur-[40px]"
             style={{ background: 'radial-gradient(circle, #EAB308 0%, transparent 70%)' }}
-            animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 5, repeat: Infinity }}
+            animate={shouldAnimate ? { scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] } : { opacity: 0.15 }}
+            transition={shouldAnimate ? { duration: 5, repeat: Infinity } : { duration: 0 }}
           />
         </div>
         

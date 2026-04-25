@@ -40,82 +40,116 @@ function Header() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-white/20"></div>
+        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(13,10,4,0.98)', backdropFilter: 'blur(12px)' }}></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-20 border-b" style={{ borderColor: 'rgba(200,146,30,0.2)' }}>
             <Link to="/" className="flex items-center gap-3 cursor-pointer group">
-              <motion.div 
-                className="w-12 h-12 rounded-xl gradient-gold flex items-center justify-center"
-                whileHover={{ scale: 1.1, rotate: 5 }}
+              <motion.img 
+                src="/imperador_logo.png"
+                alt="Imperador do Chopp"
+                className="h-12 w-auto"
+                style={{ filter: 'brightness(0) saturate(100%) invert(80%) sepia(30%) hue-rotate(5deg)' }}
+                whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M5 5.5A.5.5 0 0 1 5.5 5H6v6.5a2 2 0 0 1-2 2h-1v3a3 3 0 0 1-3 3H2a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1V6h.5A.5.5 0 0 1 5 5.5zM8 8.5a.5.5 0 0 0 .5-.5V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V4.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v3zm6.5.5a.5.5 0 0 0-.5-.5V4a1 1 0 0 0-1-1h-1a3 3 0 0 0-3 3v1a1 1 0 0 0 1 1h1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1V4.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v3z"/>
-                </svg>
-              </motion.div>
-              <span className="font-bold text-xl text-primary hidden sm:block">
-                Imperador<span className="text-cta">do Chopp</span>
-              </span>
+              />
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-2">
+            <nav className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
-                <Link
+                <motion.div
                   key={link.path}
-                  to={link.path}
-                  className={`relative px-4 py-2 rounded-lg font-medium transition-colors duration-300 ${
-                    location.pathname === link.path
-                      ? 'text-cta'
-                      : 'text-primary hover:text-cta'
-                  }`}
+                  className="relative"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  {link.label}
-                  {location.pathname === link.path && (
-                    <motion.div
-                      layoutId="activeNav"
-                      className="absolute inset-0 bg-cta/10 rounded-lg"
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    />
-                  )}
-                </Link>
+                  <Link
+                    to={link.path}
+                    className="px-4 py-2 font-medium text-sm relative group"
+                    style={{ 
+                      fontFamily: 'Oswald, sans-serif',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    <span 
+                      className="relative z-10 transition-colors duration-300"
+                      style={{ 
+                        color: location.pathname === link.path ? '#c8921e' : 'rgba(232,224,208,0.8)',
+                      }}
+                    >
+                      {link.label}
+                    </span>
+                    
+                    {/* Hover background */}
+                    <div 
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ 
+                        backgroundColor: 'rgba(200,146,30,0.1)',
+                        border: location.pathname === link.path ? 'none' : '1px solid rgba(200,146,30,0.2)',
+                      }}
+                    ></div>
+                    
+                    {/* Hover underline */}
+                    <div 
+                      className="absolute bottom-0 left-4 right-4 h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+                      style={{ backgroundColor: '#c8921e' }}
+                    ></div>
+                    
+                    {location.pathname === link.path && (
+                      <motion.div
+                        layoutId="activeNav"
+                        className="absolute bottom-0 left-4 right-4 h-0.5"
+                        style={{ backgroundColor: '#c8921e' }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                </motion.div>
               ))}
             </nav>
 
             <div className="flex items-center gap-4">
               <Link
                 to="/venda"
-                className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-cta text-white rounded-xl font-semibold hover:bg-cta-dark transition-colors duration-300"
+                className="hidden md:flex items-center gap-2 px-5 py-2.5 font-semibold transition-all duration-300 hover:brightness-110"
+                style={{ 
+                  backgroundColor: '#c8921e',
+                  color: '#2a1f14',
+                  fontFamily: 'Oswald, sans-serif',
+                  letterSpacing: '1px',
+                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+                }}
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.892 3.181.001 6.167 1.24 8.412 3.488 2.245 2.248 3.865 5.246 3.865 8.528 0 6.446-5.278 11.772-11.717 11.772-1.667 0-3.234-.391-4.652-1.126l-6.17 1.654z"/>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 Orçamento
               </Link>
 
               <motion.button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 relative overflow-hidden"
+                className="lg:hidden p-2 relative overflow-hidden"
                 whileTap={{ scale: 0.95 }}
               >
                 <div className="relative w-6 h-6">
                   <motion.span
                     animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-                    className="absolute left-0 w-6 h-0.5 bg-primary rounded-full"
-                    style={{ top: '2px' }}
+                    className="absolute left-0 w-6 h-0.5 rounded-full"
+                    style={{ top: '2px', backgroundColor: '#e8e0d0' }}
                   />
                   <motion.span
                     animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-                    className="absolute left-0 w-6 h-0.5 bg-primary rounded-full"
-                    style={{ top: '10px' }}
+                    className="absolute left-0 w-6 h-0.5 rounded-full"
+                    style={{ top: '10px', backgroundColor: '#e8e0d0' }}
                   />
                   <motion.span
                     animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-                    className="absolute left-0 w-6 h-0.5 bg-primary rounded-full"
-                    style={{ top: '18px' }}
+                    className="absolute left-0 w-6 h-0.5 rounded-full"
+                    style={{ top: '18px', backgroundColor: '#e8e0d0' }}
                   />
                 </div>
               </motion.button>
-            </div>
+</div>
           </div>
         </div>
       </header>
@@ -128,7 +162,8 @@ function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 z-40 lg:hidden"
+              style={{ backgroundColor: 'rgba(13,10,4,0.8)', backdropFilter: 'blur(4px)' }}
               onClick={() => setIsMenuOpen(false)}
             />
             <motion.nav
@@ -136,19 +171,24 @@ function Header() {
               animate="open"
               exit="closed"
               variants={menuVariants}
-              className="fixed top-0 right-0 bottom-0 w-[300px] bg-white z-50 lg:hidden shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 w-[300px] z-50 lg:hidden shadow-2xl"
+              style={{ backgroundColor: '#2a1f14' }}
             >
               <div className="p-8">
                 <div className="flex items-center justify-between mb-12">
-                  <span className="font-bold text-xl text-primary">
-                    Imperador<span className="text-cta">do Chopp</span>
-                  </span>
+                  <img 
+                    src="/imperador_logo.png"
+                    alt="Imperador do Chopp"
+                    className="h-10 w-auto"
+                    style={{ filter: 'brightness(0) saturate(100%) invert(80%) sepia(30%) hue-rotate(5deg)' }}
+                  />
                   <button
                     onClick={() => setIsMenuOpen(false)}
-                    className="p-2 rounded-lg hover:bg-gray-100"
+                    className="p-2 rounded-lg transition-colors duration-300"
+                    style={{ color: 'rgba(232,224,208,0.6)' }}
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
@@ -162,25 +202,42 @@ function Header() {
                       <Link
                         to={link.path}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`block px-4 py-3 rounded-xl font-medium transition-colors duration-300 ${
-                          location.pathname === link.path
-                            ? 'bg-cta text-white'
-                            : 'text-primary hover:bg-cta/10 hover:text-cta'
-                        }`}
+                        className="block px-4 py-3 font-medium transition-all duration-300 group"
+                        style={{ 
+                          fontFamily: 'Oswald, sans-serif',
+                          letterSpacing: '1px',
+                          textTransform: 'uppercase',
+                          backgroundColor: location.pathname === link.path ? '#c8921e' : 'transparent',
+                          color: location.pathname === link.path ? '#2a1f14' : 'rgba(232,224,208,0.8)',
+                          borderRadius: 0,
+                        }}
                       >
-                        {link.label}
+                        <span className="relative z-10">{link.label}</span>
+                        <div 
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ 
+                            backgroundColor: location.pathname === link.path ? 'transparent' : 'rgba(200,146,30,0.1)',
+                          }}
+                        />
                       </Link>
                     </motion.div>
                   ))}
                 </div>
-                <div className="mt-8 pt-8 border-t border-gray-100">
+                <div className="mt-8 pt-8" style={{ borderTop: '1px solid rgba(200,146,30,0.2)' }}>
                   <Link
                     to="/venda"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-cta text-white rounded-xl font-semibold"
+                    className="flex items-center justify-center gap-2 w-full px-5 py-3 font-semibold transition-all duration-300 hover:brightness-110"
+                    style={{ 
+                      backgroundColor: '#c8921e',
+                      color: '#2a1f14',
+                      fontFamily: 'Oswald, sans-serif',
+                      letterSpacing: '1px',
+                      clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+                    }}
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.892 3.181.001 6.167 1.24 8.412 3.488 2.245 2.248 3.865 5.246 3.865 8.528 0 6.446-5.278 11.772-11.717 11.772-1.667 0-3.234-.391-4.652-1.126l-6.17 1.654z"/>
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
                     Solicitar Orçamento
                   </Link>

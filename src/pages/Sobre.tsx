@@ -1,348 +1,635 @@
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { filiais } from '../data/filiais'
+import { motion, useInView } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import * as React from 'react'
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
+
+function useCountUp(end: number, duration: number = 2000) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const hasStarted = useRef(false)
+
+  useEffect(() => {
+    if (isInView && !hasStarted.current) {
+      hasStarted.current = true
+      const startTime = Date.now()
+      const updateCount = () => {
+        const elapsed = Date.now() - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        setCount(Math.floor(eased * end))
+        if (progress < 1) requestAnimationFrame(updateCount)
+      }
+      requestAnimationFrame(updateCount)
+    }
+  }, [isInView, end, duration])
+
+  return { count, ref }
+}
 
 const timeline = [
+  { year: '2009', title: 'Fundação', description: 'Nasceu em Cascavel o sonho de levar chopp premium para o Paraná.' },
+  { year: '2013', title: 'Primeira Expansão', description: 'Consolidamos nossa marca e iniciamos atendimento em Toledo.' },
+  { year: '2017', title: 'Parcerias Estratégicas', description: 'Acordos com bares e restaurantes fortaleceram nossa rede.' },
+  { year: '2024', title: 'Referência Regional', description: 'Liderança confirmada no Sul do Brasil em chopp premium.' },
+]
+
+const missionVision = [
   {
-    year: '2014',
-    title: 'O Início',
-    description: 'Tudo começou em Cascavel, com o sonho de levar o melhor chopp argentino para o Paraná.',
+    type: 'Missão',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+      </svg>
+    ),
+    title: 'Nossa Missão',
+    description: 'Levar experiências memoráveis através de chopp premium de alta qualidade, transformando cada evento em uma celebração inesquecível.',
+    details: 'Priorizamos ingredientes selecionados, processos rigorosos e atendimento diferenciado para garantir a satisfação total dos nossos clientes.',
   },
   {
-    year: '2018',
-    title: 'Expansão',
-    description: 'Chegamos a Toledo, conquistando novos clientes e fortalecendo nossa marca.',
+    type: 'Visão',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    title: 'Nossa Visão',
+    description: 'Ser a referência incontestável em distribuição de chopp premium no Sul do Brasil, reconhecida pela excelência e inovação.',
+    details: 'Almejamos expandir nossa presença mantendo os mais altos padrões de qualidade e atendimento personalizado.',
   },
   {
-    year: '2021',
-    title: 'Crescimento',
-    description: 'Inauguramos nossa filial em Maringá, consolidando presença no estado.',
-  },
-  {
-    year: '2024',
-    title: 'Liderança',
-    description: 'Referência no Sul do Brasil em distribuição de chopp premium.',
+    type: 'Valores',
+    icon: (
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+      </svg>
+    ),
+    title: 'Nossos Valores',
+    description: 'Qualidade absoluta, pontualidade impecável, transparência nas relações e compromisso com a satisfação do cliente.',
+    details: 'Cada decisão é guiada pela busca da excelência e pelo respeito aos nossos colaboradores, parceiros e clientes.',
   },
 ]
 
-const values = [
+const brands = [
+  { name: 'Budweiser', origin: 'Estados Unidos', image: 'https://images.unsplash.com/photo-1608270586620-248524c67deb?w=400&h=300&fit=crop' },
+  { name: 'Stella Artois', origin: 'Bélgica', image: 'https://images.unsplash.com/photo-1566633806327-68e152aaf26d?w=400&h=300&fit=crop' },
+  { name: 'Heineken', origin: 'Holanda', image: 'https://images.unsplash.com/photo-1608855238291-c3e3e939c8b7?w=400&h=300&fit=crop' },
+  { name: 'Brahma', origin: 'Brasil', image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=300&fit=crop' },
+  { name: 'Spaten', origin: 'Alemanha', image: 'https://images.unsplash.com/photo-1584195616901-4c6c1a8c3e2c?w=400&h=300&fit=crop' },
+  { name: 'Hoegaarden', origin: 'Bélgica', image: 'https://images.unsplash.com/photo-1575037614876-c38a4c44f5bd?w=400&h=300&fit=crop' },
+]
+
+const facilities = [
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.421-.035.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.421.035-.662M4.5 12l3 3m-3-3l-3 3" />
       </svg>
     ),
-    title: 'Qualidade',
-    description: 'Selecionamos os melhores insumos e mantemos padrões rigorosos em cada etapa.',
+    title: 'Tanques de Armazenamento',
+    description: 'Sistema completo de tanques refrigerados com controle automático de temperatura para manter o chopp na condição ideal de 4°C.',
+    stat: '8',
+    statLabel: 'Tanques ativos',
   },
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
       </svg>
     ),
-    title: 'Pontualidade',
-    description: 'Seu evento merece chegar no horário certo. Isso é sagrado para nós.',
+    title: 'Frota Refrigerada',
+    description: 'Veículos adaptados com sistemas de refrigeração para garantir a integridade do produto do armazenamento até a entrega.',
+    stat: '5',
+    statLabel: 'Veículos',
   },
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
       </svg>
     ),
-    title: 'Atendimento Humanizado',
-    description: 'Mais do que vender chopp, construímos relações genuínas com nossos clientes.',
+    title: 'Chopeiras Profissionais',
+    description: 'Equipamentos de alta performance para servir chopp com espuma perfeita e temperatura controlada em qualquer evento.',
+    stat: '50+',
+    statLabel: 'Chopeiras',
   },
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    title: 'Paixão',
-    description: 'Cada chopp que servimos carrega o amor pelo que fazemos.',
+    title: 'Sistema de Entrega',
+    description: 'Logística integrada com rastreamento em tempo real para garantir pontualidade e transparência em cada entrega.',
+    stat: '24/7',
+    statLabel: 'Monitoramento',
   },
+]
+
+const team = [
+  { initials: 'RM', name: 'Roberto Martins', role: 'Fundador & CEO', bio: 'Visionário por trás da Imperador, transforma sonhos em realidade há 15 anos.' },
+  { initials: 'CS', name: 'Carlos Silva', role: 'Diretor Operacional', bio: 'Garante que cada entrega seja perfeita, do primeiro ao último barril.' },
+  { initials: 'AP', name: 'Ana Paula', role: 'Gerente Comercial', bio: 'Conecta clientes e produtos com dedicação e empatia genuína.' },
 ]
 
 function Sobre() {
+  const isMobile = useIsMobile()
+
   return (
     <div className="pt-20">
-      {/* Hero Section - Mais emocional */}
-      <section className="relative bg-primary overflow-hidden">
-        <div className="absolute inset-0">
+      {/* Section 1: Hero - Dark Gold */}
+      <section className="relative min-h-[420px] overflow-hidden" style={{ backgroundColor: '#0d0a04' }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 right-0 w-[600px] h-[600px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.2) 0%, transparent 70%)' }}></div>
           <motion.div 
-            className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cta rounded-full blur-[120px]"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 6, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-cta-light rounded-full blur-[80px]"
-            animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.2, 0.4] }}
-            transition={{ duration: 5, repeat: Infinity }}
+            className="absolute top-1/2 right-1/4 w-[300px] h-[300px]"
+            style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.1) 0%, transparent 70%)' }}
+            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+            transition={{ duration: 4, repeat: Infinity }}
           />
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-cta/20 rounded-full text-cta text-sm font-medium mb-6"
-            >
-              <span className="w-2 h-2 bg-cta rounded-full animate-pulse"></span>
-              Nossa História
-            </motion.div>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
-            >
-              Mais do que chopp, <br />
-              <span className="text-gradient-gold">uma história de paixão</span>
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mt-6 text-xl text-gray-300"
-            >
-              Descubra como a Imperador do Chopp transformou o mercado de chopp premium no Paraná
-            </motion.p>
-          </div>
-        </div>
-      </section>
-
-      {/* Storytelling Section - História com imagem diferenciada */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Imagem com moldura premium */}
-            <div className="relative">
-              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-4 border-l-4 border-cta rounded-tl-3xl"></div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-4 border-r-4 border-cta rounded-br-3xl"></div>
-              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=750&fit=crop"
-                  alt="Nossa história"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6">
-                  <p className="text-white font-medium">"Cada chopp conta uma história"</p>
-                </div>
-              </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[420px] flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full py-12 lg:py-16">
+            <div>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4 mb-6">
+                <div className="h-px w-8" style={{ backgroundColor: '#c8921e' }}></div>
+                <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Nossa história</span>
+              </motion.div>
+              
+              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-5xl sm:text-6xl lg:text-7xl font-normal mb-6" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                <span style={{ color: '#e8e0d0' }}>Imperador</span>
+                <br />
+                <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>do Chopp</span>
+              </motion.h1>
+              
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-base leading-relaxed max-w-md mb-8" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                Transformamos cada evento em uma celebração inesquecível. Há mais de uma década levando chopp premium com excelência e dedicação.
+              </motion.p>
+              
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex items-center gap-6" style={{ borderTop: '1px solid rgba(200,146,30,0.2)', paddingTop: '24px' }}>
+                <StatCounter value={15} suffix="+" label="Anos" />
+                <div className="w-px h-12" style={{ backgroundColor: 'rgba(200,146,30,0.3)' }}></div>
+                <StatCounter value={500} suffix="+" label="Eventos" />
+                <div className="w-px h-12" style={{ backgroundColor: 'rgba(200,146,30,0.3)' }}></div>
+                <StatCounter value={4} suffix="°C" label="Temperatura" />
+              </motion.div>
             </div>
             
-            {/* Texto da história */}
-            <div>
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+            <div className="hidden lg:block relative">
+              <div className="absolute inset-0" style={{ backgroundColor: '#111008', clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }}>
+                <div className="absolute top-0 bottom-0 w-px" style={{ left: '20%', background: 'linear-gradient(to bottom, transparent, rgba(200,146,30,0.6), transparent)' }}></div>
+              </div>
+              <motion.div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
               >
-                <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-8">
-                  Tudo começou com uma <span className="text-cta">paixão</span>
-                </h2>
-                
-                <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
-                  <p>
-                    Em 2014, em Cascavel, nasceu a <strong className="text-primary">Imperador do Chopp</strong>. 
-                    Não era apenas uma distribuidora - era o concretizar de um sonho: levar o autêntico 
-                    chopp argentino para os paranaenses.
-                  </p>
-                  
-                  <p>
-                    Começamos pequeno, com muita dedicação e cero na qualidade. Cada cliente satisfeito 
-                    era uma nova semente plantada. E essas sementes cresceram.
-                  </p>
-                  
-                  <p>
-                    Hoje, com filiais em Toledo e Maringá, continuamos com o mesmo propósito: 
-                    <strong className="text-cta"> transformar cada evento em uma experiência inesquecível</strong>. 
-                    Mais de 10 anos depois, a paixão continua a mesma.
-                  </p>
-                </div>
-
-                {/* Citação */}
-                <div className="mt-10 p-6 bg-gradient-to-r from-cta/10 to-cta-light/10 rounded-2xl border-l-4 border-cta">
-                  <p className="text-lg text-primary italic">
-                    "Não vendemos apenas chopp. Celebramos momentos, criamos memórias e 
-                    conectamos pessoas. Isso é a Imperador do Chopp."
-                  </p>
-                  <p className="mt-3 text-sm text-gray-500">— Fundador</p>
-                </div>
+                <div className="w-64 h-64 rounded-full" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.3) 0%, transparent 70%)' }}></div>
               </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Timeline - Nossa jornada */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+      {/* Section 2: Quem Somos - Light Theme with Flip Cards */}
+      <section className="py-20" style={{ backgroundColor: '#faf8f4' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary">
-              Nossa <span className="text-cta">Jornada</span>
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">O caminho que percorremos até aqui</p>
-          </motion.div>
-
-          <div className="relative">
-            {/* Linha do tempo horizontal no mobile, vertical no desktop */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cta via-cta-light to-cta" />
-            
-            <div className="space-y-8 md:space-y-12">
-              {timeline.map((item, index) => (
-                <motion.div
-                  key={item.year}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative pl-16 md:pl-0"
-                >
-                  {/* Ponto na linha - mobile e desktop */}
-                  <div className="absolute left-[26px] md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full gradient-gold border-4 border-white shadow-lg z-10" />
-                  
-                  <div className={`md:w-[45%] ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12 md:ml-auto'}`}>
-                    <div className="bg-white p-5 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 ml-2 md:ml-0">
-                      <span className="inline-block px-3 py-1 bg-gradient-to-r from-cta to-cta-light text-white rounded-full text-sm font-semibold mb-2">
-                        {item.year}
-                      </span>
-                      <h3 className="text-lg font-bold text-primary mb-1">{item.title}</h3>
-                      <p className="text-gray-600 text-sm">{item.description}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="mb-16">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="h-px w-6" style={{ backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Quem somos</span>
             </div>
+            
+            <h2 className="text-4xl sm:text-5xl font-normal mb-6" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#2a1f14' }}>Chopp não é bebida.</span>
+              <br />
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>É experiência.</span>
+            </h2>
+            
+            <p className="text-base leading-relaxed max-w-2xl" style={{ color: 'rgba(42,31,20,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              A Imperador do Chopp nasceu de um sonho: levar o melhor chopp argentino para os paranaenses. Começamos em 2009, em Cascavel, com uma visão clara — qualidade acima de tudo. Hoje, com filiais em Toledo e Maringá, continuamos com o mesmo propósito. Mais de uma década depois, a paixão continua a mesma.
+            </p>
+          </div>
+
+          {/* Flip Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {missionVision.map((item, index) => (
+              <FlipCard key={item.type} item={item} index={index} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Valores - Fundo branco com detalhe dourado */}
-      <section className="py-24 bg-white border-t border-b border-amber-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Section 3: Marcas - Modern Glass Morphism */}
+      <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a1208 0%, #0d0a04 50%, #1a1610 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(200,146,30,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(200,146,30,0.05) 0%, transparent 50%)' }}></div>
+        
+        <div className="absolute inset-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8921e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }}></div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
+            className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary">
-              O que nos <span className="text-cta">move</span>
+            <motion.div 
+              className="inline-flex items-center gap-3 px-5 py-2 mb-6"
+              style={{ backgroundColor: 'rgba(200,146,30,0.1)', border: '1px solid rgba(200,146,30,0.2)' }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+            >
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Parceiros Oficiais</span>
+            </motion.div>
+            
+            <h2 className="text-5xl sm:text-6xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#e8e0d0' }}>Cervejarias que </span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Confiamos</span>
             </h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Valores que guiam cada decisão e cada chopp que servimos
+            <p className="text-base max-w-lg mx-auto" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              Parcerias estratégicas com as melhores cervejarias do mundo para garantir qualidade incomparável em cada chopp.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((value, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {brands.map((brand, index) => (
               <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 20 }}
+                key={brand.name}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="group relative overflow-hidden"
+                style={{ 
+                  backgroundColor: 'rgba(255,255,255,0.03)', 
+                  border: '1px solid rgba(200,146,30,0.15)',
+                }}
+              >
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(200,146,30,0.1) 0%, transparent 50%, rgba(200,146,30,0.05) 100%)' }}></div>
+                
+                <div className="relative flex items-center gap-5 p-6">
+                  <motion.div 
+                    className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                    style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+                  >
+                    <img 
+                      src={brand.image} 
+                      alt={brand.name} 
+                      className="w-full h-full object-cover"
+                      style={{ filter: 'saturate(1.1) brightness(1.05)' }}
+                    />
+                  </motion.div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-medium mb-1" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#e8e0d0', letterSpacing: '1px' }}>{brand.name}</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-4 h-px" style={{ backgroundColor: '#c8921e' }}></div>
+                      <span className="text-xs uppercase" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{brand.origin}</span>
+                    </div>
+                    <p className="text-sm" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Distribuidor autorizado</p>
+                  </div>
+                  
+                  <motion.div 
+                    className="w-8 h-8 flex items-center justify-center rounded-full"
+                    style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}
+                    whileHover={{ scale: 1.2, backgroundColor: 'rgba(200,146,30,0.2)' }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="#c8921e" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </motion.div>
+                </div>
+                
+                <div className="absolute bottom-0 left-0 right-0 h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" style={{ background: 'linear-gradient(90deg, #c8921e, #f0a820, #c8921e)' }}></div>
+              </motion.div>
+            ))}
+          </div>
+          
+          <motion.div 
+            className="mt-12 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+          >
+            <div className="inline-flex items-center gap-4 px-6 py-3" style={{ backgroundColor: 'rgba(200,146,30,0.05)', border: '1px solid rgba(200,146,30,0.1)' }}>
+              <span className="text-sm" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif' }}>Trabalhamos com mais de</span>
+              <span className="text-2xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#c8921e' }}>12 marcas</span>
+              <span className="text-sm" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif' }}>premium</span>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 4: Timeline - Warm Medium Dark */}
+      <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #2a1f14 0%, #1f1810 50%, #2a1f14 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 30% 20%, rgba(200,146,30,0.06) 0%, transparent 40%), radial-gradient(circle at 70% 80%, rgba(200,146,30,0.04) 0%, transparent 40%)' }}></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Nossa jornada</span>
+              <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#e8e0d0' }}>Nossa </span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Trajetória</span>
+            </h2>
+            <p className="text-sm max-w-md mx-auto" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              Do primeiro barril em Cascavel até a referência regional em chopp premium.
+            </p>
+          </motion.div>
+          
+          <div className="relative">
+            <div className={`absolute ${isMobile ? 'left-0' : 'left-1/2'} top-0 bottom-0 w-px`} style={{ background: 'linear-gradient(to bottom, transparent, rgba(200,150,30,0.3), transparent)' }}></div>
+            
+            {isMobile ? (
+              <div className="space-y-8 pl-8">
+                {timeline.map((item, index) => (
+                  <motion.div key={item.year} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="relative">
+                    <div className="absolute -left-8 top-0 w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#c8921e', boxShadow: '0 0 10px rgba(200,146,30,0.6)' }}></div>
+                    <div className="pl-4" style={{ borderLeft: '1px solid rgba(200,150,30,0.2)' }}>
+                      <div className="text-2xl font-normal mb-1" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>{item.year}</div>
+                      <h3 className="text-sm uppercase mb-1" style={{ color: '#e8e0d0', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{item.title}</h3>
+                      <p className="text-sm" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-[1fr_48px_1fr] gap-4">
+                {timeline.map((item, index) => {
+                  const isLeft = index % 2 === 0
+                  return (
+                    <React.Fragment key={item.year}>
+                      {isLeft ? (
+                        <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="text-right pr-8">
+                          <div className="text-2xl font-normal mb-1" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>{item.year}</div>
+                          <h3 className="text-sm uppercase mb-1" style={{ color: '#e8e0d0', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{item.title}</h3>
+                          <p className="text-sm" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item.description}</p>
+                        </motion.div>
+                      ) : <div></div>}
+                      <div className="flex items-center justify-center">
+                        <motion.div 
+                          className="w-3.5 h-3.5 rounded-full"
+                          style={{ backgroundColor: '#c8921e', boxShadow: '0 0 12px rgba(200,146,30,0.6)' }}
+                          whileInView={{ scale: [1, 1.2, 1] }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.2 }}
+                        />
+                      </div>
+                      {!isLeft ? (
+                        <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="text-left pl-8">
+                          <div className="text-2xl font-normal mb-1" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>{item.year}</div>
+                          <h3 className="text-sm uppercase mb-1" style={{ color: '#e8e0d0', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{item.title}</h3>
+                          <p className="text-sm" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item.description}</p>
+                        </motion.div>
+                      ) : <div></div>}
+                    </React.Fragment>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5: Equipe - Light Theme */}
+      <section className="py-20" style={{ backgroundColor: '#faf8f4' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="h-px w-6" style={{ backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Time</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#2a1f14' }}>Nossa </span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Equipe</span>
+            </h2>
+            <p className="text-sm" style={{ color: 'rgba(42,31,20,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>As pessoas que fazem a Imperador acontecer todos os dias.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {team.map((member, index) => (
+              <motion.div key={member.initials} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} whileHover={{ y: -8 }} className="group relative bg-white p-8" style={{ border: '1px solid rgba(200,150,30,0.15)', boxShadow: '0 4px 20px rgba(42,31,20,0.05)' }}>
+                <div className="text-center">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #c8921e 0%, #e8c040 100%)' }}>
+                    <span className="text-3xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>{member.initials}</span>
+                  </div>
+                  <h3 className="text-lg uppercase mb-1" style={{ color: '#2a1f14', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{member.name}</h3>
+                  <span className="text-xs uppercase block mb-4" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{member.role}</span>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(42,31,20,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{member.bio}</p>
+                </div>
+                <div className="absolute bottom-0 right-0 w-6 h-6 transition-all duration-300 group-hover:w-8 group-hover:h-8" style={{ borderBottom: '2px solid rgba(200,150,30,0.2)', borderRight: '2px solid rgba(200,150,30,0.2)' }}></div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6: Instalações - Medium Warm */}
+      <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #3d2e1a 0%, #4a3828 50%, #3d2e1a 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(200,146,30,0.08) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(200,146,30,0.05) 0%, transparent 40%)' }}></div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Infraestrutura</span>
+              <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#e8e0d0' }}>Nossas </span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Instalações</span>
+            </h2>
+            <p className="text-sm max-w-lg mx-auto" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              Infraestrutura de ponta para garantir a qualidade e frescor do nosso chopp em cada entrega.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {facilities.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group bg-gradient-to-b from-amber-50 to-white p-8 rounded-3xl border border-amber-200 hover:border-cta hover:shadow-xl transition-all duration-300"
+                className="group relative p-6 cursor-pointer"
+                style={{ backgroundColor: 'rgba(200,146,30,0.05)', border: '1px solid rgba(200,146,30,0.15)' }}
               >
-                <div className="w-16 h-16 rounded-2xl gradient-gold flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <div className="text-white">{value.icon}</div>
+                <div className="absolute top-0 left-0 w-full h-0.5 transition-all duration-300 group-hover:h-full" style={{ background: 'linear-gradient(180deg, rgba(200,146,30,0.5), transparent)', opacity: 0.1 }}></div>
+                
+                <div className="relative z-10">
+                  <div className="mb-4 p-3 inline-block" style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}>
+                    <div style={{ color: '#c8921e' }}>{item.icon}</div>
+                  </div>
+                  
+                  <h3 className="text-lg font-medium mb-2" style={{ fontFamily: 'Oswald, sans-serif', color: '#e8e0d0', letterSpacing: '1px' }}>{item.title}</h3>
+                  
+                  <p className="text-sm mb-4 leading-relaxed" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item.description}</p>
+                  
+                  <div className="flex items-center gap-3 pt-4" style={{ borderTop: '1px solid rgba(200,146,30,0.15)' }}>
+                    <span className="text-2xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#c8921e' }}>{item.stat}</span>
+                    <span className="text-xs uppercase" style={{ color: 'rgba(200,146,30,0.6)', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{item.statLabel}</span>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-primary mb-3">{value.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
+
+                <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-12 group-hover:h-12" style={{ borderBottom: '2px solid rgba(200,146,30,0.25)', borderRight: '2px solid rgba(200,146,30,0.25)' }}></div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Filiais - Compacto */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-primary">
-              Presentes em 3 cidades do Paraná
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {filiais.map((filial, index) => (
-              <motion.div
-                key={filial.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all text-center"
-              >
-                <div className="w-14 h-14 rounded-2xl gradient-gold flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-primary">{filial.cidade}</h3>
-                <p className="text-sm text-gray-500">{filial.estado}</p>
-                <Link
-                  to="/localizacao"
-                  className="mt-3 inline-flex items-center text-sm text-cta font-medium hover:text-cta-dark"
-                >
-                  Ver no Mapa →
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA - Fundo cinza claro para variar */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-cta/5 rounded-3xl" />
-            <div className="relative p-10 rounded-3xl border border-cta/20">
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
-                Venha nos conhecer
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Entre em contato e faça uma visita. Será um prazer receber você!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link 
-                  to="/contato" 
-                  className="px-8 py-4 bg-cta text-white rounded-2xl font-semibold text-lg shadow-lg shadow-cta/30 hover:bg-cta-dark transition-all"
-                >
-                  Falar Conosco
-                </Link>
-                <Link 
-                  to="/localizacao" 
-                  className="px-8 py-4 bg-primary text-white rounded-2xl font-semibold text-lg hover:bg-secondary transition-all"
-                >
-                  Ver Localização
-                </Link>
-              </div>
+      {/* Section 7: CTA - Gold Gradient */}
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #c8921e 0%, #e0a820 50%, #b87a10 100%)' }}>
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[120px] font-normal leading-none pointer-events-none select-none" style={{ fontFamily: 'Bebas Neue, sans-serif', color: 'rgba(13,10,4,0.08)' }}>IMPERADOR DO CHOPP</div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="text-center lg:text-left">
+              <span className="text-xs uppercase block mb-2" style={{ color: 'rgba(13,10,4,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Entre em contato</span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Traga o Imperador para o seu evento</h2>
+              <p className="text-sm max-w-md" style={{ color: 'rgba(13,10,4,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Entre em contato agora e solicite seu orçamento personalizado.</p>
             </div>
-          </motion.div>
+            
+            <motion.a href="https://wa.me/5545998044188" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="inline-flex items-center gap-3 px-8 py-4 text-base font-bold uppercase transition-all duration-300" style={{ backgroundColor: '#0d0a04', color: '#d4a820', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)' }}>
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Solicitar Orçamento
+            </motion.a>
+          </div>
         </div>
       </section>
+    </div>
+  )
+}
+
+function FlipCard({ item, index }: { item: typeof missionVision[0]; index: number }) {
+  const [isFlipped, setIsFlipped] = useState(false)
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: index * 0.1 }}
+        className="relative p-6"
+        style={{ backgroundColor: '#ffffff', border: '1px solid rgba(200,150,30,0.2)', boxShadow: '0 4px 20px rgba(42,31,20,0.05)' }}
+      >
+        <div className="flex items-start gap-4">
+          <div className="p-3 flex-shrink-0" style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}>
+            <div style={{ color: '#c8921e' }}>{item.icon}</div>
+          </div>
+          <div>
+            <span className="text-xs uppercase mb-1 block" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{item.type}</span>
+            <h3 className="text-lg font-medium mb-2" style={{ color: '#2a1f14', fontFamily: 'Oswald, sans-serif' }}>{item.title}</h3>
+            <p className="text-sm leading-relaxed" style={{ color: 'rgba(42,31,20,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item.description}</p>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="relative h-[320px] cursor-pointer perspective-1000"
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
+    >
+      <motion.div
+        className="relative w-full h-full"
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* Front */}
+        <div 
+          className="absolute inset-0 p-6 flex flex-col"
+          style={{ 
+            backfaceVisibility: 'hidden',
+            backgroundColor: '#ffffff',
+            border: '1px solid rgba(200,150,30,0.2)',
+            boxShadow: '0 4px 20px rgba(42,31,20,0.05)'
+          }}
+        >
+          <div className="p-3 mb-4 inline-block" style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}>
+            <div style={{ color: '#c8921e' }}>{item.icon}</div>
+          </div>
+          <span className="text-xs uppercase mb-2" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{item.type}</span>
+          <h3 className="text-xl font-medium mb-3" style={{ color: '#2a1f14', fontFamily: 'Bebas Neue, sans-serif' }}>{item.title}</h3>
+          <p className="text-sm leading-relaxed flex-1" style={{ color: 'rgba(42,31,20,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>{item.description}</p>
+          <div className="mt-4 flex items-center gap-2 text-xs" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>
+            <span>Hover para mais</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.421-.035.662M19.5 12l3-3m-3 3l-3-3" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div 
+          className="absolute inset-0 p-6 flex flex-col justify-center"
+          style={{ 
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+            background: 'linear-gradient(135deg, #c8921e 0%, #e0a820 100%)',
+          }}
+        >
+          <span className="text-xs uppercase mb-2" style={{ color: 'rgba(13,10,4,0.6)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{item.type}</span>
+          <h3 className="text-xl font-medium mb-4" style={{ color: '#0d0a04', fontFamily: 'Bebas Neue, sans-serif' }}>{item.title}</h3>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(13,10,4,0.8)', fontFamily: 'Inter, sans-serif', fontWeight: 400 }}>{item.details}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function StatCounter({ value, suffix, label }: { value: number; suffix: string; label: string }) {
+  const { count, ref } = useCountUp(value)
+  
+  return (
+    <div ref={ref} className="text-center px-4">
+      <div className="text-3xl font-normal" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>
+        {count}{suffix}
+      </div>
+      <div className="text-[10px] uppercase mt-1" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{label}</div>
     </div>
   )
 }
