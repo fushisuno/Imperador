@@ -41,35 +41,62 @@ function Pedido() {
   const handleSubmit = () => {
     if (!selectedSede || !nomeCliente.trim()) return
 
-    let message = `*NOVO PEDIDO - Imperador do Chopp*%0A%0A`
-    message += `*Cliente:* ${nomeCliente}%0A`
-    message += `*Sede:* ${selectedSede.nome}%0A`
-    message += `*Cidade:* ${selectedSede.cidade} - ${selectedSede.estado}%0A`
-    message += `*Endereço:* ${selectedSede.endereco}%0A%0A`
+    let message = `🧀 *NOVO PEDIDO - IMPERADOR DO CHOPP* %0A`
+    message += `%0A%0D`
+    message += `%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A`
+    message += `%0A👤 *DADOS DO CLIENTE* %0A`
+    message += `%0A• Nome: ${nomeCliente}%0A`
+    message += `%0A%0D`
+    message += `%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A`
+    message += `%0A🏪 *SEDE SOLICITADA* %0A`
+    message += `%0A• Unidade: ${selectedSede.nome}%0A`
+    message += `• Cidade: ${selectedSede.cidade} - ${selectedSede.estado}%0A`
+    message += `• Endereço: ${selectedSede.endereco}%0A`
+    message += `%0A%0D`
+    message += `%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A`
+    message += `%0A📋 *SITUAÇÃO DOS EQUIPAMENTOS* %0A`
 
     if (hasEquipamento === 'sim') {
+      message += `%0A✅ Cliente POSSUI equipamentos próprios%0A`
       if (selectedEquipamentos.length > 0) {
-        message += `*Equipamentos do cliente:*%0A`
+        message += `%0A📦 Equipamentos que o cliente tem:%0A`
         selectedEquipamentos.forEach(id => {
           const eq = equipamentos.find(e => e.id === id)
-          if (eq) message += `• ${eq.name}%0A`
+          if (eq) message += `   ✓ ${eq.name}%0A`
         })
       } else {
-        message += `*Equipamentos:* Cliente possui próprios equipamentos%0A`
+        message += `   (não especificou quais)%0A`
       }
-      message += `%0A`
-    } else if (hasEquipamento === 'nao' && selectedEquipamentos.length > 0) {
-      message += `*Equipamentos necessários:*%0A`
-      selectedEquipamentos.forEach(id => {
-        const eq = equipamentos.find(e => e.id === id)
-        if (eq) message += `• ${eq.name}%0A`
-      })
-      message += `%0A`
+    } else if (hasEquipamento === 'nao') {
+      message += `%0A❌ Cliente NÃO possui equipamentos%0A`
+      if (selectedEquipamentos.length > 0) {
+        message += `%0A📦 Equipamentos que PRECISA LOCAR:%0A`
+        selectedEquipamentos.forEach(id => {
+          const eq = equipamentos.find(e => e.id === id)
+          if (eq) message += `   ☐ ${eq.name}%0A`
+        })
+      } else {
+        message += `   (nenhum selecionado)%0A`
+      }
+    } else {
+      message += `   (não informado)%0A`
     }
 
+    message += `%0A%0D`
+    message += `%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A`
+
     if (observacoes) {
-      message += `*Observações:*%0A${observacoes}%0A`
+      message += `%0A📝 *OBSERVAÇÕES* %0A${observacoes}%0A`
+      message += `%0A%0D`
+      message += `%0A━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A`
     }
+
+    message += `%0A%0A💡 *AÇÕES PENDENTES:* %0A`
+    message += `[ ] Confirmar recebimento%0A`
+    message += `[ ] Verificar disponibilidade%0A`
+    message += `[ ] Emitir orçamento%0A`
+    message += `[ ] Agendar entrega%0A%0A`
+    message += `_Mensagem enviada via Imperador do Chopp_`
 
     const whatsappUrl = selectedSede.whatsapp 
       ? `https://wa.me/${selectedSede.whatsapp}?text=${message}`
