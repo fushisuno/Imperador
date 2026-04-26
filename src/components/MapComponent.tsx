@@ -4,16 +4,16 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 interface Sede {
-  id: number
-  name: string
+  id: string
+  nome: string
   cat: string
   bairro: string
   cidade: string
-  address: string
+  endereco: string
   lat: number
   lng: number
-  rep: string
   whatsapp: string
+  rep: string
   tel: string
   horario: string
 }
@@ -43,9 +43,10 @@ function MapController({ selectedSede }: MapControllerProps) {
   return null
 }
 
-function createMarkerIcon(num: number, isActive: boolean) {
+function createMarkerIcon(nome: string, isActive: boolean) {
   const color = isActive ? '#c8921e' : '#fff'
   const textColor = isActive ? '#fff' : '#0d0a04'
+  const shortName = nome.split(' ')[1] || nome.substring(0, 2)
   const pulse = isActive ? `<div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: rgba(200,146,30,0.3); top: -7px; animation: pulse 2s ease-out infinite; z-index: 1;"></div>` : ''
   
   return L.divIcon({
@@ -69,10 +70,10 @@ function createMarkerIcon(num: number, isActive: boolean) {
           <span style="
             transform: rotate(45deg);
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             color: ${textColor};
-          ">${num}</span>
+          ">${shortName}</span>
         </div>
       </div>
     `,
@@ -98,11 +99,11 @@ export default function MapComponent({ sedes, selectedSede, onSedeSelect }: MapP
       
       <MapController selectedSede={selectedSede} />
       
-      {sedes.map((sede, index) => (
+      {sedes.map((sede) => (
         <Marker
           key={sede.id}
           position={[sede.lat, sede.lng]}
-          icon={createMarkerIcon(index + 1, selectedSede?.id === sede.id)}
+          icon={createMarkerIcon(sede.nome, selectedSede?.id === sede.id)}
           eventHandlers={{
             click: () => onSedeSelect(sede),
           }}

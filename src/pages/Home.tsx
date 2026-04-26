@@ -2,36 +2,8 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FadeIn } from '../components/Animations'
 import { Carousel } from '../components/Carousel'
-import { useState, useEffect } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-  return isMobile
-}
-
-function usePrefersReducedMotion() {
-  const [prefersReduced, setPrefersReduced] = useState(false)
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReduced(mediaQuery.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
-  return prefersReduced
-}
+import { useState } from 'react'
+import { useIsMobile, usePrefersReducedMotion } from '../hooks/useMedia'
 
 function Home() {
   const isMobile = useIsMobile()

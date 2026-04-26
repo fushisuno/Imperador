@@ -1,148 +1,51 @@
 import { useState, useEffect, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MapComponent from '../components/MapComponent'
+import { filiais } from '../data/filiais'
 
-const sedes = [
-  {
-    id: 1,
-    name: 'Imperador Centro',
-    cat: 'Matriz',
-    bairro: 'Centro',
-    cidade: 'Curitiba',
-    address: 'Av. Vicente Machado, 500',
-    lat: -25.4284,
-    lng: -49.2733,
-    rep: 'Roberto Martins',
-    whatsapp: '5545998044188',
-    tel: '(41) 99999-0001',
+interface SedeFrontend {
+  id: string;
+  nome: string;
+  cat: string;
+  bairro: string;
+  cidade: string;
+  endereco: string;
+  lat: number;
+  lng: number;
+  whatsapp: string;
+  rep: string;
+  tel: string;
+  horario: string;
+}
+
+const mapFiliaisToSedes = (): SedeFrontend[] => {
+  return filiais.map(f => ({
+    id: f.id,
+    nome: f.nome,
+    cat: f.id === 'centro' ? 'Matriz' : 'Filial',
+    bairro: f.bairro,
+    cidade: f.cidade,
+    endereco: f.endereco,
+    lat: f.coordenadas[0],
+    lng: f.coordenadas[1],
+    whatsapp: f.whatsapp,
+    rep: 'Equipe Imperador',
+    tel: `(${f.whatsapp.slice(2,4)}) ${f.whatsapp.slice(6,11)}-${f.whatsapp.slice(11)}`,
     horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 2,
-    name: 'Imperador Norte',
-    cat: 'Filial',
-    bairro: 'Boa Vista',
-    cidade: 'Curitiba',
-    address: 'Av. Paraná, 2340',
-    lat: -25.3833,
-    lng: -49.2333,
-    rep: 'Carlos Silva',
-    whatsapp: '5545998044189',
-    tel: '(41) 99999-0002',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 3,
-    name: 'Imperador Sul',
-    cat: 'Filial',
-    bairro: 'Pinheirinho',
-    cidade: 'Curitiba',
-    address: 'Av. Winston Churchill, 1200',
-    lat: -25.4667,
-    lng: -49.3167,
-    rep: 'Ana Paula',
-    whatsapp: '5545998044190',
-    tel: '(41) 99999-0003',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 4,
-    name: 'Imperador Leste',
-    cat: 'Filial',
-    bairro: 'Boqueirão',
-    cidade: 'Curitiba',
-    address: 'Av. do Boqueirão, 890',
-    lat: -25.4500,
-    lng: -49.2500,
-    rep: 'Marcos Oliveira',
-    whatsapp: '5545998044191',
-    tel: '(41) 99999-0004',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 5,
-    name: 'Imperador Oeste',
-    cat: 'Filial',
-    bairro: 'Portão',
-    cidade: 'Curitiba',
-    address: 'Av. das Américas, 3400',
-    lat: -25.4500,
-    lng: -49.3000,
-    rep: 'Juliana Santos',
-    whatsapp: '5545998044192',
-    tel: '(41) 99999-0005',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 6,
-    name: 'Imperador Cascavel',
-    cat: 'Filial',
-    bairro: 'Centro',
-    cidade: 'Cascavel',
-    address: 'Av. Brasil, 1520',
-    lat: -24.9557,
-    lng: -53.4554,
-    rep: 'Paulo Henrique',
-    whatsapp: '5545998044193',
-    tel: '(45) 99999-0006',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 7,
-    name: 'Imperador Cascavel Oeste',
-    cat: 'Filial',
-    bairro: 'Núcleo Urbano',
-    cidade: 'Cascavel',
-    address: 'Av. Tito Muffo, 850',
-    lat: -24.9713,
-    lng: -53.4918,
-    rep: 'Fernanda Lima',
-    whatsapp: '5545998044194',
-    tel: '(45) 99999-0007',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 8,
-    name: 'Imperador Maringá',
-    cat: 'Filial',
-    bairro: 'Zona 1',
-    cidade: 'Maringá',
-    address: 'Av. XV de Novembro, 890',
-    lat: -23.4203,
-    lng: -51.9336,
-    rep: 'Ricardo Souza',
-    whatsapp: '5545998044195',
-    tel: '(44) 99999-0008',
-    horario: 'Seg-Sex: 8h-18h'
-  },
-  {
-    id: 9,
-    name: 'Imperador Maringá Sul',
-    cat: 'Filial',
-    bairro: 'Jardim Independência',
-    cidade: 'Maringá',
-    address: 'Av. Cerro Azul, 1200',
-    lat: -23.4467,
-    lng: -51.9584,
-    rep: 'Vanessa Costa',
-    whatsapp: '5545998044196',
-    tel: '(44) 99999-0009',
-    horario: 'Seg-Sex: 8h-18h'
-  }
-]
+  }))
+}
 
 function Localizacao() {
-  const [selectedSede, setSelectedSede] = useState<typeof sedes[0] | null>(null)
+  const sedes = mapFiliaisToSedes()
+  const [selectedSede, setSelectedSede] = useState<SedeFrontend | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
-    
-    return () => {}
   }, [])
 
-  const handleSelectSede = (sede: typeof sedes[0]) => {
+  const handleSelectSede = (sede: SedeFrontend) => {
     setSelectedSede(sede)
   }
 
@@ -151,7 +54,7 @@ function Localizacao() {
   }
 
   const filteredSedes = sedes.filter(sede => 
-    sede.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sede.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     sede.bairro.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -283,7 +186,7 @@ function Localizacao() {
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm uppercase" style={{ color: '#0d0a04', fontFamily: 'Oswald, sans-serif' }}>{sede.name}</span>
+                        <span className="text-sm uppercase" style={{ color: '#0d0a04', fontFamily: 'Oswald, sans-serif' }}>{sede.nome}</span>
                         {sede.cat === 'Matriz' && (
                           <span 
                             className="px-2 py-0.5 text-[8px] uppercase font-medium"
@@ -293,7 +196,7 @@ function Localizacao() {
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] mb-1" style={{ color: 'rgba(30,25,15,0.5)', fontFamily: 'Inter, sans-serif' }}>{sede.address}</p>
+                      <p className="text-[11px] mb-1" style={{ color: 'rgba(30,25,15,0.5)', fontFamily: 'Inter, sans-serif' }}>{sede.endereco}</p>
                       <span className="text-[10px] px-2 py-0.5" style={{ backgroundColor: 'rgba(200,146,30,0.1)', color: '#c8921e', fontFamily: 'Inter, sans-serif' }}>
                         {sede.bairro}
                       </span>
@@ -385,7 +288,7 @@ function Localizacao() {
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm" style={{ color: '#0d0a04', fontFamily: 'Oswald, sans-serif' }}>{sede.name}</span>
+                      <span className="text-sm" style={{ color: '#0d0a04', fontFamily: 'Oswald, sans-serif' }}>{sede.nome}</span>
                       {sede.cat === 'Matriz' && (
                         <span className="px-1.5 py-0.5 text-[8px] uppercase font-medium rounded" style={{ backgroundColor: '#c8921e', color: '#fff', fontFamily: 'Oswald, sans-serif' }}>
                           Matriz
@@ -440,7 +343,7 @@ function Localizacao() {
                           {selectedSede.cat}
                         </span>
                         <h3 className="text-xl sm:text-2xl lg:text-3xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>
-                          {selectedSede.name}
+                          {selectedSede.nome}
                         </h3>
                       </div>
                       
@@ -453,7 +356,7 @@ function Localizacao() {
                           </div>
                           <div>
                             <span className="text-[9px] sm:text-[10px] uppercase block" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Endereço</span>
-                            <span className="text-[10px] sm:text-sm" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>{selectedSede.address}</span>
+                            <span className="text-[10px] sm:text-sm" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>{selectedSede.endereco}</span>
                           </div>
                         </div>
                         
