@@ -1,428 +1,355 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { filiais, whatsappGeral } from '../data/filiais'
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-  return isMobile
-}
-
-function usePrefersReducedMotion() {
-  const [prefersReduced, setPrefersReduced] = useState(false)
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReduced(mediaQuery.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
-  return prefersReduced
-}
 
 function Contato() {
-  const [hoveredContact, setHoveredContact] = useState<string | null>(null)
-  const isMobile = useIsMobile()
-  const prefersReduced = usePrefersReducedMotion()
-  const shouldAnimate = !isMobile && !prefersReduced
-  
-  const abrirWhatsApp = (mensagem?: string) => {
-    const texto = mensagem ? encodeURIComponent(mensagem) : ''
-    window.open(`https://wa.me/55${whatsappGeral}?text=${texto}`, '_blank')
+  const [formData, setFormData] = useState({
+    nome: '',
+    telefone: '',
+    assunto: '',
+    mensagem: ''
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const abrirWhatsAppFilial = (filialId: string) => {
-    const filial = filiais.find(f => f.id === filialId)
-    if (!filial) return
-    const mensagem = encodeURIComponent('Olá! Gostaria de mais informações.')
-    window.open(`https://wa.me/55${filial.whatsapp}?text=${mensagem}`, '_blank')
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '')
+    if (value.length > 11) value = value.slice(0, 11)
+    if (value.length > 6) {
+      value = `(${value.slice(0, 2)}) ${value.slice(2, 6)}-${value.slice(6)}`
+    } else if (value.length > 2) {
+      value = `(${value.slice(0, 2)}) ${value.slice(2)}`
+    } else if (value.length > 0) {
+      value = `(${value}`
+    }
+    setFormData({ ...formData, telefone: value })
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    const assuntoText = formData.assunto === 'vendas' ? 'Vendas' 
+                       : formData.assunto === 'suporte' ? 'Suporte' 
+                       : formData.assunto === 'parceria' ? 'Parceria' 
+                       : 'Outros'
+    
+    const message = `Olá! Vim pelo site do Imperador do Chopp.%0A%0A*Nome:* ${formData.nome}%0A*Telefone:* ${formData.telefone}%0A*Assunto:* ${assuntoText}%0A%0A*Mensagem:*%0A${formData.mensagem}`
+    
+    window.open(`https://wa.me/5541999999999?text=${message}`, '_blank')
+    
+    setFormData({ nome: '', telefone: '', assunto: '', mensagem: '' })
   }
 
   return (
     <div className="pt-20">
-      {/* Hero Section - Muito mais impactante */}
-      <section className="relative bg-primary overflow-hidden min-h-[70vh] flex items-center">
+      {/* Section 1: Hero - DARK */}
+      <section className="relative py-6 overflow-hidden" style={{ backgroundColor: '#0d0a04' }}>
         <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[400px] h-[400px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.12) 0%, transparent 60%)' }}></div>
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full md:blur-[100px] blur-[50px]"
-            style={{ background: 'radial-gradient(circle, #CA8A04 0%, transparent 70%)' }}
-            animate={shouldAnimate ? { scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] } : { opacity: 0.2 }}
-            transition={shouldAnimate ? { duration: 6, repeat: Infinity } : { duration: 0 }}
+            className="absolute top-0 right-1/4 w-[200px] h-[200px]"
+            style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}
+            animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
+            transition={{ duration: 4, repeat: Infinity }}
           />
-          <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full md:blur-[80px] blur-[40px]"
-            style={{ background: 'radial-gradient(circle, #EAB308 0%, transparent 70%)' }}
-            animate={shouldAnimate ? { scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] } : { opacity: 0.15 }}
-            transition={shouldAnimate ? { duration: 5, repeat: Infinity } : { duration: 0 }}
-          />
+          <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(200,146,30,0.25), transparent)' }}></div>
+          <div className="absolute top-1/2 left-[60px] w-[80px] h-px" style={{ background: 'linear-gradient(90deg, rgba(200,146,30,0.15), transparent)' }}></div>
+          <div className="absolute top-1/2 right-[60px] w-[80px] h-px" style={{ background: 'linear-gradient(270deg, rgba(200,146,30,0.15), transparent)' }}></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8"
-          >
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <span className="text-white text-sm font-medium">Resposta em menos de 5 minutos</span>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight"
-          >
-            Vamos conversar?
-            <br />
-            <span className="text-gradient-gold">É rapidinho!</span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mt-8 text-xl sm:text-2xl text-gray-300 max-w-2xl mx-auto"
-          >
-            Seja para distribuição de chopp, eventos ou parcerias,
-            <br className="hidden sm:block" /> estamos prontos para atender você.
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-12 flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <motion.button
-              onClick={() => abrirWhatsApp('Olá! Vim pelo site e gostaria de mais informações sobre os serviços da Imperador do Chopp.')}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-10 py-5 bg-green-500 text-white rounded-2xl font-bold text-lg shadow-2xl shadow-green-500/30 flex items-center justify-center gap-3"
-            >
-              <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.892 3.181.001 6.167 1.24 8.412 3.488 2.245 2.248 3.865 5.246 3.865 8.528 0 6.446-5.278 11.772-11.717 11.772-1.667 0-3.234-.391-4.652-1.126l-6.17 1.654z"/>
-              </svg>
-              Falar no WhatsApp Agora
-            </motion.button>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
+              <div className="h-px w-8" style={{ backgroundColor: '#c8921e' }}></div>
+              <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Contato</span>
+            </motion.div>
             
-            <motion.a
-              href="#opcoes"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-10 py-5 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all flex items-center justify-center gap-3"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              Ver Outras Opções
-            </motion.a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Estatísticas de Confiança */}
-      <section className="py-12 bg-white relative -mt-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-3xl shadow-2xl shadow-gray-200/50 grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100"
-          >
-            {[
-              { numero: '3', label: 'Filiais no Paraná' },
-              { numero: '100%', label: 'Qualidade Garantida' },
-              { numero: '5min', label: 'Tempo de Resposta' },
-              { numero: '24h', label: 'Atendimento' },
-            ].map((stat, index) => (
-              <div key={index} className="p-6 sm:p-8 text-center">
-                <motion.div 
-                  className="text-3xl sm:text-4xl font-bold text-gradient-gold"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, type: 'spring' }}
-                >
-                  {stat.numero}
-                </motion.div>
-                <p className="mt-2 text-sm sm:text-base text-gray-600">{stat.label}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Principais Formas de Contato - Cards grandes e chamativos */}
-      <section id="opcoes" className="py-24 bg-gradient-to-b from-white to-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary">
-              Como podemos te ajudar?
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Escolha a melhor forma de entrar em contato
-            </p>
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="text-4xl sm:text-5xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+              <span style={{ color: '#e8e0d0' }}>Fale</span>
+              <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}> Conosco</span>
+            </motion.h1>
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Card WhatsApp - Maior e mais chamativo */}
-            <motion.div
+        </div>
+      </section>
+
+      {/* Section 2: Main Contact - LIGHT */}
+      <section className="py-12" style={{ backgroundColor: '#faf8f4' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+            {/* Formulário - Envia para WhatsApp */}
+            <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              onMouseEnter={() => setHoveredContact('whatsapp')}
-              onMouseLeave={() => setHoveredContact(null)}
-              className={`relative p-8 sm:p-10 rounded-3xl transition-all duration-500 cursor-pointer overflow-hidden ${
-                hoveredContact === 'whatsapp' ? 'bg-green-500 scale-[1.02]' : 'bg-green-500/10 border-2 border-green-500/20'
-              }`}
+              transition={{ duration: 0.5 }}
+              className="p-8 rounded" style={{ backgroundColor: '#fff', boxShadow: '0 20px 60px rgba(0,0,0,0.08)' }}
             >
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-green-400/20 rounded-full blur-3xl" />
-              <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-green-400/10 rounded-full blur-2xl" />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-px w-8" style={{ backgroundColor: '#c8921e' }}></div>
+                <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Formulário</span>
+              </div>
               
-              <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <motion.div 
-                  animate={{ scale: hoveredContact === 'whatsapp' ? 1.1 : 1 }}
-                  className={`w-24 h-24 rounded-2xl flex items-center justify-center transition-colors duration-300 ${
-                    hoveredContact === 'whatsapp' ? 'bg-white/20' : 'bg-green-500'
-                  }`}
-                >
-                  <svg className={`w-12 h-12 transition-colors duration-300 ${hoveredContact === 'whatsapp' ? 'text-white' : 'text-white'}`} fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.892 3.181.001 6.167 1.24 8.412 3.488 2.245 2.248 3.865 5.246 3.865 8.528 0 6.446-5.278 11.772-11.717 11.772-1.667 0-3.234-.391-4.652-1.126l-6.17 1.654z"/>
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-14 h-14 flex items-center justify-center rounded-full flex-shrink-0" style={{ background: 'linear-gradient(135deg, rgba(37,211,102,0.2) 0%, rgba(37,211,102,0.1) 100%)' }}>
+                  <svg className="w-6 h-6" fill="#25D366" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                   </svg>
-                </motion.div>
-                
-                <div className="flex-1">
-                  <h3 className={`text-2xl sm:text-3xl font-bold transition-colors duration-300 ${hoveredContact === 'whatsapp' ? 'text-white' : 'text-primary'}`}>
-                    WhatsApp
-                  </h3>
-                  <p className={`mt-2 text-base transition-colors duration-300 ${hoveredContact === 'whatsapp' ? 'text-white/80' : 'text-gray-600'}`}>
-                    Resposta imediata, simples e prática. 
-                    <br />Clique e já seja atendido!
+                </div>
+                <div>
+                  <h2 className="text-2xl font-normal mb-1" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Envie pelo WhatsApp</h2>
+                  <p className="text-sm" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                    Preencha os dados e clique em enviar para iniciar uma conversa
                   </p>
-                  
-                  <motion.button
-                    onClick={() => abrirWhatsApp()}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`mt-6 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
-                      hoveredContact === 'whatsapp' 
-                        ? 'bg-white text-green-600 shadow-xl hover:shadow-2xl' 
-                        : 'bg-green-500 text-white hover:bg-green-600'
-                    }`}
-                  >
-                    Iniciar Conversa →
-                  </motion.button>
                 </div>
               </div>
-            </motion.div>
-
-            {/* Card Orçamento */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              onMouseEnter={() => setHoveredContact('orcamento')}
-              onMouseLeave={() => setHoveredContact(null)}
-              className={`relative p-8 sm:p-10 rounded-3xl transition-all duration-500 cursor-pointer overflow-hidden ${
-                hoveredContact === 'orcamento' ? 'bg-cta scale-[1.02]' : 'bg-cta/10 border-2 border-cta/20'
-              }`}
-            >
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-400/20 rounded-full blur-3xl" />
-              <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl" />
               
-              <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <motion.div 
-                  animate={{ scale: hoveredContact === 'orcamento' ? 1.1 : 1 }}
-                  className={`w-24 h-24 rounded-2xl flex items-center justify-center transition-colors duration-300 ${
-                    hoveredContact === 'orcamento' ? 'bg-white/20' : 'bg-cta'
-                  }`}
-                >
-                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                  </svg>
-                </motion.div>
-                
-                <div className="flex-1">
-                  <h3 className={`text-2xl sm:text-3xl font-bold transition-colors duration-300 ${hoveredContact === 'orcamento' ? 'text-white' : 'text-primary'}`}>
-                    Solicitar Orçamento
-                  </h3>
-                  <p className={`mt-2 text-base transition-colors duration-300 ${hoveredContact === 'orcamento' ? 'text-white/80' : 'text-gray-600'}`}>
-                    Precisa de chopp para evento ou festa?
-                    <br />Solicite um orçamento personalizado.
-                  </p>
-                  
-                  <motion.a
-                    href="/venda"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`mt-6 inline-flex items-center px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
-                      hoveredContact === 'orcamento' 
-                        ? 'bg-white text-cta shadow-xl hover:shadow-2xl' 
-                        : 'bg-cta text-white hover:bg-cta-dark'
-                    }`}
-                  >
-                    Fazer Solicitação →
-                  </motion.a>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="relative">
+                    <label className="text-xs uppercase tracking-wider mb-2 block" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Oswald, sans-serif' }}>Nome</label>
+                    <input
+                      type="text"
+                      name="nome"
+                      value={formData.nome}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 outline-none transition-all text-base rounded"
+                      style={{ 
+                        backgroundColor: 'rgba(200,146,30,0.03)', 
+                        border: '2px solid rgba(200,146,30,0.15)',
+                        fontFamily: 'Inter, sans-serif'
+                      }}
+                      onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(200,146,30,0.15)'}
+                      onBlur={(e) => e.target.style.boxShadow = 'none'}
+                    />
+                  </div>
+                  <div className="relative">
+                    <label className="text-xs uppercase tracking-wider mb-2 block" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Oswald, sans-serif' }}>Telefone</label>
+                    <input
+                      type="tel"
+                      name="telefone"
+                      value={formData.telefone}
+                      onChange={handlePhoneChange}
+                      required
+                      placeholder="(00) 00000-0000"
+                      className="w-full px-4 py-3 outline-none transition-all text-base rounded"
+                      style={{ 
+                        backgroundColor: 'rgba(200,146,30,0.03)', 
+                        border: '2px solid rgba(200,146,30,0.15)',
+                        fontFamily: 'Inter, sans-serif'
+                      }}
+                      onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(200,146,30,0.15)'}
+                      onBlur={(e) => e.target.style.boxShadow = 'none'}
+                    />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Filiais com WhatsApp direto */}
-      <section className="py-24 bg-primary">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white">
-              Falar com <span className="text-gradient-gold">filial específica</span>
-            </h2>
-            <p className="mt-4 text-lg text-gray-300">
-              Cada filial tem seu WhatsApp para atender você mais rápido
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {filiais.map((filial, index) => (
-              <motion.div
-                key={filial.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/15 transition-all duration-300 group"
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 rounded-xl gradient-gold flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">{filial.cidade}</h3>
-                    <p className="text-gray-400">{filial.estado}</p>
-                  </div>
+                
+                <div>
+                  <label className="text-xs uppercase tracking-wider mb-2 block" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Oswald, sans-serif' }}>Assunto</label>
+                  <select
+                    name="assunto"
+                    value={formData.assunto}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 outline-none transition-all text-base rounded"
+                    style={{ 
+                      backgroundColor: 'rgba(200,146,30,0.03)', 
+                      border: '2px solid rgba(200,146,30,0.15)',
+                      fontFamily: 'Inter, sans-serif'
+                    }}
+                    onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(200,146,30,0.15)'}
+                    onBlur={(e) => e.target.style.boxShadow = 'none'}
+                  >
+                    <option value="">Selecione um assunto</option>
+                    <option value="vendas">Vendas</option>
+                    <option value="suporte">Suporte</option>
+                    <option value="parceria">Parceria</option>
+                    <option value="outros">Outros</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="text-xs uppercase tracking-wider mb-2 block" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Oswald, sans-serif' }}>Mensagem</label>
+                  <textarea
+                    name="mensagem"
+                    value={formData.mensagem}
+                    onChange={handleChange}
+                    required
+                    rows={4}
+                    className="w-full px-4 py-3 outline-none transition-all resize-none text-base rounded"
+                    style={{ 
+                      backgroundColor: 'rgba(200,146,30,0.03)', 
+                      border: '2px solid rgba(200,146,30,0.15)',
+                      fontFamily: 'Inter, sans-serif'
+                    }}
+                    onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(200,146,30,0.15)'}
+                    onBlur={(e) => e.target.style.boxShadow = 'none'}
+                  />
                 </div>
                 
                 <motion.button
-                  onClick={() => abrirWhatsAppFilial(filial.id)}
+                  type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors"
+                  className="px-8 py-4 text-base uppercase w-full md:w-auto rounded"
+                  style={{ 
+                    backgroundColor: '#25D366',
+                    color: '#fff',
+                    fontFamily: 'Oswald, sans-serif',
+                    boxShadow: '0 4px 16px rgba(37,211,102,0.25)'
+                  }}
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.892 3.181.001 6.167 1.24 8.412 3.488 2.245 2.248 3.865 5.246 3.865 8.528 0 6.446-5.278 11.772-11.717 11.772-1.667 0-3.234-.391-4.652-1.126l-6.17 1.654z"/>
-                  </svg>
-                  Falar com {filial.cidade}
-                </motion.button>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Depoimentos / Prova Social */}
-      <section className="py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary">
-              O que dizem nossos clientes
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                texto: "Atendimento excepcional! Fiz a encomenda para o casamento da minha filha e ficou perfeito. Recomendo demais!",
-                autor: "Carlos Silva",
-                papel: "Cliente - Cascavel"
-              },
-              {
-                texto: "Somos clientes há mais de 3 anos. Qualidade nunca falha e o atendimento é sempre rápido.",
-                autor: "Maria Oliveira",
-                papel: "Proprietária de Restaurante - Toledo"
-              },
-              {
-                texto: "O chopp mais fresco que já experimentei! Vendas aumentaram desde que troquei para a Imperador.",
-                autor: "Roberto Mendes",
-                papel: "Bar - Maringá"
-              }
-            ].map((depoimento, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-cta" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  <span className="flex items-center justify-center gap-3">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
-                  ))}
-                </div>
-                <p className="text-gray-600 italic mb-6">"{depoimento.texto}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full gradient-gold flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">{depoimento.autor[0]}</span>
+                    Enviar pelo WhatsApp
+                  </span>
+                </motion.button>
+              </form>
+            </motion.div>
+
+            {/* Info Lateral */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="space-y-4"
+            >
+              {/* Card Telefone */}
+              <div className="p-6 relative overflow-hidden rounded" style={{ 
+                backgroundColor: 'rgba(255,255,255,0.95)', 
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.06)'
+              }}>
+                <div className="absolute top-0 right-0 w-6 h-6" style={{ background: 'linear-gradient(135deg, transparent 50%, #c8921e 50%)' }}></div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full" style={{ background: 'linear-gradient(135deg, rgba(200,146,30,0.2) 0%, rgba(200,146,30,0.08) 100%)' }}>
+                    <svg className="w-5 h-5" fill="none" stroke="#c8921e" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
                   </div>
                   <div>
-                    <p className="font-semibold text-primary">{depoimento.autor}</p>
-                    <p className="text-sm text-gray-500">{depoimento.papel}</p>
+                    <span className="text-[9px] uppercase tracking-wider block mb-0.5" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Telefone</span>
+                    <span className="text-base" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>(41) 3333-4444</span>
                   </div>
                 </div>
-              </motion.div>
-            ))}
+                <motion.a
+                  href="tel:+554133334444"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="mt-4 flex items-center justify-center gap-2 px-4 py-2 text-sm uppercase w-full rounded"
+                  style={{ 
+                    backgroundColor: 'transparent',
+                    border: '1px solid rgba(200,146,30,0.3)',
+                    color: '#c8921e',
+                    fontFamily: 'Oswald, sans-serif'
+                  }}
+                >
+                  Ligar Agora
+                </motion.a>
+              </div>
+
+              {/* Card Endereço */}
+              <div className="p-6 relative overflow-hidden rounded" style={{ 
+                backgroundColor: 'rgba(255,255,255,0.95)', 
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.06)'
+              }}>
+                <div className="absolute top-0 right-0 w-6 h-6" style={{ background: 'linear-gradient(135deg, transparent 50%, #c8921e 50%)' }}></div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full" style={{ background: 'linear-gradient(135deg, rgba(200,146,30,0.2) 0%, rgba(200,146,30,0.08) 100%)' }}>
+                    <svg className="w-5 h-5" fill="none" stroke="#c8921e" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-[9px] uppercase tracking-wider block mb-0.5" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Endereço</span>
+                    <span className="text-sm" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>
+                      Av. Vicente Machado, 500<br/>
+                      Centro - Curitiba/PR
+                    </span>
+                  </div>
+                </div>
+                <motion.a
+                  href="/localizacao"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="mt-4 flex items-center justify-center gap-2 px-4 py-2 text-sm uppercase w-full rounded"
+                  style={{ 
+                    backgroundColor: 'transparent',
+                    border: '1px solid rgba(200,146,30,0.3)',
+                    color: '#c8921e',
+                    fontFamily: 'Oswald, sans-serif'
+                  }}
+                >
+                  Ver no Mapa
+                </motion.a>
+              </div>
+
+              {/* Card Horário */}
+              <div className="p-6 relative overflow-hidden rounded" style={{ 
+                backgroundColor: 'rgba(255,255,255,0.95)', 
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.06)'
+              }}>
+                <div className="absolute top-0 right-0 w-6 h-6" style={{ background: 'linear-gradient(135deg, transparent 50%, #c8921e 50%)' }}></div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full" style={{ background: 'linear-gradient(135deg, rgba(200,146,30,0.2) 0%, rgba(200,146,30,0.08) 100%)' }}>
+                    <svg className="w-5 h-5" fill="none" stroke="#c8921e" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-[9px] uppercase tracking-wider block mb-0.5" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Horário</span>
+                    <span className="text-sm" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>Seg-Sex: 8h às 18h</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative p-12 sm:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-gray-900 overflow-hidden"
+      {/* Section 3: CTA WhatsApp - GOLD */}
+      <section className="relative py-10 overflow-hidden rounded" style={{ background: 'linear-gradient(135deg, #c8921e 0%, #e0a820 50%, #b87a10 100%)' }}>
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 text-[80px] font-normal leading-none pointer-events-none select-none" style={{ fontFamily: 'Bebas Neue, sans-serif', color: 'rgba(0,0,0,0.05)' }}>WHATSAPP</div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+        >
+          <h2 className="text-3xl font-normal mb-2" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Prefere falar direto?</h2>
+          <p className="text-base mb-6" style={{ color: 'rgba(13,10,4,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+            Clique abaixo e inicie uma conversa pelo WhatsApp
+          </p>
+          
+          <motion.a
+            href="https://wa.me/5541999999999?text=Olá! Gostaria de mais informações sobre o Imperador do Chopp."
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            animate={{ boxShadow: ['0 8px 32px rgba(0,0,0,0.2)', '0 12px 40px rgba(0,0,0,0.3)', '0 8px 32px rgba(0,0,0,0.2)'] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="inline-flex items-center gap-3 px-8 py-4 text-base uppercase rounded"
+            style={{ 
+              backgroundColor: '#0d0a04',
+              color: '#fff',
+              fontFamily: 'Oswald, sans-serif'
+            }}
           >
-            <div className="absolute inset-0">
-              <div className="absolute top-0 right-0 w-60 h-60 bg-cta/20 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-amber-400/10 rounded-full blur-2xl" />
-            </div>
-            
-            <div className="relative z-10">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-                Ainda tem dúvidas?
-              </h2>
-              <p className="text-xl text-gray-300 mb-10">
-                Nossa equipe está pronta para te ajudar!
-              </p>
-              
-              <motion.button
-                onClick={() => abrirWhatsApp('Olá! Ainda tenho algumas dúvidas sobre os serviços da Imperador do Chopp.')}
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-12 py-5 bg-green-500 text-white rounded-2xl font-bold text-xl shadow-2xl shadow-green-500/30 inline-flex items-center gap-4"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.892 3.181.001 6.167 1.24 8.412 3.488 2.245 2.248 3.865 5.246 3.865 8.528 0 6.446-5.278 11.772-11.717 11.772-1.667 0-3.234-.391-4.652-1.126l-6.17 1.654z"/>
-                </svg>
-                Chamar no WhatsApp
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Conversar pelo WhatsApp
+          </motion.a>
+        </motion.div>
       </section>
     </div>
   )

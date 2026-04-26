@@ -476,13 +476,16 @@ function Home() {
         </div>
       </section>
 
-      {/* Become Distributor Section */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: '#4a3828', minHeight: '380px' }}>
+{/* Become Distributor Section */}
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #2a1f14 0%, #1a1610 50%, #2a1f14 100%)' }}>
+        {/* Background glow effect */}
+        <div className="absolute inset-0 pointer-events-none hidden lg:block" style={{ backgroundImage: 'radial-gradient(circle at 70% 50%, rgba(200,146,30,0.08) 0%, transparent 50%)' }}></div>
+        
         {/* Diagonal contrast on right side */}
         <div 
-          className="absolute top-0 right-0 h-full"
+          className="absolute top-0 right-0 h-full hidden lg:block"
           style={{ 
-            backgroundColor: '#1a1610',
+            backgroundColor: '#0d0a04',
             clipPath: 'polygon(12% 0, 100% 0, 100% 100%, 0% 100%)',
             width: '50%',
           }}
@@ -490,14 +493,30 @@ function Home() {
         
         {/* Metallic edge lines */}
         <div 
-          className="absolute top-0 h-full w-px"
+          className="absolute top-0 h-full w-px hidden lg:block"
           style={{ 
             left: '12%',
             background: 'linear-gradient(to bottom, #c8921e, rgba(200,146,30,0.7), rgba(200,146,30,0.3))',
           }}
         />
         <div 
-          className="absolute top-0 h-full w-px"
+          className="absolute top-0 h-full w-px hidden lg:block"
+          style={{ 
+            left: 'calc(12% + 3px)',
+            background: 'linear-gradient(to bottom, rgba(200,146,30,0.3), rgba(200,146,30,0.15), transparent)',
+          }}
+        />
+        
+        {/* Metallic edge lines - hidden on mobile */}
+        <div 
+          className="absolute top-0 h-full w-px hidden lg:block"
+          style={{ 
+            left: '12%',
+            background: 'linear-gradient(to bottom, #c8921e, rgba(200,146,30,0.7), rgba(200,146,30,0.3))',
+          }}
+        />
+        <div 
+          className="absolute top-0 h-full w-px hidden lg:block"
           style={{ 
             left: 'calc(12% + 3px)',
             background: 'linear-gradient(to bottom, rgba(200,146,30,0.3), rgba(200,146,30,0.15), transparent)',
@@ -629,9 +648,9 @@ function Home() {
                   {/* Body */}
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="flex items-center justify-center p-4 transition-all duration-300 hover:bg-[#2a1f14]" style={{ backgroundColor: '#2a1f14' }}>
-                      <motion.span 
-                        className="text-2xl font-normal writing-vertical"
-                        style={{ 
+<motion.span 
+                      className="hidden lg:block"
+                      style={{ 
                           fontFamily: 'Bebas Neue, sans-serif', 
                           color: 'rgba(200,185,145,0.5)',
                           writingMode: 'vertical-rl',
@@ -784,166 +803,122 @@ function Home() {
         </div>
       </section>
 
-{/* Sobre Section - Dark Gold Theme */}
-      <section className="py-16 lg:py-20 relative overflow-hidden" style={{ backgroundColor: '#2a1f14' }}>
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)' }}></div>
-        </div>
+{/* Sobre Section - Modern Dark Gold */}
+      <section className="py-20 lg:py-24 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #2a1f14 0%, #1f1810 50%, #2a1f14 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(ellipse at 30% 20%, rgba(200,146,30,0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(200,146,30,0.05) 0%, transparent 50%)' }}></div>
         
-        <div className="px-6 lg:px-12 max-w-7xl mx-auto relative">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
           {/* Header */}
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
             <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-px" style={{ width: '40px', backgroundColor: '#c8921e' }}></div>
+              <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
               <span className="text-xs font-medium uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>
                 Nossa história
               </span>
-              <div className="h-px" style={{ width: '40px', backgroundColor: '#c8921e' }}></div>
+              <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
             </div>
             <h2 className="text-5xl lg:text-6xl font-normal leading-none mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
               <span style={{ color: '#e8e0d0' }}>Sobre o </span>
               <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Imperador</span>
             </h2>
-            <p className="text-sm mx-auto leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300, maxWidth: '460px' }}>
-              Uma jornada de tradição e excelência no mundo do chopp premium, construindo memórias inesquecíveis em cada evento.
+            <p className="text-base mx-auto leading-relaxed max-w-2xl" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+             Uma jornada de tradição e excelência no mundo do chopp premium, construindo memórias inesquecíveis em cada evento.
             </p>
+          </motion.div>
+
+          {/* Cards Grid - 2x2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              { icon: '01', title: 'Tradição', subtitle: 'Desde 2014', description: 'Mais de uma década entregando excelência em cada chopeira, mantendo os mais altos padrões de qualidade.', link: 'Nossa história' },
+              { icon: '02', title: 'Qualidade', subtitle: 'Certificada', description: 'Processos rigorosos e ingredientes selecionados garantem o melhor chopp em cada evento.', link: 'Ver detalhes' },
+              { icon: '03', title: 'Atendimento', subtitle: 'Personalizado', description: 'Equipe treinada para oferecer experiência única, desde a montagem até o último gole.', link: 'Saiba mais' },
+              { icon: '04', title: 'Compromisso', subtitle: 'Pontualidade', description: 'Entrega no prazo e temperatura perfeita. Seu evento merece o melhor chopp.', link: 'Saiba mais' },
+            ].map((card, index) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -4 }}
+                className="group relative p-8 lg:p-10 cursor-pointer overflow-hidden"
+                style={{ backgroundColor: '#3d2e1a', border: '1px solid rgba(200,146,30,0.15)' }}
+              >
+                {/* Hover glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(200,146,30,0.1) 0%, transparent 60%)' }}></div>
+                
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-8 h-8 border-l border-t border-[#c8921e] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ borderColor: 'rgba(200,146,30,0.4)' }}></div>
+                <div className="absolute top-0 right-0 w-8 h-8 border-r border-t border-[#c8921e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75" style={{ borderColor: 'rgba(200,146,30,0.4)' }}></div>
+                <div className="absolute bottom-0 left-0 w-8 h-8 border-l border-b border-[#c8921e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150" style={{ borderColor: 'rgba(200,146,30,0.4)' }}></div>
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-[#c8921e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200" style={{ borderColor: 'rgba(200,146,30,0.4)' }}></div>
+
+                <div className="relative">
+                  {/* Icon/Number */}
+                  <motion.div 
+                    className="w-14 h-14 rounded-lg flex items-center justify-center mb-6"
+                    style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}
+                    whileHover={{ rotate: 5, scale: 1.05 }}
+                    transition={{ type: 'spring', stiffness: 400 }}
+                  >
+                    <span className="text-2xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#c8921e' }}>{card.icon}</span>
+                  </motion.div>
+
+                  {/* Subtitle */}
+                  <span className="text-xs uppercase block mb-2" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{card.subtitle}</span>
+                  
+                  {/* Title */}
+                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#e8e0d0' }}>
+                    {card.title}
+                  </h3>
+                  
+                  {/* Description */}
+                  <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                    {card.description}
+                  </p>
+                  
+                  {/* Link */}
+                  <a 
+                    href="/sobre" 
+                    className="inline-flex items-center gap-2 text-xs uppercase group/link"
+                    style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
+                  >
+                    <span>{card.link}</span>
+                    <svg className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          {/* Grid Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[3px]" style={{ backgroundColor: '#c8921e', padding: '1.5px' }}>
-            {/* Card 1 - Top Left: Tradição & Qualidade */}
-            <div className="relative overflow-hidden">
-              <div className="p-8 lg:p-10 h-full flex flex-col justify-between" style={{ backgroundColor: '#c8921e', minHeight: '280px' }}>
-                <div>
-                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(42,31,20,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Diferencial</span>
-                  <h3 className="text-3xl lg:text-4xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#2a1f14' }}>Tradição &amp; Qualidade</h3>
-                  <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(42,31,20,0.75)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Desde 2014 entregue excelência em cada chopeira, com ingredientes selecionados e processos rigorosos de qualidade.</p>
-                </div>
-                <a href="/sobre" className="inline-flex items-center gap-2 text-xs uppercase" style={{ color: '#2a1f14', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #2a1f14', paddingBottom: '2px' }}>
-                  Nossa história
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
+          {/* Stats Row */}
+          <motion.div 
+            className="mt-16 pt-12 flex flex-wrap justify-center gap-8 lg:gap-16"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            style={{ borderTop: '1px solid rgba(200,146,30,0.15)' }}
+          >
+            {[
+              { number: '10+', label: 'Anos' },
+              { number: '5000+', label: 'Eventos' },
+              { number: '4°C', label: 'Temperatura' },
+              { number: '50+', label: 'Parcerias' },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-4xl lg:text-5xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#c8921e' }}>{stat.number}</div>
+                <div className="text-xs uppercase mt-1" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>{stat.label}</div>
               </div>
-              <div className="absolute bottom-0 right-0 w-0 h-0" style={{ borderLeft: '30px solid transparent', borderBottom: '30px solid #2a1f14' }}></div>
-            </div>
-
-            {/* Card 2 - Right Tall: Nossa Gente */}
-            <div className="relative overflow-hidden lg:row-span-2" style={{ minHeight: '400px' }}>
-              <img 
-                src="/produto_teste.png" 
-                alt="Nossa equipe" 
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ transform: 'scale(1)', transition: 'transform 0.5s ease' }}
-              />
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(42,31,20,0.95) 0%, rgba(42,31,20,0.4) 50%, transparent 100%)' }}></div>
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <span className="text-xs uppercase block mb-2" style={{ color: 'rgba(200,185,145,0.8)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Equipe</span>
-                <h3 className="text-3xl lg:text-4xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                  <span style={{ color: '#e8e0d0' }}>Nossa </span>
-                  <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Gente</span>
-                </h3>
-                <p className="text-sm leading-relaxed mb-4 max-w-sm" style={{ color: 'rgba(200,185,145,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Profissionais treinados para oferecer o melhor atendimento, tornando cada momento único e especial.</p>
-                <a href="/sobre" className="inline-flex items-center gap-2 text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}>
-                  Saiba mais
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Card 3 - Bottom Left: Qualidade Garantida */}
-            <motion.div 
-              className="relative overflow-hidden group"
-              style={{ backgroundColor: '#3d2e1a', border: '1px solid rgba(200,150,30,0.15)' }}
-              whileHover={{ backgroundColor: '#4a3828', borderColor: 'rgba(200,146,30,0.3)' }}
-            >
-              <div className="p-8 lg:p-10 h-full flex flex-col justify-between transition-all duration-300" style={{ minHeight: '220px' }}>
-                <div>
-                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Certificação</span>
-                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                    <span style={{ color: '#e8c040' }}>Qualidade </span>
-                    <span style={{ color: '#e8e0d0' }}>Garantida</span>
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Processos certificados e inspeções rigorosas em cada etapa.</p>
-                </div>
-                <motion.a 
-                  href="/sobre" 
-                  className="inline-flex items-center gap-2 text-xs uppercase"
-                  style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
-                  whileHover={{ x: 4 }}
-                >
-                  Ver detalhes
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </motion.a>
-              </div>
-              <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-10 group-hover:h-10" style={{ borderBottom: '2px solid rgba(200,150,30,0.35)', borderRight: '2px solid rgba(200,150,30,0.35)' }}></div>
-            </motion.div>
-
-            {/* Row 2 - Card 4: Compromisso & Pontualidade */}
-            <motion.div 
-              className="relative overflow-hidden group"
-              style={{ backgroundColor: '#4a3828', border: '1px solid rgba(200,150,30,0.12)' }}
-              whileHover={{ backgroundColor: '#3d2e1a', borderColor: 'rgba(200,146,30,0.3)' }}
-            >
-              <div className="p-8 lg:p-10 h-full flex flex-col justify-between transition-all duration-300" style={{ minHeight: '200px' }}>
-                <div>
-                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Atendimento</span>
-                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                    <span style={{ color: '#e8e0d0' }}>Compromisso </span>
-                    <span style={{ color: '#d4a820' }}>&amp; Pontualidade</span>
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Entrega no prazo e temperatura perfeita para seu evento.</p>
-                </div>
-                <motion.a 
-                  href="/sobre" 
-                  className="inline-flex items-center gap-2 text-xs uppercase"
-                  style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
-                  whileHover={{ x: 4 }}
-                >
-                  Saiba mais
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </motion.a>
-              </div>
-              <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-10 group-hover:h-10" style={{ borderBottom: '2px solid rgba(200,150,30,0.35)', borderRight: '2px solid rgba(200,150,30,0.35)' }}></div>
-            </motion.div>
-
-            {/* Card 5: Tradição Regional */}
-            <motion.div 
-              className="relative overflow-hidden group"
-              style={{ backgroundColor: '#3d2e1a', border: '1px solid rgba(200,150,30,0.2)' }}
-              whileHover={{ backgroundColor: '#4a3828', borderColor: 'rgba(200,146,30,0.3)' }}
-            >
-              <div className="p-8 lg:p-10 h-full flex flex-col justify-between transition-all duration-300" style={{ minHeight: '200px' }}>
-                <div>
-                  <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(200,146,30,0.7)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Legacy</span>
-                  <h3 className="text-2xl lg:text-3xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                    <span style={{ color: '#d4a820' }}>Tradição </span>
-                    <span style={{ color: '#e8e0d0' }}>Regional</span>
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(200,185,145,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Mais de uma década construindo reputação no Paraná.</p>
-                </div>
-                <motion.a 
-                  href="/sobre" 
-                  className="inline-flex items-center gap-2 text-xs uppercase"
-                  style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', borderBottom: '1px solid #c8921e', paddingBottom: '2px' }}
-                  whileHover={{ x: 4 }}
-                >
-                  Nossa história
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </motion.a>
-              </div>
-              <div className="absolute bottom-0 right-0 w-8 h-8 transition-all duration-300 group-hover:w-10 group-hover:h-10" style={{ borderBottom: '2px solid rgba(200,150,30,0.35)', borderRight: '2px solid rgba(200,150,30,0.35)' }}></div>
-            </motion.div>
-          </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
@@ -980,7 +955,7 @@ function Home() {
               <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>inesquecível?</span>
             </motion.h2>
             <p className="text-lg mb-10 mx-auto leading-relaxed max-w-xl" style={{ color: 'rgba(42,31,20,0.65)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
-              Entre em contato agora e solicite seu orçamento personalizado.
+              Faça seu pedido personalizado.
             </p>
           </FadeIn>
           
@@ -1014,7 +989,7 @@ function Home() {
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
               </motion.div>
-              <span>Solicitar Orçamento</span>
+              <span>Fazer Pedido</span>
             </motion.a>
             <motion.div
               whileHover={{ scale: 1.05 }}

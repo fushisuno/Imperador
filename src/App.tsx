@@ -7,7 +7,7 @@ import Produtos from './pages/Produtos'
 import Sobre from './pages/Sobre'
 import Eventos from './pages/Eventos'
 import Contato from './pages/Contato'
-import Venda from './pages/Venda'
+import Pedido from './pages/Pedido'
 import Localizacao from './pages/Localizacao'
 
 function AnimatedRoutes() {
@@ -21,7 +21,7 @@ function AnimatedRoutes() {
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/eventos" element={<Eventos />} />
         <Route path="/contato" element={<Contato />} />
-        <Route path="/venda" element={<Venda />} />
+        <Route path="/pedido" element={<Pedido />} />
         <Route path="/localizacao" element={<Localizacao />} />
       </Routes>
     </AnimatePresence>
