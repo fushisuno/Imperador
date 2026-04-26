@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -12,34 +12,40 @@ const navLinks = [
 ]
 
 const menuVariants = {
-  closed: {
-    opacity: 0,
-    x: '100%',
-    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const }
-  },
-  open: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const }
-  }
+  closed: { opacity: 0, x: '100%' },
+  open: { opacity: 1, x: 0 }
 }
 
-const linkVariants = {
-  closed: { opacity: 0, x: 50 },
-  open: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: { delay: 0.1 + i * 0.08, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const }
-  })
+const backdropVariants = {
+  closed: { opacity: 0 },
+  open: { opacity: 1 }
 }
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
 
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isMenuOpen])
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const closeMenu = () => setIsMenuOpen(false)
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50">
+      <header className="fixed top-0 left-0 right-0 z-[100]">
         <div className="absolute inset-0" style={{ backgroundColor: 'rgba(13,10,4,0.98)', backdropFilter: 'blur(12px)' }}></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 border-b" style={{ borderColor: 'rgba(200,146,30,0.2)' }}>
@@ -80,29 +86,10 @@ function Header() {
                       {link.label}
                     </span>
                     
-                    {/* Hover background */}
                     <div 
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ 
-                        backgroundColor: 'rgba(200,146,30,0.1)',
-                        border: location.pathname === link.path ? 'none' : '1px solid rgba(200,146,30,0.2)',
-                      }}
-                    ></div>
-                    
-                    {/* Hover underline */}
-                    <div 
-                      className="absolute bottom-0 left-4 right-4 h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-                      style={{ backgroundColor: '#c8921e' }}
-                    ></div>
-                    
-                    {location.pathname === link.path && (
-                      <motion.div
-                        layoutId="activeNav"
-                        className="absolute bottom-0 left-4 right-4 h-0.5"
-                        style={{ backgroundColor: '#c8921e' }}
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      />
-                    )}
+                      style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}
+                    />
                   </Link>
                 </motion.div>
               ))}
@@ -126,63 +113,60 @@ function Header() {
                 Fazer Pedido
               </Link>
 
-              <motion.button
+              <button
                 type="button"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2 relative z-50"
-                whileTap={{ scale: 0.95 }}
+                onClick={toggleMenu}
+                className="lg:hidden p-2"
+                aria-label="Menu"
               >
                 <div className="relative w-6 h-6">
                   <motion.span
                     animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
                     className="absolute left-0 w-6 h-0.5 rounded-full"
                     style={{ top: '2px', backgroundColor: '#c8921e' }}
+                    transition={{ duration: 0.2 }}
                   />
                   <motion.span
                     animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
                     className="absolute left-0 w-6 h-0.5 rounded-full"
                     style={{ top: '10px', backgroundColor: '#c8921e' }}
+                    transition={{ duration: 0.2 }}
                   />
                   <motion.span
                     animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
                     className="absolute left-0 w-6 h-0.5 rounded-full"
                     style={{ top: '18px', backgroundColor: '#c8921e' }}
+                    transition={{ duration: 0.2 }}
                   />
                 </div>
-              </motion.button>
-</div>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 lg:hidden"
-              style={{ backgroundColor: 'rgba(13,10,4,0.8)', backdropFilter: 'blur(4px)' }}
-              onClick={() => setIsMenuOpen(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') setIsMenuOpen(false)
-              }}
-              role="button"
-              tabIndex={0}
-              aria-label="Fechar menu"
-            />
-            <motion.nav
+              variants={backdropVariants}
               initial="closed"
               animate="open"
               exit="closed"
+              className="fixed inset-0 z-[110]"
+              style={{ backgroundColor: 'rgba(13,10,4,0.8)', backdropFilter: 'blur(4px)' }}
+              onClick={closeMenu}
+            />
+            <motion.nav
               variants={menuVariants}
-              className="fixed top-0 right-0 bottom-0 w-[300px] z-50 lg:hidden shadow-2xl"
-              style={{ backgroundColor: '#2a1f14' }}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              className="fixed top-0 right-0 bottom-0 w-[280px] z-[120]"
+              style={{ backgroundColor: '#0d0a04' }}
             >
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-12">
+              <div className="flex flex-col h-full p-6">
+                <div className="flex items-center justify-between mb-10">
                   <img 
                     src="/imperador_logo.png"
                     alt="Imperador do Chopp"
@@ -191,57 +175,47 @@ function Header() {
                   />
                   <button
                     type="button"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={closeMenu}
                     className="p-2 rounded-lg transition-colors duration-300"
                     style={{ color: 'rgba(232,224,208,0.6)' }}
+                    aria-label="Fechar menu"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
-                <div className="space-y-2">
-                  {navLinks.map((link, i) => (
-                    <motion.div
+                
+                <nav className="flex-1 space-y-1">
+                  {navLinks.map((link) => (
+                    <Link
                       key={link.path}
-                      custom={i}
-                      variants={linkVariants}
+                      to={link.path}
+                      onClick={closeMenu}
+                      className="flex items-center gap-3 px-4 py-3 transition-all duration-300"
+                      style={{ 
+                        fontFamily: 'Oswald, sans-serif',
+                        letterSpacing: '1px',
+                        textTransform: 'uppercase',
+                        backgroundColor: location.pathname === link.path ? 'rgba(200,146,30,0.15)' : 'transparent',
+                        color: location.pathname === link.path ? '#c8921e' : 'rgba(232,224,208,0.8)',
+                      }}
                     >
-                      <Link
-                        to={link.path}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block px-4 py-3 font-medium transition-all duration-300 group"
-                        style={{ 
-                          fontFamily: 'Oswald, sans-serif',
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                          backgroundColor: location.pathname === link.path ? '#c8921e' : 'transparent',
-                          color: location.pathname === link.path ? '#2a1f14' : 'rgba(232,224,208,0.8)',
-                          borderRadius: 0,
-                        }}
-                      >
-                        <span className="relative z-10">{link.label}</span>
-                        <div 
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ 
-                            backgroundColor: location.pathname === link.path ? 'transparent' : 'rgba(200,146,30,0.1)',
-                          }}
-                        />
-                      </Link>
-                    </motion.div>
+                      {link.label}
+                    </Link>
                   ))}
-                </div>
-                <div className="mt-8 pt-8" style={{ borderTop: '1px solid rgba(200,146,30,0.2)' }}>
+                </nav>
+                
+                <div className="pt-6" style={{ borderTop: '1px solid rgba(200,146,30,0.2)' }}>
                   <Link
                     to="/pedido"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full px-5 py-3 font-semibold transition-all duration-300 hover:brightness-110"
+                    onClick={closeMenu}
+                    className="flex items-center justify-center gap-2 w-full px-5 py-3 font-semibold transition-all duration-300"
                     style={{ 
                       backgroundColor: '#c8921e',
                       color: '#2a1f14',
                       fontFamily: 'Oswald, sans-serif',
                       letterSpacing: '1px',
-                      clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
                     }}
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

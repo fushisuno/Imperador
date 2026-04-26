@@ -1,5 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
 
 const events = [
   {
@@ -67,6 +78,7 @@ const textEvents = [
 
 function Eventos() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
+  const isMobile = useIsMobile()
 
   const categorias = ['Todos', 'Sociais', 'Corporativos', 'Casamentos', 'Festivais']
 
@@ -74,13 +86,13 @@ function Eventos() {
     <div className="pt-20">
       {/* Section 1: Hero with Mosaic - DARK */}
       <section className="relative min-h-[480px] overflow-hidden" style={{ backgroundColor: '#0d0a04' }}>
-        {/* Particles */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full"
-              style={{
+        {!isMobile && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 rounded-full"
+                style={{
                 backgroundColor: 'rgba(200,146,30,0.6)',
                 left: `${10 + Math.random() * 30}%`,
                 bottom: '-10px'
@@ -96,16 +108,21 @@ function Eventos() {
               }}
             />
           ))}
-        </div>
+          </div>
+        )}
 
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[700px] h-[700px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.12) 0%, transparent 60%)' }}></div>
-          <motion.div 
-            className="absolute top-10 right-1/4 w-[350px] h-[350px]"
-            style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}
-            animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 5, repeat: Infinity }}
-          />
+          {!isMobile ? (
+            <motion.div 
+              className="absolute top-10 right-1/4 w-[350px] h-[350px]"
+              style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}
+              animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 5, repeat: Infinity }}
+            />
+          ) : (
+            <div className="absolute top-10 right-1/4 w-[350px] h-[350px] animate-glow" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}></div>
+          )}
           <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(200,146,30,0.25), transparent)' }}></div>
         </div>
         

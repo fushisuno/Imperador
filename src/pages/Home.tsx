@@ -2,12 +2,17 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FadeIn } from '../components/Animations'
 import { Carousel } from '../components/Carousel'
-import { useState } from 'react'
-import * as React from 'react'
+import { useState, useEffect } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState(false)
-  React.useEffect(() => {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
     window.addEventListener('resize', check)
@@ -17,8 +22,8 @@ function useIsMobile() {
 }
 
 function usePrefersReducedMotion() {
-  const [prefersReduced, setPrefersReduced] = React.useState(false)
-  React.useEffect(() => {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+  useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReduced(mediaQuery.matches)
     const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches)
@@ -27,8 +32,6 @@ function usePrefersReducedMotion() {
   }, [])
   return prefersReduced
 }
-
-
 
 function Home() {
   const isMobile = useIsMobile()
@@ -235,12 +238,12 @@ function Home() {
           </div>
         </div>
 
-        {shouldAnimate && (
+        {shouldAnimate && !isMobile ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:block"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
@@ -256,6 +259,12 @@ function Home() {
               />
             </motion.div>
           </motion.div>
+        ) : shouldAnimate && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:block">
+            <div className="w-8 h-14 rounded-full border-2 flex justify-center pt-3 animate-float" style={{ borderColor: 'rgba(200, 146, 30, 0.4)' }}>
+              <div className="w-1.5 h-3 rounded-full animate-pulse" style={{ backgroundColor: '#c8921e' }}></div>
+            </div>
+          </div>
         )}
       </section>
 

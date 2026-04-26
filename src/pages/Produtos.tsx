@@ -1,5 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
 
 const products = [
   {
@@ -153,6 +164,7 @@ const equipment = [
 
 function Produtos() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos')
+  const isMobile = useIsMobile()
 
   const categorias = ['Todos', 'Chopps', 'Barris', 'Equipamentos']
 
@@ -165,12 +177,16 @@ function Produtos() {
       <section className="relative min-h-[480px] overflow-hidden" style={{ backgroundColor: '#0d0a04' }}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[700px] h-[700px]" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.12) 0%, transparent 60%)' }}></div>
-          <motion.div 
-            className="absolute top-10 right-1/4 w-[350px] h-[350px]"
-            style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}
-            animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 5, repeat: Infinity }}
-          />
+          {isMobile ? (
+            <div className="absolute top-10 right-1/4 w-[350px] h-[350px] animate-glow" style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}></div>
+          ) : (
+            <motion.div 
+              className="absolute top-10 right-1/4 w-[350px] h-[350px]"
+              style={{ background: 'radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)' }}
+              animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 5, repeat: Infinity }}
+            />
+          )}
           <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(200,146,30,0.25), transparent)' }}></div>
         </div>
         
@@ -245,58 +261,54 @@ function Produtos() {
               Escolha o seu Favorito
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, x: -30, rotateY: -3 }}
-                  whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                  initial={isMobile ? { opacity: 0, y: 20 } : { opacity: 0, x: -30 }}
+                  whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="group relative cursor-pointer bg-white overflow-hidden"
+                  transition={{ delay: isMobile ? 0 : index * 0.1, duration: 0.5, ease: "easeOut" }}
+                  whileHover={isMobile ? {} : { y: -8, scale: 1.02 }}
+                  className="group relative cursor-pointer bg-white overflow-hidden hover-lift"
                   style={{ 
                     border: '1px solid rgba(200,150,30,0.12)',
                     boxShadow: '0 4px 20px rgba(42,31,20,0.04)'
                   }}
                 >
-                  {/* Hover Glow Overlay */}
-                  <motion.div 
-                    className="absolute inset-0 pointer-events-none"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ 
-                      boxShadow: 'inset 0 0 30px rgba(200,146,30,0.06), 0 8px 30px rgba(200,146,30,0.1)',
-                      background: 'linear-gradient(135deg, rgba(200,146,30,0.03) 0%, transparent 50%)'
-                    }}
-                  />
-
-                  {/* Shimmer Line */}
-                  <motion.div 
-                    className="absolute top-0 left-0 h-px z-10"
-                    style={{ width: '100%', background: 'linear-gradient(90deg, transparent, #c8921e, transparent)' }}
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '100%' }}
-                    transition={{ duration: 0.7 }}
-                  />
-
-                  {/* Image Area */}
                   <div className="relative h-52 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #faf8f4, #f5f2ea)' }}>
-                    <motion.div 
-                      className="w-full h-full flex items-center justify-center"
-                      whileHover={{ y: -12, scale: 1.05 }}
-                      transition={{ duration: 0.4, ease: [0.34, 1.4, 0.64, 1] }}
-                    >
+                    <div className="w-full h-full flex items-center justify-center">
                       <img 
                         src={product.image} 
                         alt={product.name}
                         className="w-full h-full object-cover"
                         style={{ filter: 'saturate(0.9) brightness(1.02)' }}
                       />
-                    </motion.div>
+                    </div>
                     
-                    {/* Badge */}
+                    {!isMobile && (
+                      <motion.div 
+                        className="absolute inset-0 pointer-events-none"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        style={{ 
+                          boxShadow: 'inset 0 0 30px rgba(200,146,30,0.06), 0 8px 30px rgba(200,146,30,0.1)',
+                          background: 'linear-gradient(135deg, rgba(200,146,30,0.03) 0%, transparent 50%)'
+                        }}
+                      />
+                    )}
+                    
+                    {!isMobile && (
+                      <motion.div 
+                        className="absolute top-0 left-0 h-px z-10"
+                        style={{ width: '100%', background: 'linear-gradient(90deg, transparent, #c8921e, transparent)' }}
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '100%' }}
+                        transition={{ duration: 0.7 }}
+                      />
+                    )}
+                    
                     {product.badge && (
                       <div 
                         className="absolute top-4 left-4 px-3 py-1.5 text-[10px] uppercase tracking-wider z-10"
@@ -312,19 +324,15 @@ function Produtos() {
                     )}
                   </div>
 
-                  {/* Info Area */}
                   <div className="relative p-6">
-                    {/* Category */}
                     <span className="text-[10px] uppercase tracking-[2.5px] block mb-2" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>
                       {product.category}
                     </span>
                     
-                    {/* Name - Larger */}
                     <h3 className="text-2xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#2a1f14' }}>
                       {product.name}
                     </h3>
                     
-                    {/* Specs Grid - More Spacious */}
                     <div className="grid grid-cols-2 gap-4 mb-5">
                       <div className="p-3" style={{ backgroundColor: 'rgba(200,146,30,0.04)', border: '1px solid rgba(200,146,30,0.08)' }}>
                         <span className="text-[9px] uppercase block mb-1" style={{ color: 'rgba(42,31,20,0.4)', fontFamily: 'Oswald, sans-serif' }}>Teor</span>
@@ -340,7 +348,6 @@ function Produtos() {
                       </div>
                     </div>
                     
-                    {/* Volume Tags - Improved */}
                     <div className="flex flex-wrap gap-2 mb-5">
                       {product.volumes.map((vol, i) => (
                         <motion.span 
@@ -355,14 +362,14 @@ function Produtos() {
                             border: '1px solid rgba(200,150,30,0.2)',
                             color: 'rgba(42,31,20,0.5)'
                           }}
-                          whileHover={{ 
-                            borderColor: 'rgba(200,146,30,0.5)',
-                            color: '#c8921e',
-                            backgroundColor: 'rgba(200,146,30,0.08)'
-                          }}
-                        >
-                          {vol}
-                        </motion.span>
+whileHover={{ 
+                              borderColor: 'rgba(200,146,30,0.5)',
+                              color: '#c8921e',
+                              backgroundColor: 'rgba(200,146,30,0.08)'
+                            }}
+                          >
+                            {vol}
+                          </motion.span>
                       ))}
                     </div>
                     

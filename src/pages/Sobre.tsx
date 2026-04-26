@@ -1,29 +1,6 @@
-import { motion, useInView } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
-
-function useCountUp(end: number, duration: number = 2000) {
-  const [count, setCount] = useState(0)
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const hasStarted = useRef(false)
-
-  useEffect(() => {
-    if (isInView && !hasStarted.current) {
-      hasStarted.current = true
-      const startTime = Date.now()
-      const updateCount = () => {
-        const elapsed = Date.now() - startTime
-        const progress = Math.min(elapsed / duration, 1)
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setCount(Math.floor(eased * end))
-        if (progress < 1) requestAnimationFrame(updateCount)
-      }
-      requestAnimationFrame(updateCount)
-    }
-  }, [isInView, end, duration])
-
-  return { count, ref }
-}
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { GSAPCounter } from '../components/AnimationsGSAP'
 
 const timeline = [
   { year: '2009', title: 'Fundação', description: 'Nasceu em Cascavel o sonho de levar chopp premium para o Paraná.' },
@@ -654,12 +631,10 @@ function MissionCardLight({ item, index }: { item: typeof missionVision[0]; inde
 }
 
 function StatCounter({ value, suffix, label }: { value: number; suffix: string; label: string }) {
-  const { count, ref } = useCountUp(value)
-  
   return (
-    <div ref={ref} className="text-center px-6">
+    <div className="text-center px-6">
       <div className="text-4xl font-normal" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>
-        {count}{suffix}
+        <GSAPCounter end={value} suffix={suffix} />
       </div>
       <div className="text-[10px] uppercase mt-2 tracking-wider" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '1px' }}>{label}</div>
     </div>
