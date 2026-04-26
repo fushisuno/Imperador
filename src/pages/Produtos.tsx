@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "../hooks/useMedia";
 import { produtos } from "../data/produtos";
+import { GSAPFadeIn } from "../components/AnimationsGSAP";
 
 const products = produtos.map((p, i) => ({
   id: i + 1,
@@ -171,6 +172,7 @@ function Produtos() {
   return (
     <div className="pt-20">
       {/* Section 1: Hero - DARK */}
+      <GSAPFadeIn direction="up" delay={0.2}>
       <section
         className="relative min-h-[480px] overflow-hidden"
         style={{ backgroundColor: "#0d0a04" }}
@@ -335,8 +337,10 @@ function Produtos() {
           </div>
         </div>
       </section>
+      </GSAPFadeIn>
 
       {/* Section 2: Products Grid - LIGHT */}
+      <GSAPFadeIn direction="up" delay={0.2}>
       {showProducts && (
         <section
           className="py-14 relative overflow-hidden"
@@ -604,7 +608,7 @@ function Produtos() {
                       </div>
                     </div>
 
-                    {/* CTA */}
+                    {/* CTA 
                     <div
                       className="flex items-center gap-3 pt-2"
                       style={{ borderTop: "1px solid rgba(200,146,30,0.1)" }}
@@ -651,6 +655,7 @@ function Produtos() {
                         </svg>
                       </motion.button>
                     </div>
+                    */}
                   </div>
 
                   {/* Corner Accent */}
@@ -667,6 +672,7 @@ function Produtos() {
           </div>
         </section>
       )}
+      </GSAPFadeIn>
 
       {/* Section 3: Equipment - MEDIUM DARK */}
       {showEquipment && (
