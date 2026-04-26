@@ -1,16 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-  return isMobile
-}
+import { useIsMobile } from '../hooks/useMedia'
 
 const events = [
   {
@@ -175,10 +165,10 @@ function Eventos() {
               {/* Mosaic Grid */}
               <div className="absolute inset-0 grid grid-cols-2 grid-rows-2" style={{ clipPath: 'polygon(16% 0, 100% 0, 100% 100%, 0% 100%)' }}>
                 {[
-                  { image: 'https://images.unsplash.com/photo-1464366400600-7168b8af0bc3?w=500&h=400&fit=crop', category: 'Social' },
-                  { image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&h=400&fit=crop', category: 'Corporativo' },
-                  { image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&h=400&fit=crop', category: 'Casamento' },
-                  { image: 'https://images.unsplash.com/photo-1533177632549-6ff2d46d8e57?w=500&h=400&fit=crop', category: 'Festival' }
+                  { image: 'https://images.unsplash.com/photo-1511795409834-432f7b5178e1?w=500&h=400&fit=crop', category: 'Social' },
+                  { image: 'https://images.unsplash.com/photo-1528607929212-2636ec44253e?w=500&h=400&fit=crop', category: 'Corporativo' },
+                  { image: 'https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=500&h=400&fit=crop', category: 'Casamento' },
+                  { image: 'https://images.unsplash.com/photo-1492684223066-81342ee475ff?w=500&h=400&fit=crop', category: 'Festival' }
                 ].map((item, i) => (
                   <motion.div
                     key={i}

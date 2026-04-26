@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, useMemo } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MapComponent from '../components/MapComponent'
 import { filiais } from '../data/filiais'
@@ -37,7 +37,7 @@ const mapFiliaisToSedes = (): SedeFrontend[] => {
 }
 
 function Localizacao() {
-  const sedes = useMemo(() => mapFiliaisToSedes(), [])
+  const sedes = mapFiliaisToSedes()
   const [selectedSede, setSelectedSede] = useState<SedeFrontend | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [isClient, setIsClient] = useState(false)
@@ -60,31 +60,33 @@ function Localizacao() {
     sede.bairro.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  return (
-    <div className="pt-20 relative" style={{ backgroundColor: '#faf8f4' }}>
-      {/* Full-screen Map */}
-      <div className="relative" style={{ height: 'calc(100vh - 80px)' }}>
-        
-        {/* Map Container - desktop only */}
-        <div className="hidden md:block absolute inset-0 z-0">
-          {isClient && (
-            <Suspense fallback={
-              <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}>
-                <div className="text-center">
-                  <div className="w-8 h-8 border-2 border-t-[#c8921e] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                  <span className="text-sm" style={{ color: 'rgba(30,25,15,0.5)', fontFamily: 'Inter, sans-serif' }}>Carregando mapa...</span>
-                </div>
-              </div>
-            }>
-              <MapComponent 
-                sedes={sedes} 
-                selectedSede={!isMobile ? selectedSede : null} 
-                onSedeSelect={handleSelectSede}
-                onClearSede={handleClearSede}
-              />
-            </Suspense>
-          )}
-        </div>
+   return (
+     <div className="pt-20 relative" style={{ backgroundColor: '#faf8f4' }}>
+       {/* Map Section - Desktop only */}
+       {!isMobile && (
+         <div className="relative" style={{ height: 'calc(100vh - 80px)' }}>
+           {/* Map Container - behind everything */}
+           <div className="absolute inset-0 z-0">
+             {isClient && (
+               <Suspense fallback={
+                 <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: 'rgba(200,146,30,0.1)' }}>
+                   <div className="text-center">
+                     <div className="w-8 h-8 border-2 border-t-[#c8921e] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                     <span className="text-sm" style={{ color: 'rgba(30,25,15,0.5)', fontFamily: 'Inter, sans-serif' }}>Carregando mapa...</span>
+                   </div>
+                 </div>
+               }>
+                 <MapComponent 
+                   sedes={sedes} 
+                   selectedSede={selectedSede} 
+                   onSedeSelect={handleSelectSede}
+                   onClearSede={handleClearSede}
+                 />
+               </Suspense>
+             )}
+           </div>
+         </div>
+       )}
 
         {/* Header Overlay */}
         <div className="absolute top-0 left-0 right-0 pt-[max(env(safe-area-inset-top),24px)] px-4 sm:px-6 pb-6 bg-gradient-to-b from-[#faf8f4] via-[#faf8f4]/90 to-transparent pointer-events-none z-10">
@@ -470,24 +472,23 @@ function Localizacao() {
           }}
         >
           <p className="text-[9px] uppercase tracking-wider mb-2" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Legenda</p>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <div className="w-3 h-3 bg-[#fff] border-2 border-[#c8921e] rounded-full"></div>
-              </div>
-              <span className="text-[10px]" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif' }}>Sede</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <div className="w-3 h-3 bg-[#c8921e] rounded-full"></div>
-              </div>
-              <span className="text-[10px]" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif' }}>Selecionada</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default Localizacao
+           <div className="flex items-center gap-3">
+             <div className="flex items-center gap-2">
+               <div className="w-4 h-4 flex items-center justify-center">
+                 <div className="w-3 h-3 bg-[#fff] border-2 border-[#c8921e] rounded-full"></div>
+               </div>
+               <span className="text-[10px]" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif' }}>Sede</span>
+             </div>
+             <div className="flex items-center gap-2">
+               <div className="w-4 h-4 flex items-center justify-center">
+                 <div className="w-3 h-3 bg-[#c8921e] rounded-full"></div>
+               </div>
+               <span className="text-[10px]" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif' }}>Selecionada</span>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   }
+ 
+ export default Localizacao

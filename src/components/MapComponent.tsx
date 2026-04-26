@@ -33,7 +33,7 @@ function MapController({ selectedSede }: MapControllerProps) {
   const map = useMap()
   
   useEffect(() => {
-    if (selectedSede) {
+    if (selectedSede && selectedSede.lat && selectedSede.lng) {
       map.flyTo([selectedSede.lat, selectedSede.lng], 13, { animate: true, duration: 0.5 })
     } else {
       map.flyTo([-24.5, -51.5], 8, { animate: true })

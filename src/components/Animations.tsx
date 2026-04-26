@@ -73,10 +73,6 @@ export function FadeIn({
     }
   }, [isInView, controls, shouldAnimate])
 
-  if (!shouldAnimate) {
-    return <div className={className}>{children}</div>
-  }
-
   return (
     <motion.div
       ref={ref}

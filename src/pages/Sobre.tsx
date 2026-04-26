@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { GSAPCounter } from '../components/AnimationsGSAP'
+import { GSAPCounter, GSAPScrollReveal } from '../components/AnimationsGSAP'
 
 const timeline = [
   { year: '2009', title: 'Fundação', description: 'Nasceu em Cascavel o sonho de levar chopp premium para o Paraná.' },
@@ -47,13 +47,26 @@ const missionVision = [
 ]
 
 const brands = [
-  { name: 'Budweiser', origin: 'Estados Unidos', image: 'https://images.unsplash.com/photo-1608270586620-248524c67deb?w=400&h=300&fit=crop' },
-  { name: 'Stella Artois', origin: 'Bélgica', image: 'https://images.unsplash.com/photo-1566633806327-68e152aaf26d?w=400&h=300&fit=crop' },
-  { name: 'Heineken', origin: 'Holanda', image: 'https://images.unsplash.com/photo-1608855238291-c3e3e939c8b7?w=400&h=300&fit=crop' },
-  { name: 'Brahma', origin: 'Brasil', image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=300&fit=crop' },
-  { name: 'Spaten', origin: 'Alemanha', image: 'https://images.unsplash.com/photo-1584195616901-4c6c1a8c3e2c?w=400&h=300&fit=crop' },
-  { name: 'Hoegaarden', origin: 'Bélgica', image: 'https://images.unsplash.com/photo-1575037614876-c38a4c44f5bd?w=400&h=300&fit=crop' },
+  { name: 'Budweiser', origin: 'Estados Unidos', image: '/Budweiser_Anheuser-Busch_logo.svg.png' },
+  { name: 'Stella Artois', origin: 'Bélgica', image: '/Stella_Artois_logo.svg.png' },
+  { name: 'Heineken', origin: 'Holanda', image: '/heineken-logo-png_seeklogo-168528.png' },
+  { name: 'Brahma', origin: 'Brasil', image: '/brahma-logo-0.png' },
+  { name: 'Spaten', origin: 'Alemanha', image: '/Spaten-Emblema.png' },
+  { name: 'Hoegaarden', origin: 'Bélgica', image: '/Hoegaarden-beer-Logo.png' },
 ]
+
+const getBrandLogo = (name: string, image: string) => {
+  const logos: Record<string, string> = {
+    'Budweiser': '🦊',
+    'Stella Artois': '⭐',
+    'Heineken': '🍀',
+    'Brahma': '🔥',
+    'Spaten': '🏰',
+    'Hoegaarden': '🌸',
+  }
+  if (!image) return logos[name] || '🍺'
+  return null
+}
 
 const facilities = [
   {
@@ -142,28 +155,36 @@ function Sobre() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[480px] flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full py-16 lg:py-20">
             <div className="lg:col-span-7">
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4 mb-6">
-                <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
-                <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Quem somos</span>
-              </motion.div>
+              <GSAPScrollReveal direction="up" delay={0.1}>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
+                  <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Quem somos</span>
+                </div>
+              </GSAPScrollReveal>
               
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-5xl sm:text-6xl lg:text-7xl font-normal mb-6" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                <span style={{ color: '#e8e0d0' }}>Imperador</span>
-                <br />
-                <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>do Chopp</span>
-              </motion.h1>
+              <GSAPScrollReveal direction="up" delay={0.2}>
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-normal mb-6" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                  <span style={{ color: '#e8e0d0' }}>Imperador</span>
+                  <br />
+                  <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>do Chopp</span>
+                </h1>
+              </GSAPScrollReveal>
               
-              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg leading-relaxed max-w-lg mb-8" style={{ color: 'rgba(200,185,145,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
-                Transformamos cada evento em uma celebração inesquecível. Há mais de uma década levando chopp premium com excelência e dedicação.
-              </motion.p>
+              <GSAPScrollReveal direction="up" delay={0.3}>
+                <p className="text-lg leading-relaxed max-w-lg mb-8" style={{ color: 'rgba(200,185,145,0.7)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                  Transformamos cada evento em uma celebração inesquecível. Há mais de uma década levando chopp premium com excelência e dedicação.
+                </p>
+              </GSAPScrollReveal>
               
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap items-center gap-8" style={{ borderTop: '1px solid rgba(200,146,30,0.2)', paddingTop: '28px' }}>
+              <GSAPScrollReveal direction="up" delay={0.4}>
+                <div className="flex flex-wrap items-center gap-8" style={{ borderTop: '1px solid rgba(200,146,30,0.2)', paddingTop: '28px' }}>
                 <StatCounter value={15} suffix="+" label="Anos" />
                 <div className="w-px h-14" style={{ backgroundColor: 'rgba(200,146,30,0.3)' }}></div>
                 <StatCounter value={500} suffix="+" label="Eventos" />
                 <div className="w-px h-14" style={{ backgroundColor: 'rgba(200,146,30,0.3)' }}></div>
                 <StatCounter value={4} suffix="°C" label="Temperatura" />
-              </motion.div>
+                </div>
+              </GSAPScrollReveal>
             </div>
             
             <div className="hidden lg:block lg:col-span-5 relative">
@@ -312,17 +333,16 @@ function Sobre() {
                 
                 <div className="relative flex items-center gap-5 p-6">
                   <motion.div 
-                    className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0"
+                    className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center text-5xl"
                     whileHover={{ scale: 1.15 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+                    style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.3)', backgroundColor: 'rgba(200,146,30,0.1)' }}
                   >
-                    <img 
-                      src={brand.image} 
-                      alt={brand.name} 
-                      className="w-full h-full object-cover"
-                      style={{ filter: 'saturate(1.1) brightness(1.05)' }}
-                    />
+                    {brand.image ? (
+                      <img src={brand.image} alt={brand.name} className="w-full h-full object-contain p-2" style={{ filter: 'brightness(1.1)' }} />
+                    ) : (
+                      getBrandLogo(brand.name, brand.image)
+                    )}
                   </motion.div>
                   
                   <div className="flex-1 min-w-0">

@@ -7,7 +7,7 @@ if (typeof window !== 'undefined') {
 }
 
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(true)
   
   useEffect(() => {
     const checkMobile = () => {
@@ -97,12 +97,8 @@ export function GSAPFadeIn({
     return () => ctx.revert()
   }, [direction, delay, duration, isMobile, prefersReduced, threshold])
 
-  if (isMobile || prefersReduced) {
-    return <div className={className}>{children}</div>
-  }
-
   return (
-    <div ref={ref} className={className} style={{ opacity: 0 }}>
+    <div ref={ref} className={className} style={{ opacity: isMobile || prefersReduced ? 1 : 0 }}>
       {children}
     </div>
   )
@@ -149,10 +145,6 @@ export function GSAPStagger({ children, className = '', stagger = 0.1, delay = 0
     return () => ctx.revert()
   }, [stagger, delay, isMobile, prefersReduced])
 
-  if (isMobile || prefersReduced) {
-    return <div className={className}>{children}</div>
-  }
-
   return (
     <div ref={ref} className={className}>
       {children}
@@ -197,12 +189,8 @@ export function GSAPScaleIn({ children, delay = 0, duration = 0.6, className = '
     return () => ctx.revert()
   }, [delay, duration, isMobile, prefersReduced])
 
-  if (isMobile || prefersReduced) {
-    return <div className={className}>{children}</div>
-  }
-
   return (
-    <div ref={ref} className={className} style={{ opacity: 0, scale: 0.85 }}>
+    <div ref={ref} className={className} style={{ opacity: isMobile || prefersReduced ? 1 : 0, scale: isMobile || prefersReduced ? 1 : 0.85 }}>
       {children}
     </div>
   )
@@ -410,12 +398,8 @@ export function GSAPScrollReveal({ children, className = '', direction = 'up', d
     return () => ctx.revert()
   }, [direction, delay, isMobile, prefersReduced])
 
-  if (isMobile || prefersReduced) {
-    return <div className={className}>{children}</div>
-  }
-
   return (
-    <div ref={ref} className={className} style={{ opacity: 0 }}>
+    <div ref={ref} className={className} style={{ opacity: isMobile || prefersReduced ? 1 : 0 }}>
       {children}
     </div>
   )
