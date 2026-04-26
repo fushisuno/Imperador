@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 const navLinks = [
   { path: '/', label: 'Início' },
   { path: '/produtos', label: 'Produtos' },
-  { path: '/sobre', label: 'Sobre' },
   { path: '/eventos', label: 'Eventos' },
   { path: '/localizacao', label: 'Localização' },
   { path: '/contato', label: 'Contato' },
+  { path: '/sobre', label: 'Sobre' },
 ]
 
 const menuVariants = {
@@ -128,28 +128,25 @@ function Header() {
 
               <motion.button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsMenuOpen(!isMenuOpen)
-                }}
-                className="lg:hidden p-2 relative overflow-hidden"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="lg:hidden p-2 relative z-50"
                 whileTap={{ scale: 0.95 }}
               >
                 <div className="relative w-6 h-6">
                   <motion.span
                     animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
                     className="absolute left-0 w-6 h-0.5 rounded-full"
-                    style={{ top: '2px', backgroundColor: '#e8e0d0' }}
+                    style={{ top: '2px', backgroundColor: '#c8921e' }}
                   />
                   <motion.span
                     animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
                     className="absolute left-0 w-6 h-0.5 rounded-full"
-                    style={{ top: '10px', backgroundColor: '#e8e0d0' }}
+                    style={{ top: '10px', backgroundColor: '#c8921e' }}
                   />
                   <motion.span
                     animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
                     className="absolute left-0 w-6 h-0.5 rounded-full"
-                    style={{ top: '18px', backgroundColor: '#e8e0d0' }}
+                    style={{ top: '18px', backgroundColor: '#c8921e' }}
                   />
                 </div>
               </motion.button>
@@ -168,10 +165,7 @@ function Header() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-40 lg:hidden"
               style={{ backgroundColor: 'rgba(13,10,4,0.8)', backdropFilter: 'blur(4px)' }}
-              onClick={(e) => {
-                e.preventDefault()
-                setIsMenuOpen(false)
-              }}
+              onClick={() => setIsMenuOpen(false)}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') setIsMenuOpen(false)
               }}
@@ -197,11 +191,7 @@ function Header() {
                   />
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      setIsMenuOpen(false)
-                    }}
+                    onClick={() => setIsMenuOpen(false)}
                     className="p-2 rounded-lg transition-colors duration-300"
                     style={{ color: 'rgba(232,224,208,0.6)' }}
                   >
@@ -219,11 +209,7 @@ function Header() {
                     >
                       <Link
                         to={link.path}
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setIsMenuOpen(false)
-                        }}
+                        onClick={() => setIsMenuOpen(false)}
                         className="block px-4 py-3 font-medium transition-all duration-300 group"
                         style={{ 
                           fontFamily: 'Oswald, sans-serif',

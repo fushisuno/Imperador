@@ -14,7 +14,13 @@ function Pedido() {
   const [selectedSede, setSelectedSede] = useState<Filial | null>(null)
   const [hasEquipamento, setHasEquipamento] = useState<'sim' | 'nao' | null>(null)
   const [selectedEquipamentos, setSelectedEquipamentos] = useState<number[]>([])
+  const [nomeCliente, setNomeCliente] = useState('')
   const [observacoes, setObservacoes] = useState('')
+  const [canSubmit, setCanSubmit] = useState(false)
+
+  const updateCanSubmit = (sede: Filial | null, nome: string) => {
+    setCanSubmit(!!sede && nome.trim().length > 0)
+  }
 
   const toggleEquipamento = (id: number) => {
     setSelectedEquipamentos(prev => 
@@ -22,15 +28,37 @@ function Pedido() {
     )
   }
 
+  const handleSedeChange = (sede: Filial) => {
+    setSelectedSede(sede)
+    updateCanSubmit(sede, nomeCliente)
+  }
+
+  const handleNomeChange = (nome: string) => {
+    setNomeCliente(nome)
+    updateCanSubmit(selectedSede, nome)
+  }
+
   const handleSubmit = () => {
-    if (!selectedSede) return
+    if (!selectedSede || !nomeCliente.trim()) return
 
     let message = `*NOVO PEDIDO - Imperador do Chopp*%0A%0A`
+    message += `*Cliente:* ${nomeCliente}%0A`
     message += `*Sede:* ${selectedSede.nome}%0A`
     message += `*Cidade:* ${selectedSede.cidade} - ${selectedSede.estado}%0A`
     message += `*Endereço:* ${selectedSede.endereco}%0A%0A`
 
-    if (hasEquipamento === 'sim' && selectedEquipamentos.length > 0) {
+    if (hasEquipamento === 'sim') {
+      if (selectedEquipamentos.length > 0) {
+        message += `*Equipamentos do cliente:*%0A`
+        selectedEquipamentos.forEach(id => {
+          const eq = equipamentos.find(e => e.id === id)
+          if (eq) message += `• ${eq.name}%0A`
+        })
+      } else {
+        message += `*Equipamentos:* Cliente possui próprios equipamentos%0A`
+      }
+      message += `%0A`
+    } else if (hasEquipamento === 'nao' && selectedEquipamentos.length > 0) {
       message += `*Equipamentos necessários:*%0A`
       selectedEquipamentos.forEach(id => {
         const eq = equipamentos.find(e => e.id === id)
@@ -49,8 +77,6 @@ function Pedido() {
     
     window.open(whatsappUrl, '_blank')
   }
-
-  const canSubmit = selectedSede
 
   return (
     <div className="pt-20">
@@ -102,7 +128,7 @@ function Pedido() {
                   {filiais.map((sede) => (
                     <motion.button
                       key={sede.id}
-                      onClick={() => setSelectedSede(sede)}
+                      onClick={() => handleSedeChange(sede)}
                       className="p-4 rounded relative text-left transition-all"
                       style={{ 
                         backgroundColor: selectedSede?.id === sede.id ? 'rgba(200,146,30,0.08)' : 'rgba(200,146,30,0.03)',
@@ -141,6 +167,36 @@ function Pedido() {
                   <div className="w-8 h-8 flex items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(200,146,30,0.15)' }}>
                     <span className="text-sm font-bold" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>2</span>
                   </div>
+                  <h2 className="text-xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Seu nome</h2>
+                </div>
+                
+                <input
+                  type="text"
+                  value={nomeCliente}
+                  onChange={(e) => handleNomeChange(e.target.value)}
+                  placeholder="Digite seu nome para continuarmos o atendimento"
+                  className="w-full px-4 py-3 rounded text-sm outline-none"
+                  style={{ 
+                    backgroundColor: 'rgba(200,146,30,0.03)', 
+                    border: '2px solid rgba(200,146,30,0.15)',
+                    fontFamily: 'Inter, sans-serif'
+                  }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(200,146,30,0.15)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
+                />
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.15 }}
+                className="p-6 rounded" style={{ backgroundColor: '#fff', boxShadow: '0 16px 48px rgba(0,0,0,0.06)' }}
+              >
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(200,146,30,0.15)' }}>
+                    <span className="text-sm font-bold" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>3</span>
+                  </div>
                   <h2 className="text-xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Você possui equipamentos?</h2>
                 </div>
                 
@@ -171,6 +227,7 @@ function Pedido() {
                       exit={{ opacity: 0, height: 0 }}
                       className="space-y-3 pt-2"
                     >
+                      <p className="text-xs mb-3" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif' }}>Selecione os equipamentos que você já possui:</p>
                       {equipamentos.map((eq) => (
                         <motion.label
                           key={eq.id}
@@ -187,7 +244,48 @@ function Pedido() {
                             onChange={() => toggleEquipamento(eq.id)}
                             className="hidden"
                           />
-                          <div className={`w-5 h-5 rounded flex items-center justify-center transition-all`}
+                          <div className="w-5 h-5 rounded flex items-center justify-center transition-all"
+                            style={{ 
+                              backgroundColor: selectedEquipamentos.includes(eq.id) ? '#c8921e' : 'transparent',
+                              border: '2px solid rgba(200,146,30,0.3)'
+                            }}
+                          >
+                            {selectedEquipamentos.includes(eq.id) && (
+                              <svg className="w-3 h-3" fill="none" stroke="#fff" strokeWidth="3" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-sm" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>{eq.name}</span>
+                        </motion.label>
+                      ))}
+                    </motion.div>
+                  )}
+                  {hasEquipamento === 'nao' && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-3 pt-2"
+                    >
+                      <p className="text-xs mb-3" style={{ color: 'rgba(30,25,15,0.6)', fontFamily: 'Inter, sans-serif' }}>Selecione os equipamentos que precisa locar:</p>
+                      {equipamentos.map((eq) => (
+                        <motion.label
+                          key={eq.id}
+                          className="flex items-center gap-3 p-3 rounded cursor-pointer"
+                          style={{ 
+                            backgroundColor: selectedEquipamentos.includes(eq.id) ? 'rgba(200,146,30,0.08)' : 'rgba(200,146,30,0.03)',
+                            border: selectedEquipamentos.includes(eq.id) ? '2px solid #c8921e' : '2px solid rgba(200,146,30,0.1)'
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedEquipamentos.includes(eq.id)}
+                            onChange={() => toggleEquipamento(eq.id)}
+                            className="hidden"
+                          />
+                          <div className="w-5 h-5 rounded flex items-center justify-center transition-all"
                             style={{ 
                               backgroundColor: selectedEquipamentos.includes(eq.id) ? '#c8921e' : 'transparent',
                               border: '2px solid rgba(200,146,30,0.3)'
@@ -211,12 +309,12 @@ function Pedido() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.25 }}
                 className="p-6 rounded" style={{ backgroundColor: '#fff', boxShadow: '0 16px 48px rgba(0,0,0,0.06)' }}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-8 h-8 flex items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(200,146,30,0.15)' }}>
-                    <span className="text-sm font-bold" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>3</span>
+                    <span className="text-sm font-bold" style={{ color: '#c8921e', fontFamily: 'Bebas Neue, sans-serif' }}>4</span>
                   </div>
                   <h2 className="text-xl font-normal" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Observações</h2>
                 </div>
@@ -249,6 +347,15 @@ function Pedido() {
                 <h3 className="text-xl font-normal mb-5" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Resumo do Pedido</h3>
                 
                 <div className="mb-4 pb-4" style={{ borderBottom: '1px solid rgba(200,146,30,0.1)' }}>
+                  <span className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Cliente</span>
+                  {nomeCliente ? (
+                    <span className="text-sm" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>{nomeCliente}</span>
+                  ) : (
+                    <span className="text-sm italic" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Inter, sans-serif' }}>Digite seu nome</span>
+                  )}
+                </div>
+
+                <div className="mb-4 pb-4" style={{ borderBottom: '1px solid rgba(200,146,30,0.1)' }}>
                   <span className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Sede</span>
                   {selectedSede ? (
                     <div>
@@ -260,17 +367,25 @@ function Pedido() {
                   )}
                 </div>
 
-                {hasEquipamento === 'sim' && selectedEquipamentos.length > 0 && (
+                {hasEquipamento && (
                   <div className="mb-4 pb-4" style={{ borderBottom: '1px solid rgba(200,146,30,0.1)' }}>
-                    <span className="text-[10px] uppercase tracking-wider block mb-2" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>Equipamentos</span>
-                    <div className="space-y-1">
-                      {selectedEquipamentos.map(id => {
-                        const eq = equipamentos.find(e => e.id === id)
-                        return eq ? (
-                          <span key={id} className="text-xs block" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>• {eq.name}</span>
-                        ) : null
-                      })}
-                    </div>
+                    <span className="text-[10px] uppercase tracking-wider block mb-2" style={{ color: 'rgba(30,25,15,0.4)', fontFamily: 'Oswald, sans-serif' }}>
+                      {hasEquipamento === 'sim' ? 'Equipamentos do cliente' : 'Equipamentos necessários'}
+                    </span>
+                    {selectedEquipamentos.length > 0 ? (
+                      <div className="space-y-1">
+                        {selectedEquipamentos.map(id => {
+                          const eq = equipamentos.find(e => e.id === id)
+                          return eq ? (
+                            <span key={id} className="text-xs block" style={{ color: '#0d0a04', fontFamily: 'Inter, sans-serif' }}>• {eq.name}</span>
+                          ) : null
+                        })}
+                      </div>
+                    ) : (
+                      <span className="text-xs" style={{ color: 'rgba(30,25,15,0.5)', fontFamily: 'Inter, sans-serif' }}>
+                        {hasEquipamento === 'sim' ? 'Proprietário de equipamentos' : 'Selecione os equipamentos'}
+                      </span>
+                    )}
                   </div>
                 )}
 
