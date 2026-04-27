@@ -8,6 +8,7 @@ import {
   GSAPFadeIn,
   GSAPScrollReveal as Scroll,
 } from "../components/AnimationsGSAP";
+import { BeerMug } from "../components/BeerMug";
 
 function Home() {
   const isMobile = useIsMobile();
@@ -358,27 +359,28 @@ function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.3 }}
-                className="relative w-full max-w-2xl -mr-16"
+                className="relative flex items-center justify-center"
               >
-                <img
-                  src="/copos_chopp_hero.png"
-                  alt="Imperador do Chopp - Copos de chopp premium"
-                  className="w-full h-auto"
+                <div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] rounded-full"
                   style={{
-                    filter:
-                      "brightness(1.1) contrast(1.05) saturate(1.1) drop-shadow(0 0 40px rgba(200,146,30,0.4))",
+                    background:
+                      "radial-gradient(circle, rgba(200, 146, 30, 0.35) 0%, transparent 70%)",
+                    filter: "blur(50px)",
                   }}
-                />
-              </motion.div>
+                ></div>
 
-              <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-24 rounded-[100%]"
-                style={{
-                  background:
-                    "linear-gradient(to bottom, rgba(200, 146, 30, 0.2), transparent)",
-                  filter: "blur(15px)",
-                }}
-              ></div>
+                <BeerMug />
+
+                <div
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-24 rounded-[100%]"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, rgba(200, 146, 30, 0.2), transparent)",
+                    filter: "blur(15px)",
+                  }}
+                ></div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -1412,7 +1414,8 @@ function Home() {
 
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           {/* Header */}
-          <motion.div
+          <Scroll>
+            <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1466,6 +1469,7 @@ function Home() {
               construindo memórias inesquecíveis em cada evento.
             </p>
           </motion.div>
+          </Scroll>
 
           {/* Cards Grid - 2x2 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -2,7 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "../hooks/useMedia";
 import { produtos } from "../data/produtos";
-import { GSAPFadeIn } from "../components/AnimationsGSAP";
+import {
+  GSAPFadeIn,
+  GSAPScrollReveal as Scroll,
+} from "../components/AnimationsGSAP";
 
 const products = produtos.map((p, i) => ({
   id: i + 1,
@@ -173,442 +176,440 @@ function Produtos() {
     <div className="pt-20">
       {/* Section 1: Hero - DARK */}
       <GSAPFadeIn direction="up" delay={0.2}>
-      <section
-        className="relative min-h-[480px] overflow-hidden"
-        style={{ backgroundColor: "#0d0a04" }}
-      >
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute top-0 right-0 w-[700px] h-[700px]"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(200,146,30,0.12) 0%, transparent 60%)",
-            }}
-          ></div>
-          {isMobile ? (
+        <section
+          className="relative min-h-[480px] overflow-hidden"
+          style={{ backgroundColor: "#0d0a04" }}
+        >
+          <div className="absolute inset-0 pointer-events-none">
             <div
-              className="absolute top-10 right-1/4 w-[350px] h-[350px] animate-glow"
+              className="absolute top-0 right-0 w-[700px] h-[700px]"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)",
+                  "radial-gradient(circle, rgba(200,146,30,0.12) 0%, transparent 60%)",
               }}
             ></div>
-          ) : (
-            <motion.div
-              className="absolute top-10 right-1/4 w-[350px] h-[350px]"
+            {isMobile ? (
+              <div
+                className="absolute top-10 right-1/4 w-[350px] h-[350px] animate-glow"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)",
+                }}
+              ></div>
+            ) : (
+              <motion.div
+                className="absolute top-10 right-1/4 w-[350px] h-[350px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)",
+                }}
+                animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 5, repeat: Infinity }}
+              />
+            )}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-px"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)",
+                  "linear-gradient(90deg, transparent, rgba(200,146,30,0.25), transparent)",
               }}
-              animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 5, repeat: Infinity }}
-            />
-          )}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-px"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(200,146,30,0.25), transparent)",
-            }}
-          ></div>
-        </div>
+            ></div>
+          </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[480px] flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full py-16 lg:py-20">
-            <div className="lg:col-span-6">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-4 mb-6"
-              >
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[480px] flex items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full py-16 lg:py-20">
+              <div className="lg:col-span-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-4 mb-6"
+                >
+                  <div
+                    className="h-px w-12"
+                    style={{ backgroundColor: "#c8921e" }}
+                  ></div>
+                  <span
+                    className="text-xs uppercase tracking-[3px]"
+                    style={{
+                      color: "#c8921e",
+                      fontFamily: "Oswald, sans-serif",
+                    }}
+                  >
+                    Linha completa
+                  </span>
+                </motion.div>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="text-5xl sm:text-6xl lg:text-7xl font-normal mb-6"
+                  style={{ fontFamily: "Bebas Neue, sans-serif" }}
+                >
+                  <span style={{ color: "#e8e0d0" }}>Nossos</span>
+                  <br />
+                  <span
+                    style={{
+                      background:
+                        "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    Produtos
+                  </span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-lg leading-relaxed max-w-md mb-8"
+                  style={{
+                    color: "rgba(200,185,145,0.65)",
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 300,
+                  }}
+                >
+                  Variedadede chopps premium, barris de alta qualidade e
+                  equipamentos profissionais para tornar seu evento
+                  inesquecível.
+                </motion.p>
+
+                {/* Filter Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex flex-wrap gap-3"
+                >
+                  {categorias.map((categoria) => (
+                    <button
+                      key={categoria}
+                      onClick={() => setCategoriaSelecionada(categoria)}
+                      className="relative px-6 py-2.5 text-sm uppercase tracking-wider transition-all duration-300 cursor-pointer"
+                      style={{
+                        fontFamily: "Oswald, sans-serif",
+                        backgroundColor:
+                          categoriaSelecionada === categoria
+                            ? "#c8921e"
+                            : "transparent",
+                        color:
+                          categoriaSelecionada === categoria
+                            ? "#0d0a04"
+                            : "rgba(200,185,145,0.7)",
+                        border: "1px solid rgba(200,146,30,0.25)",
+                        clipPath:
+                          "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+                      }}
+                    >
+                      {categoria}
+                    </button>
+                  ))}
+                </motion.div>
+              </div>
+
+{/* Right Side - Background */}
+            <div className="hidden lg:block lg:col-span-6 relative">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: "linear-gradient(135deg, #111008 0%, #0d0a04 100%)",
+                }}
+              ></div>
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(200, 146, 30, 0.2) 0%, transparent 70%)",
+                  filter: "blur(40px)",
+                }}
+              ></div>
+            </div>
+            </div>
+          </div>
+        </section>
+      </GSAPFadeIn>
+
+      {/* Section 2: Products Grid - LIGHT */}
+      <GSAPFadeIn direction="up" delay={0.2}>
+        {showProducts && (
+          <section
+            className="py-14 relative overflow-hidden"
+            style={{ backgroundColor: "#faf8f4" }}
+          >
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 50% 0%, rgba(200,146,30,0.04) 0%, transparent 50%)",
+              }}
+            ></div>
+
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-4 mb-10">
                 <div
-                  className="h-px w-12"
+                  className="h-px w-8"
                   style={{ backgroundColor: "#c8921e" }}
                 ></div>
                 <span
                   className="text-xs uppercase tracking-[3px]"
                   style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif" }}
                 >
-                  Linha completa
+                  Catálogo
                 </span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-5xl sm:text-6xl lg:text-7xl font-normal mb-6"
-                style={{ fontFamily: "Bebas Neue, sans-serif" }}
-              >
-                <span style={{ color: "#e8e0d0" }}>Nossos</span>
-                <br />
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Produtos
-                </span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-lg leading-relaxed max-w-md mb-8"
-                style={{
-                  color: "rgba(200,185,145,0.65)",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 300,
-                }}
-              >
-                Variedadede chopps premium, barris de alta qualidade e
-                equipamentos profissionais para tornar seu evento inesquecível.
-              </motion.p>
-
-              {/* Filter Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-wrap gap-3"
-              >
-                {categorias.map((categoria) => (
-                  <button
-                    key={categoria}
-                    onClick={() => setCategoriaSelecionada(categoria)}
-                    className="relative px-6 py-2.5 text-sm uppercase tracking-wider transition-all duration-300 cursor-pointer"
-                    style={{
-                      fontFamily: "Oswald, sans-serif",
-                      backgroundColor:
-                        categoriaSelecionada === categoria
-                          ? "#c8921e"
-                          : "transparent",
-                      color:
-                        categoriaSelecionada === categoria
-                          ? "#0d0a04"
-                          : "rgba(200,185,145,0.7)",
-                      border: "1px solid rgba(200,146,30,0.25)",
-                      clipPath:
-                        "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
-                    }}
-                  >
-                    {categoria}
-                  </button>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Right Side - Diagonal Contrast */}
-            <div className="hidden lg:block lg:col-span-6 relative">
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundColor: "#111008",
-                  clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0% 100%)",
-                }}
-              >
-                <div
-                  className="absolute top-0 bottom-0 w-px"
-                  style={{
-                    left: "30%",
-                    background:
-                      "linear-gradient(to bottom, transparent, rgba(200,146,30,0.5), transparent)",
-                  }}
-                ></div>
               </div>
-              <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                animate={{ scale: [1, 1.12, 1] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                <div
-                  className="w-64 h-64"
+
+              <Scroll>
+                <h2
+                  className="text-3xl sm:text-4xl font-normal mb-10"
                   style={{
-                    background:
-                      "radial-gradient(circle, rgba(200,146,30,0.2) 0%, transparent 70%)",
-                  }}
-                ></div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </section>
-      </GSAPFadeIn>
-
-      {/* Section 2: Products Grid - LIGHT */}
-      <GSAPFadeIn direction="up" delay={0.2}>
-      {showProducts && (
-        <section
-          className="py-14 relative overflow-hidden"
-          style={{ backgroundColor: "#faf8f4" }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 50% 0%, rgba(200,146,30,0.04) 0%, transparent 50%)",
-            }}
-          ></div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-4 mb-10">
-              <div
-                className="h-px w-8"
-                style={{ backgroundColor: "#c8921e" }}
-              ></div>
-              <span
-                className="text-xs uppercase tracking-[3px]"
-                style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif" }}
-              >
-                Catálogo
-              </span>
-            </div>
-
-            <h2
-              className="text-3xl sm:text-4xl font-normal mb-10"
-              style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}
-            >
-              Escolha o seu Favorito
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center">
-               {products.map((product, index) => (
-                 <motion.div
-                   key={product.id}
-                   initial={{ opacity: 0 }}
-                   whileInView={{ opacity: 1 }}
-                   viewport={{ once: true }}
-                   transition={{ delay: isMobile ? 0 : index * 0.1, duration: 0.5, ease: "easeOut" }}
-                   whileHover={isMobile ? {} : { y: -8, scale: 1.02 }}
-                   className="group relative cursor-pointer bg-white overflow-hidden hover-lift max-w-[340px] sm:max-w-none sm:w-full"
-                  style={{
-                    border: "1px solid rgba(200,150,30,0.12)",
-                    boxShadow: "0 4px 20px rgba(42,31,20,0.04)",
+                    fontFamily: "Bebas Neue, sans-serif",
+                    color: "#2a1f14",
                   }}
                 >
-                  <div
-                    className="relative h-52 overflow-hidden"
+                  Escolha o seu Favorito
+                </h2>
+              </Scroll>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center">
+                {products.map((product, index) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      delay: isMobile ? 0 : index * 0.1,
+                      duration: 0.5,
+                      ease: "easeOut",
+                    }}
+                    whileHover={isMobile ? {} : { y: -8, scale: 1.02 }}
+                    className="group relative cursor-pointer bg-white overflow-hidden hover-lift max-w-[340px] sm:max-w-none sm:w-full"
                     style={{
-                      background:
-                        "linear-gradient(to bottom, #faf8f4, #f5f2ea)",
+                      border: "1px solid rgba(200,150,30,0.12)",
+                      boxShadow: "0 4px 20px rgba(42,31,20,0.04)",
                     }}
                   >
-                    <div className="w-full h-full flex items-center justify-center">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                        style={{ filter: "saturate(0.9) brightness(1.02)" }}
-                      />
-                    </div>
-
-                    {!isMobile && (
-                      <motion.div
-                        className="absolute inset-0 pointer-events-none"
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                        style={{
-                          boxShadow:
-                            "inset 0 0 30px rgba(200,146,30,0.06), 0 8px 30px rgba(200,146,30,0.1)",
-                          background:
-                            "linear-gradient(135deg, rgba(200,146,30,0.03) 0%, transparent 50%)",
-                        }}
-                      />
-                    )}
-
-                    {!isMobile && (
-                      <motion.div
-                        className="absolute top-0 left-0 h-px z-10"
-                        style={{
-                          width: "100%",
-                          background:
-                            "linear-gradient(90deg, transparent, #c8921e, transparent)",
-                        }}
-                        initial={{ x: "-100%" }}
-                        whileHover={{ x: "100%" }}
-                        transition={{ duration: 0.7 }}
-                      />
-                    )}
-
-                    {product.badge && (
-                      <div
-                        className="absolute top-4 left-4 px-3 py-1.5 text-[10px] uppercase tracking-wider z-10"
-                        style={{
-                          fontFamily: "Oswald, sans-serif",
-                          backgroundColor:
-                            product.badgeType === "dark"
-                              ? "rgba(42,31,20,0.85)"
-                              : "#c8921e",
-                          color:
-                            product.badgeType === "dark"
-                              ? "#e8e0d0"
-                              : "#0d0a04",
-                          clipPath:
-                            "polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%)",
-                        }}
-                      >
-                        {product.badge}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="relative p-6">
-                    <span
-                      className="text-[10px] uppercase tracking-[2.5px] block mb-2"
+                    <div
+                      className="relative h-52 overflow-hidden"
                       style={{
-                        color: "#c8921e",
-                        fontFamily: "Oswald, sans-serif",
+                        background:
+                          "linear-gradient(to bottom, #faf8f4, #f5f2ea)",
                       }}
                     >
-                      {product.category}
-                    </span>
-
-                    <h3
-                      className="text-2xl font-normal mb-4"
-                      style={{
-                        fontFamily: "Bebas Neue, sans-serif",
-                        color: "#2a1f14",
-                      }}
-                    >
-                      {product.name}
-                    </h3>
-
-                    <div className="grid grid-cols-2 gap-4 mb-5">
-                      <div
-                        className="p-3"
-                        style={{
-                          backgroundColor: "rgba(200,146,30,0.04)",
-                          border: "1px solid rgba(200,146,30,0.08)",
-                        }}
-                      >
-                        <span
-                          className="text-[9px] uppercase block mb-1"
-                          style={{
-                            color: "rgba(42,31,20,0.4)",
-                            fontFamily: "Oswald, sans-serif",
-                          }}
-                        >
-                          Teor
-                        </span>
-                        <span
-                          className="text-xl"
-                          style={{
-                            fontFamily: "Bebas Neue, sans-serif",
-                            color: "#c8921e",
-                          }}
-                        >
-                          {product.abv}
-                        </span>
-                      </div>
-                      <div
-                        className="p-3"
-                        style={{
-                          backgroundColor: "rgba(200,146,30,0.04)",
-                          border: "1px solid rgba(200,146,30,0.08)",
-                        }}
-                      >
-                        <span
-                          className="text-[9px] uppercase block mb-1"
-                          style={{
-                            color: "rgba(42,31,20,0.4)",
-                            fontFamily: "Oswald, sans-serif",
-                          }}
-                        >
-                          Temperatura
-                        </span>
-                        <span
-                          className="text-xl"
-                          style={{
-                            fontFamily: "Bebas Neue, sans-serif",
-                            color: "#c8921e",
-                          }}
-                        >
-                          {product.temperature}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 mb-5">
-                      {product.volumes.map((vol, i) => (
-                        <motion.span
-                          key={vol}
-                          className="px-3 py-1.5 text-[11px] uppercase tracking-wider"
-                          initial={{ opacity: 0, y: 5 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: index * 0.1 + i * 0.05 }}
-                          style={{
-                            fontFamily: "Oswald, sans-serif",
-                            border: "1px solid rgba(200,150,30,0.2)",
-                            color: "rgba(42,31,20,0.5)",
-                          }}
-                          whileHover={{
-                            borderColor: "rgba(200,146,30,0.5)",
-                            color: "#c8921e",
-                            backgroundColor: "rgba(200,146,30,0.08)",
-                          }}
-                        >
-                          {vol}
-                        </motion.span>
-                      ))}
-                    </div>
-
-                    {/* IBU Bar - Animated */}
-                    <div className="mb-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <span
-                          className="text-[10px] uppercase tracking-wider"
-                          style={{
-                            color: "rgba(42,31,20,0.4)",
-                            fontFamily: "Oswald, sans-serif",
-                          }}
-                        >
-                          Amargor (IBU)
-                        </span>
-                        <span
-                          className="text-xs font-normal"
-                          style={{
-                            color: "#c8921e",
-                            fontFamily: "Bebas Neue, sans-serif",
-                          }}
-                        >
-                          {product.ibu}
-                        </span>
-                      </div>
-                      <div
-                        className="h-1"
-                        style={{
-                          backgroundColor: "rgba(200,150,30,0.12)",
-                          borderRadius: "2px",
-                        }}
-                      >
-                        <motion.div
-                          className="h-full"
-                          initial={{ width: 0 }}
-                          whileInView={{
-                            width: `${(product.ibu / 50) * 100}%`,
-                          }}
-                          viewport={{ once: true }}
-                          transition={{
-                            delay: index * 0.1 + 0.2,
-                            duration: 0.8,
-                            ease: "easeOut",
-                          }}
-                          style={{
-                            background:
-                              "linear-gradient(90deg, #c8921e, #e8b832)",
-                            borderRadius: "2px",
-                          }}
+                      <div className="w-full h-full flex items-center justify-center">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          style={{ filter: "saturate(0.9) brightness(1.02)" }}
                         />
                       </div>
+
+                      {!isMobile && (
+                        <motion.div
+                          className="absolute inset-0 pointer-events-none"
+                          initial={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            boxShadow:
+                              "inset 0 0 30px rgba(200,146,30,0.06), 0 8px 30px rgba(200,146,30,0.1)",
+                            background:
+                              "linear-gradient(135deg, rgba(200,146,30,0.03) 0%, transparent 50%)",
+                          }}
+                        />
+                      )}
+
+                      {!isMobile && (
+                        <motion.div
+                          className="absolute top-0 left-0 h-px z-10"
+                          style={{
+                            width: "100%",
+                            background:
+                              "linear-gradient(90deg, transparent, #c8921e, transparent)",
+                          }}
+                          initial={{ x: "-100%" }}
+                          whileHover={{ x: "100%" }}
+                          transition={{ duration: 0.7 }}
+                        />
+                      )}
+
+                      {product.badge && (
+                        <div
+                          className="absolute top-4 left-4 px-3 py-1.5 text-[10px] uppercase tracking-wider z-10"
+                          style={{
+                            fontFamily: "Oswald, sans-serif",
+                            backgroundColor:
+                              product.badgeType === "dark"
+                                ? "rgba(42,31,20,0.85)"
+                                : "#c8921e",
+                            color:
+                              product.badgeType === "dark"
+                                ? "#e8e0d0"
+                                : "#0d0a04",
+                            clipPath:
+                              "polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%)",
+                          }}
+                        >
+                          {product.badge}
+                        </div>
+                      )}
                     </div>
 
-                    {/* CTA 
+                    <div className="relative p-6">
+                      <span
+                        className="text-[10px] uppercase tracking-[2.5px] block mb-2"
+                        style={{
+                          color: "#c8921e",
+                          fontFamily: "Oswald, sans-serif",
+                        }}
+                      >
+                        {product.category}
+                      </span>
+
+                      <h3
+                        className="text-2xl font-normal mb-4"
+                        style={{
+                          fontFamily: "Bebas Neue, sans-serif",
+                          color: "#2a1f14",
+                        }}
+                      >
+                        {product.name}
+                      </h3>
+
+                      <div className="grid grid-cols-2 gap-4 mb-5">
+                        <div
+                          className="p-3"
+                          style={{
+                            backgroundColor: "rgba(200,146,30,0.04)",
+                            border: "1px solid rgba(200,146,30,0.08)",
+                          }}
+                        >
+                          <span
+                            className="text-[9px] uppercase block mb-1"
+                            style={{
+                              color: "rgba(42,31,20,0.4)",
+                              fontFamily: "Oswald, sans-serif",
+                            }}
+                          >
+                            Teor
+                          </span>
+                          <span
+                            className="text-xl"
+                            style={{
+                              fontFamily: "Bebas Neue, sans-serif",
+                              color: "#c8921e",
+                            }}
+                          >
+                            {product.abv}
+                          </span>
+                        </div>
+                        <div
+                          className="p-3"
+                          style={{
+                            backgroundColor: "rgba(200,146,30,0.04)",
+                            border: "1px solid rgba(200,146,30,0.08)",
+                          }}
+                        >
+                          <span
+                            className="text-[9px] uppercase block mb-1"
+                            style={{
+                              color: "rgba(42,31,20,0.4)",
+                              fontFamily: "Oswald, sans-serif",
+                            }}
+                          >
+                            Temperatura
+                          </span>
+                          <span
+                            className="text-xl"
+                            style={{
+                              fontFamily: "Bebas Neue, sans-serif",
+                              color: "#c8921e",
+                            }}
+                          >
+                            {product.temperature}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 mb-5">
+                        {product.volumes.map((vol, i) => (
+                          <motion.span
+                            key={vol}
+                            className="px-3 py-1.5 text-[11px] uppercase tracking-wider"
+                            initial={{ opacity: 0, y: 5 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 + i * 0.05 }}
+                            style={{
+                              fontFamily: "Oswald, sans-serif",
+                              border: "1px solid rgba(200,150,30,0.2)",
+                              color: "rgba(42,31,20,0.5)",
+                            }}
+                            whileHover={{
+                              borderColor: "rgba(200,146,30,0.5)",
+                              color: "#c8921e",
+                              backgroundColor: "rgba(200,146,30,0.08)",
+                            }}
+                          >
+                            {vol}
+                          </motion.span>
+                        ))}
+                      </div>
+
+                      {/* IBU Bar - Animated */}
+                      <div className="mb-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <span
+                            className="text-[10px] uppercase tracking-wider"
+                            style={{
+                              color: "rgba(42,31,20,0.4)",
+                              fontFamily: "Oswald, sans-serif",
+                            }}
+                          >
+                            Amargor (IBU)
+                          </span>
+                          <span
+                            className="text-xs font-normal"
+                            style={{
+                              color: "#c8921e",
+                              fontFamily: "Bebas Neue, sans-serif",
+                            }}
+                          >
+                            {product.ibu}
+                          </span>
+                        </div>
+                        <div
+                          className="h-1"
+                          style={{
+                            backgroundColor: "rgba(200,150,30,0.12)",
+                            borderRadius: "2px",
+                          }}
+                        >
+                          <motion.div
+                            className="h-full"
+                            initial={{ width: 0 }}
+                            whileInView={{
+                              width: `${(product.ibu / 50) * 100}%`,
+                            }}
+                            viewport={{ once: true }}
+                            transition={{
+                              delay: index * 0.1 + 0.2,
+                              duration: 0.8,
+                              ease: "easeOut",
+                            }}
+                            style={{
+                              background:
+                                "linear-gradient(90deg, #c8921e, #e8b832)",
+                              borderRadius: "2px",
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* CTA 
                     <div
                       className="flex items-center gap-3 pt-2"
                       style={{ borderTop: "1px solid rgba(200,146,30,0.1)" }}
@@ -656,22 +657,22 @@ function Produtos() {
                       </motion.button>
                     </div>
                     */}
-                  </div>
+                    </div>
 
-                  {/* Corner Accent */}
-                  <div
-                    className="absolute bottom-0 right-0 w-7 h-7 pointer-events-none"
-                    style={{
-                      borderBottom: "2px solid rgba(200,146,30,0.25)",
-                      borderRight: "2px solid rgba(200,146,30,0.25)",
-                    }}
-                  ></div>
-                </motion.div>
-              ))}
+                    {/* Corner Accent */}
+                    <div
+                      className="absolute bottom-0 right-0 w-7 h-7 pointer-events-none"
+                      style={{
+                        borderBottom: "2px solid rgba(200,146,30,0.25)",
+                        borderRight: "2px solid rgba(200,146,30,0.25)",
+                      }}
+                    ></div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
       </GSAPFadeIn>
 
       {/* Section 3: Equipment - MEDIUM DARK */}
@@ -710,12 +711,17 @@ function Produtos() {
               </span>
             </div>
 
-            <h2
-              className="text-3xl sm:text-4xl font-normal mb-3"
-              style={{ fontFamily: "Bebas Neue, sans-serif", color: "#e8e0d0" }}
-            >
-              Nossos Equipamentos
-            </h2>
+            <Scroll>
+              <h2
+                className="text-3xl sm:text-4xl font-normal mb-3"
+                style={{
+                  fontFamily: "Bebas Neue, sans-serif",
+                  color: "#e8e0d0",
+                }}
+              >
+                Nossos Equipamentos
+              </h2>
+            </Scroll>
             <p
               className="text-sm mb-10 max-w-md"
               style={{
@@ -728,16 +734,16 @@ function Produtos() {
               inesquecível.
             </p>
 
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center md:justify-items-start">
-               {equipment.map((item, index) => (
-                 <motion.div
-                   key={item.id}
-                   initial={{ opacity: 0 }}
-                   whileInView={{ opacity: 1 }}
-                   viewport={{ once: true }}
-                   transition={{ delay: index * 0.08 }}
-                   whileHover={{ y: -6, scale: 1.01 }}
-                   className="group relative cursor-pointer max-w-[340px] sm:max-w-none mx-auto"
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center md:justify-items-start">
+              {equipment.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.08 }}
+                  whileHover={{ y: -6, scale: 1.01 }}
+                  className="group relative cursor-pointer max-w-[340px] sm:max-w-none mx-auto"
                   style={{
                     backgroundColor: item.isCta
                       ? "rgba(200,146,30,0.08)"
@@ -843,15 +849,17 @@ function Produtos() {
               >
                 Precisa de ajuda?
               </span>
-              <h2
-                className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-3"
-                style={{
-                  fontFamily: "Bebas Neue, sans-serif",
-                  color: "#0d0a04",
-                }}
-              >
-                Fale com nossa equipe
-              </h2>
+              <Scroll>
+                <h2
+                  className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-3"
+                  style={{
+                    fontFamily: "Bebas Neue, sans-serif",
+                    color: "#0d0a04",
+                  }}
+                >
+                  Fale com nossa equipe
+                </h2>
+              </Scroll>
               <p
                 className="text-sm max-w-md"
                 style={{

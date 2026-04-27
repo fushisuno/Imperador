@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useIsMobile } from '../hooks/useMedia'
+import { GSAPScrollReveal as Scroll } from '../components/AnimationsGSAP'
 
 const events = [
   {
@@ -268,9 +269,11 @@ function Eventos() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-normal mb-12" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#2a1f14' }}>
-            Eventos em Destaque
-          </h2>
+          <Scroll>
+            <h2 className="text-3xl sm:text-4xl font-normal mb-12" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#2a1f14' }}>
+              Eventos em Destaque
+            </h2>
+          </Scroll>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6">
             {/* Tall Card */}
@@ -346,9 +349,11 @@ function Eventos() {
             <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Cada evento</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl font-normal mb-8" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#e8e0d0' }}>
-            Uma história
-          </h2>
+          <Scroll>
+            <h2 className="text-3xl sm:text-4xl font-normal mb-8" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#e8e0d0' }}>
+              Uma história
+            </h2>
+          </Scroll>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {gallery.map((item, i) => (

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { GSAPCounter, GSAPScrollReveal } from '../components/AnimationsGSAP'
+import { GSAPCounter, GSAPScrollReveal, GSAPScrollReveal as Scroll } from '../components/AnimationsGSAP'
 
 const timeline = [
   { year: '2009', title: 'Fundação', description: 'Nasceu em Cascavel o sonho de levar chopp premium para o Paraná.' },
@@ -261,6 +261,7 @@ function Sobre() {
               <span className="text-xs uppercase" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif', letterSpacing: '3px' }}>Parceiros Oficiais</span>
             </motion.div>
             
+            <Scroll>
             <h2 className="text-5xl sm:text-6xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
               <span style={{ color: '#e8e0d0' }}>Cervejarias que </span>
               <motion.span
@@ -277,6 +278,7 @@ function Sobre() {
                 Confiamos
               </motion.span>
             </h2>
+            </Scroll>
             <p className="text-base max-w-lg mx-auto" style={{ color: 'rgba(200,185,145,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
               Parcerias estratégicas com as melhores cervejarias do mundo para garantir qualidade incomparável em cada chopp.
             </p>
@@ -415,10 +417,12 @@ function Sobre() {
               <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Nossa jornada</span>
               <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
             </div>
+            <Scroll>
             <h2 className="text-4xl sm:text-5xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
               <span style={{ color: '#e8e0d0' }}>Trajetória </span>
               <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Imperador</span>
             </h2>
+            </Scroll>
             <p className="text-sm max-w-md mx-auto" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
               Do primeiro barril em Cascavel até a referência regional em chopp premium.
             </p>
@@ -463,10 +467,12 @@ function Sobre() {
               <div className="h-px w-8" style={{ backgroundColor: '#c8921e' }}></div>
               <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Time</span>
             </div>
+            <Scroll>
             <h2 className="text-4xl sm:text-5xl font-normal mb-3" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
               <span style={{ color: '#2a1f14' }}>Nossa </span>
               <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Equipe</span>
             </h2>
+            </Scroll>
             <p className="text-sm" style={{ color: 'rgba(42,31,20,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>As pessoas que fazem a Imperador acontecer todos os dias.</p>
           </div>
           
@@ -517,10 +523,12 @@ function Sobre() {
               <span className="text-xs uppercase tracking-[3px]" style={{ color: '#c8921e', fontFamily: 'Oswald, sans-serif' }}>Infraestrutura</span>
               <div className="h-px w-12" style={{ backgroundColor: '#c8921e' }}></div>
             </div>
+            <Scroll>
             <h2 className="text-4xl sm:text-5xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
               <span style={{ color: '#e8e0d0' }}>Nossas </span>
               <span style={{ background: 'linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Instalações</span>
             </h2>
+            </Scroll>
             <p className="text-sm max-w-lg mx-auto" style={{ color: 'rgba(200,185,145,0.5)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
               Infraestrutura de ponta para garantir a qualidade e frescor do nosso chopp em cada entrega.
             </p>
@@ -570,7 +578,9 @@ function Sobre() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
             <div className="text-center lg:text-left">
               <span className="text-xs uppercase block mb-3" style={{ color: 'rgba(13,10,4,0.5)', fontFamily: 'Oswald, sans-serif', letterSpacing: '2px' }}>Entre em contato</span>
+              <Scroll>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-4" style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#0d0a04' }}>Traga o Imperador para o seu evento</h2>
+              </Scroll>
               <p className="text-lg max-w-md" style={{ color: 'rgba(13,10,4,0.6)', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>Entre em contato agora e faça seu pedido personalizado.</p>
             </div>
             
