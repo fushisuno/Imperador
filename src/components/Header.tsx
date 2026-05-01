@@ -60,7 +60,7 @@ function Header() {
               />
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1" aria-label="Navegação principal">
               {navLinks.map((link) => (
                 <motion.div
                   key={link.path}
@@ -76,6 +76,7 @@ function Header() {
                       letterSpacing: '1px',
                       textTransform: 'uppercase',
                     }}
+                    aria-current={location.pathname === link.path ? 'page' : undefined}
                   >
                     <span 
                       className="relative z-10 transition-colors duration-300"
@@ -116,8 +117,10 @@ function Header() {
               <button
                 type="button"
                 onClick={toggleMenu}
-                className="lg:hidden p-2"
-                aria-label="Menu"
+                className="lg:hidden flex items-center justify-center w-11 h-11"
+                aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-menu"
               >
                 <div className="relative w-6 h-6">
                   <motion.span
@@ -164,6 +167,8 @@ function Header() {
               exit="closed"
               className="fixed top-0 right-0 bottom-0 w-[280px] z-[120]"
               style={{ backgroundColor: '#0d0a04' }}
+              id="mobile-menu"
+              aria-label="Menu de navegação"
             >
               <div className="flex flex-col h-full p-6">
                 <div className="flex items-center justify-between mb-10">

@@ -271,7 +271,7 @@ function Produtos() {
                     fontWeight: 300,
                   }}
                 >
-                  Variedadede chopps premium, barris de alta qualidade e
+                  Variedade de chopps premium, barris de alta qualidade e
                   equipamentos profissionais para tornar seu evento
                   inesquecível.
                 </motion.p>

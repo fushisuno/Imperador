@@ -1,0 +1,40 @@
+:root {
+  --color-primary: #1C1917;
+  --color-secondary: #44403C;
+  --color-cta: #CA8A04;
+  --color-cta-light: #EAB308;
+  --color-cta-dark: #A16207;
+  --color-background: #FAFAF9;
+  --color-text: #0C0A09;
+  --color-gold: #CA8A04;
+  --color-gold-light: #EAB308;
+  --color-gold-dark: #A16207;
+  --color-black: #0C0A09;
+  --color-white: #FAFAF9;
+  --color-surface: #FFFFFF;
+  --color-surface-dark: #0D0A04;
+
+  --color-text-primary: #E8E0D0;
+  --color-text-secondary: rgba(200, 185, 145, 0.8);
+  --color-text-muted: rgba(200, 185, 145, 0.6);
+  --color-text-faint: rgba(200, 185, 145, 0.5);
+
+  --color-border: rgba(200, 146, 30, 0.2);
+  --color-border-light: rgba(200, 146, 30, 0.15);
+
+  --focus-ring: 0 0 0 2px #0D0A04, 0 0 0 4px #CA8A04;
+  --focus-ring-inverse: 0 0 0 2px #FAFAF9, 0 0 0 4px #CA8A04;
+
+  --touch-target-min: 44px;
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0D0A04;
+    --color-surface: #1C1917;
+  }
+}
