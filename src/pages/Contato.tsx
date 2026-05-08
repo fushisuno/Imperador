@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { config } from '../config'
 
 function Contato() {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ function Contato() {
     
     const message = `Olá! Vim pelo site do Imperador do Chopp.%0A%0A*Nome:* ${formData.nome}%0A*Telefone:* ${formData.telefone}%0A*Assunto:* ${assuntoText}%0A%0A*Mensagem:*%0A${formData.mensagem}`
     
-    window.open(`https://wa.me/5541999999999?text=${message}`, '_blank')
+    window.open(`https://wa.me/${config.whatsapp}?text=${message}`, '_blank')
     
     setFormData({ nome: '', telefone: '', assunto: '', mensagem: '' })
   }
@@ -237,7 +238,7 @@ function Contato() {
                   </div>
                 </div>
                 <motion.a
-                  href="tel:+554133334444"
+                  href="tel:+554533065776"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="mt-4 flex items-center justify-center gap-2 px-4 py-2 text-sm uppercase w-full rounded"
@@ -330,7 +331,7 @@ function Contato() {
           </p>
           
           <motion.a
-            href="https://wa.me/5541999999999?text=Olá! Gostaria de mais informações sobre o Imperador do Chopp."
+            href="https://wa.me/554599954660?text=Olá! Gostaria de mais informações sobre o Imperador do Chopp."
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.03 }}

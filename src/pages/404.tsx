@@ -57,7 +57,7 @@ function NotFound() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <motion.a
-            href="https://wa.me/5545998044188"
+            href="https://wa.me/554599954660"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
@@ -124,7 +124,7 @@ function NotFound() {
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
         <span className="text-xs" style={{ color: 'rgba(200,185,145,0.3)', fontFamily: 'Oswald, sans-serif' }}>
-          Imperador do Chopp • Tradição desde 2014
+          Imperador do Chopp • Tradição desde 2017
         </span>
       </div>
     </div>
