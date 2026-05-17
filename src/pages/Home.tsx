@@ -6,6 +6,91 @@ import {
 } from "../components/AnimationsGSAP";
 import { BeerMug } from "../components/BeerMug";
 import { config } from "../config";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+
+const headquarters = [
+  { 
+    id: 1, 
+    name: "Cascavel - Sede Principal", 
+    lat: -24.7136, 
+    lng: -53.4356, 
+    type: "Sede",
+    description: "Matriz - atendimento full"
+  },
+  { 
+    id: 2, 
+    name: "Foz do Iguaçu", 
+    lat: -25.5478, 
+    lng: -54.5882, 
+    type: "Filial",
+    description: "Atendimento região Oeste"
+  },
+  { 
+    id: 3, 
+    name: "Guarapuava", 
+    lat: -25.0910, 
+    lng: -51.4791, 
+    type: "Filial",
+    description: "Atendimento região Central"
+  },
+  { 
+    id: 4, 
+    name: "Maringá", 
+    lat: -23.4205, 
+    lng: -51.9331, 
+    type: "Filial",
+    description: "Atendimento região Norte"
+  },
+];
+
+const createPulseIcon = () => {
+  return L.divIcon({
+    className: 'custom-pulse-marker',
+    html: `
+      <div style="
+        position: relative;
+        width: 40px;
+        height: 40px;
+      ">
+        <div style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 16px;
+          height: 16px;
+          background: #c8921e;
+          border-radius: 50%;
+          box-shadow: 0 0 0 rgba(200,146,30,0.4);
+          animation: pulse-ring 2s infinite;
+        "></div>
+        <div style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 10px;
+          height: 10px;
+          background: #c8921e;
+          border-radius: 50%;
+          border: 2px solid #fff;
+        "></div>
+      </div>
+      <style>
+        @keyframes pulse-ring {
+          0% { box-shadow: 0 0 0 0 rgba(200,146,30, 0.7); }
+          70% { box-shadow: 0 0 0 20px rgba(200,146,30, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(200,146,30, 0); }
+        }
+      </style>
+    `,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+  });
+};
 
 const eventTypes = [
   {
@@ -80,6 +165,7 @@ const eventTypes = [
 function Home() {
   const [activeTab, setActiveTab] = useState("social");
   const [activeChopeiraTab, setActiveChopeiraTab] = useState("moto");
+  const [activeProductFilter, setActiveProductFilter] = useState("all");
   const isMobile = useIsMobile();
   const currentContent = eventTypes.find((t) => t.id === activeTab) || eventTypes[0];
 
@@ -321,386 +407,522 @@ function Home() {
       </section>
 
       {/* ==============================
-         3. DELIVERY - Design Moderno e Clean
+         2.1. NOSSOS BARES - Lista de Parceiros
          ============================== */}
-      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#1a1208" }}>
+      <section
+        className="py-16 lg:py-20 relative overflow-hidden"
+        style={{ backgroundColor: "#faf8f4" }}
+      >
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] opacity-10" style={{ background: "linear-gradient(180deg, rgba(200,146,30,0.4) 0%, transparent 100%)" }} />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
-          <div className="absolute top-20 right-0 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)" }} />
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 70%)" }} />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.1) 0%, transparent 70%)" }} />
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
-              <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Delivery</span>
-              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
-            </div>
-            
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
-              <span style={{ color: "#e8e0d0" }}>Chopp na sua casa,</span>
-              <br />
-              <span style={{ color: "#e8e0d0" }}>no seu evento,</span>
-              <br />
-              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>onde a festa acontecer</span>
-            </h2>
-            
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: "rgba(200,185,145,0.7)", lineHeight: 1.7 }}>
-              Jantar em família, aniversário na garagem ou confraternização da firma — o Imperador leva o chopp até você com a mesma qualidade dos grandes eventos.
-            </p>
-          </motion.div>
+        <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
+          <Scroll>
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }}></div>
+                <span className="text-xs font-medium uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "3px" }}>Parceiros</span>
+                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }}></div>
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-normal">
+                <span style={{ color: "#2a1f14" }}>Nossos </span>
+                <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Bares</span>
+              </h2>
+              <p className="mt-4 text-base max-w-2xl mx-auto" style={{ color: "rgba(42,31,20,0.65)", fontFamily: "Playfair Display, serif" }}>
+                Establecimientos parceiros que servem chopp Imperador com qualidade
+              </p>
+            </motion.div>
+          </Scroll>
 
-          <motion.div
-            className="mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <h3 className="text-center text-sm font-medium mb-8" style={{ color: "rgba(200,185,145,0.5)", fontFamily: "Oswald, sans-serif", letterSpacing: "3px" }}>
-              BARRIS DO TAMANHO DA SUA COMEMORAÇÃO
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-              {[
-                { 
-                  size: "20L", 
-                  pessoas: "10-15", 
-                  label: "Jantar em família",
-                  highlight: false 
-                },
-                { 
-                  size: "30L", 
-                  pessoas: "15-25", 
-                  label: "Aniversário",
-                  highlight: true 
-                },
-                { 
-                  size: "50L", 
-                  pessoas: "25-40", 
-                  label: "Grande evento",
-                  highlight: false 
-                },
-              ].map((barril, i) => (
-                <motion.div
-                  key={barril.size}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -8, scale: barril.highlight ? 1.02 : 1 }}
-                  className={`relative rounded-3xl overflow-hidden ${barril.highlight ? 'ring-2 ring-[#c8921e]' : ''}`}
-                  style={{ 
-                    backgroundColor: barril.highlight ? "#2a2015" : "#252019", 
-                    border: barril.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.15)",
-                    boxShadow: barril.highlight ? "0 20px 50px rgba(200,146,30,0.2)" : "none"
-                  }}
-                >
-                  {barril.highlight && (
-                    <div className="absolute top-0 left-0 right-0 py-2 text-center text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif", letterSpacing: "1px" }}>
-                      ★ MAIS PEDIDO
-                    </div>
-                  )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { name: "Bar do João", address: "Rua das Flores, 123 - Centro", city: "Cascavel", hours: "Seg-Sáb: 18h-02h", phone: "(45) 99999-0001" },
+              { name: "Choperia Central", address: "Av. Brasil, 456 - Centro", city: "Foz do Iguaçu", hours: "Ter-Dom: 17h-00h", phone: "(45) 99999-0002" },
+              { name: "Boteco do Zé", address: "Praça da Matrix, 78 - Zona 01", city: "Cascavel", hours: "Qui-Sáb: 19h-03h", phone: "(45) 99999-0003" },
+              { name: "Ponto do Chopp", address: "Av. Paraná, 890 - Jd. América", city: "Guarapuava", hours: "Qua-Dom: 18h-01h", phone: "(42) 99999-0004" },
+              { name: "Bar da Esquina", address: "Rua XV de Novembro, 234 - Centro", city: "Maringá", hours: "Seg-Sáb: 17h-02h", phone: "(44) 99999-0005" },
+              { name: "Chopp & Rock", address: "Av. das Cataratas, 567 - Vila Yolanda", city: "Foz do Iguaçu", hours: "Sex-Sáb: 19h-04h", phone: "(45) 99999-0006" },
+            ].map((bar, i) => (
+              <motion.div
+                key={bar.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -4 }}
+                className="group p-5 cursor-pointer"
+                style={{ backgroundColor: "#ffffff", border: "1px solid rgba(200,146,30,0.15)", borderRadius: "16px" }}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}>{bar.name}</h3>
+                  <span className="px-2 py-1 text-xs rounded" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#c8921e", fontFamily: "Oswald, sans-serif" }}>{bar.city}</span>
+                </div>
+                
+                <div className="space-y-2 text-sm" style={{ color: "rgba(42,31,20,0.7)" }}>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ color: "#c8921e" }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>{bar.address}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ color: "#c8921e" }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{bar.hours}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ color: "#c8921e" }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    <span>{bar.phone}</span>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-3 border-t flex justify-end" style={{ borderColor: "rgba(200,146,30,0.1)" }}>
+                  <a 
+                    href={`https://wa.me/55${bar.phone.replace(/\D/g,'')}?text=Olá! Vi o bar ${bar.name} na lista de parceiros Imperador`}
+                    className="text-sm font-medium flex items-center gap-1 group-hover:text-[#c8921e] transition-colors"
+                    style={{ color: "rgba(42,31,20,0.6)", fontFamily: "Oswald, sans-serif" }}
+                  >
+                    Falar no WhatsApp
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
-                  <div className="p-8" style={{ marginTop: barril.highlight ? '28px' : '0' }}>
-                    <div className="flex items-center justify-center mb-6">
-                      <svg className="w-20 h-24" viewBox="0 0 64 80" fill="none">
-                        <rect x="12" y="16" width="40" height="56" rx="4" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2"/>
-                        <path d="M20 16V8h24v8" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2"/>
-                        <rect x="18" y="20" width="28" height="8" rx="1" fill={barril.highlight ? "#c8921e" : "#3d3420"} stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
-                        <ellipse cx="32" cy="52" rx="14" ry="4" fill={barril.highlight ? "rgba(200,146,30,0.2)" : "rgba(139,115,72,0.1)"} stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
+          <motion.p 
+            className="text-center mt-8 text-sm italic"
+            style={{ color: "rgba(42,31,20,0.4)", fontFamily: "Playfair Display, serif" }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            *Mais parceiros serão adicionados conforme verificação dos dados
+          </motion.p>
+        </div>
+      </section>
+
+{/* ==============================
+          3. DELIVERY - Split Layout com Barril e Régua
+          ============================== */}
+      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 70%)" }} />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.1) 0%, transparent 70%)" }} />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-12 lg:gap-16 items-center">
+            {/* LEFT SIDE - Content (40%) */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px w-10" style={{ backgroundColor: "#c8921e" }} />
+                <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Delivery</span>
+              </div>
+
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-6" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+                <span style={{ color: "#2a1f14" }}>Chopp na sua casa,</span>
+                <br />
+                <span style={{ color: "#2a1f14" }}>no seu evento,</span>
+                <br />
+                <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>onde a festa acontecer</span>
+              </h2>
+
+              <p className="text-base mb-8 leading-relaxed" style={{ color: "#5a4a3a", fontFamily: "Playfair Display, serif" }}>
+                Jantar em família, aniversário na garagem ou confraternização da firma — o Imperador leva o chopp até você com a mesma qualidade dos grandes eventos.
+              </p>
+
+              {/* Benefits */}
+              <div className="space-y-4 mb-8">
+                {[
+                  { icon: "M5 13l4 4L19 7", text: "Chopp Premium bem armazenado" },
+                  { icon: "M5 13l4 4L19 7", text: "Chopeira montada e regulada" },
+                  { icon: "M5 13l4 4L19 7", text: "Suporte técnico até as 22h" },
+                  { icon: "M5 13l4 4L19 7", text: "Entrega e retirada agendadas" },
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(200,146,30,0.15)" }}>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="#c8921e" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                       </svg>
                     </div>
+                    <span className="text-sm" style={{ color: "rgba(42,31,20,0.8)" }}>{item.text}</span>
+                  </motion.div>
+                ))}
+              </div>
 
-                    <div className="text-center mb-4">
-                      <div className="text-5xl lg:text-6xl font-black mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: barril.highlight ? "#c8921e" : "#e8e0d0", lineHeight: 1 }}>
-                        {barril.size}
-                      </div>
-                      <div className="text-sm font-medium" style={{ color: barril.highlight ? "rgba(200,146,30,0.7)" : "#8a7348", fontFamily: "Oswald, sans-serif" }}>
-                        {barril.label}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center gap-2 py-3 mb-6 rounded-xl" style={{ backgroundColor: barril.highlight ? "rgba(200,146,30,0.08)" : "rgba(139,115,72,0.08)" }}>
-                      <span className="text-2xl font-bold" style={{ color: barril.highlight ? "#e8e0d0" : "#e8e0d0" }}>
-                        {barril.pessoas}
-                      </span>
-                      <span className="text-sm" style={{ color: barril.highlight ? "rgba(200,146,30,0.6)" : "#8a7348" }}>pessoas</span>
-                    </div>
-
-                    <div className="space-y-3 mb-8">
-                      {[
-                        "Chopp Premium",
-                        "Chopeira inclusa",
-                        "Suporte técnico"
-                      ].map((feat, j) => (
-                        <div key={j} className="flex items-center gap-3">
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: barril.highlight ? "rgba(200,146,30,0.15)" : "rgba(139,115,72,0.1)" }}>
-                            <svg className="w-3 h-3" fill="none" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          </div>
-                          <span className="text-sm" style={{ color: barril.highlight ? "rgba(200,185,145,0.8)" : "rgba(200,185,145,0.6)" }}>{feat}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <motion.a
-                      href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre o barril de ${barril.size}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="block w-full py-4 text-center text-sm font-semibold rounded-xl transition-all"
-                      style={{ 
-                        backgroundColor: barril.highlight ? "#c8921e" : "transparent", 
-                        color: barril.highlight ? "#1a1208" : "#c8921e", 
-                        border: barril.highlight ? "none" : "1px solid rgba(200,146,30,0.4)",
-                        fontFamily: "Oswald, sans-serif",
-                        letterSpacing: "1px"
-                      }}
-                    >
-                      SOLICITAR ORÇAMENTO
-                    </motion.a>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="relative rounded-2xl p-8 lg:p-10 text-center overflow-hidden"
-            style={{ backgroundColor: "rgba(200,146,30,0.08)", border: "1px solid rgba(200,146,30,0.2)" }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="relative z-10">
-              <p className="text-xl lg:text-2xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#e8e0d0" }}>
-                Você não contrata "só o chopp".
-              </p>
-              <p className="text-lg mb-6" style={{ color: "rgba(200,185,145,0.7)" }}>
-                Você leva junto estrutura, atendimento e segurança pra não passar perrengue no meio da festa.
-              </p>
-              
               <motion.a
                 href={`https://wa.me/${config.whatsapp}?text=Olá! Quero chopp no meu próximo evento.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold rounded-xl"
-                style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif" }}
+                className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold"
+                style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif", borderRadius: "8px", boxShadow: "0 4px 20px rgba(200,146,30,0.3)" }}
               >
                 <svg className="w-6 h-6" fill="#1a1208" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
-                Quer chopp no seu próximo encontro? Fale com a gente
+                Falar no WhatsApp
               </motion.a>
-            </div>
-          </motion.div>
+            </motion.div>
 
+            {/* RIGHT SIDE - Barrel with Ruler (60%) */}
+            <motion.div
+              className="relative flex items-center justify-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <div className="relative flex items-center gap-8">
+                {/* Vertical Ruler - Left Side */}
+                <div className="relative flex flex-col items-end gap-0" style={{ height: "420px" }}>
+                  {/* 50L Marker */}
+                  <motion.div
+                    className="absolute flex items-center gap-3"
+                    style={{ bottom: "calc(85% - 20px)" }}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <span className="text-sm font-medium" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(42,31,20,0.5)" }}>50L</span>
+                    <div className="w-8 h-0.5" style={{ backgroundColor: "rgba(200,146,30,0.4)" }} />
+                  </motion.div>
+
+                  {/* 30L Marker - Highlighted */}
+                  <motion.div
+                    className="absolute flex items-center gap-3"
+                    style={{ bottom: "calc(55% - 20px)" }}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    <span className="text-base font-bold" style={{ fontFamily: "Oswald, sans-serif", color: "#c8921e" }}>30L</span>
+                    <div className="w-12 h-1" style={{ backgroundColor: "#c8921e", borderRadius: "4px" }} />
+                  </motion.div>
+
+                  {/* 20L Marker */}
+                  <motion.div
+                    className="absolute flex items-center gap-3"
+                    style={{ bottom: "calc(30% - 20px)" }}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <span className="text-sm font-medium" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(42,31,20,0.5)" }}>20L</span>
+                    <div className="w-8 h-0.5" style={{ backgroundColor: "rgba(200,146,30,0.4)" }} />
+                  </motion.div>
+                </div>
+
+                {/* Central Barrel SVG */}
+                <motion.div
+                  className="relative"
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <svg className="w-48 lg:w-56 h-auto" viewBox="0 0 200 320" fill="none" style={{ filter: "drop-shadow(0 15px 30px rgba(200,146,30,0.25))" }}>
+                    {/* Shadow */}
+                    <ellipse cx="100" cy="310" rx="70" ry="8" fill="rgba(200,146,30,0.15)" />
+
+                    {/* Barrel body */}
+                    <path
+                      d="M40 70 C40 50 55 35 100 35 C145 35 160 50 160 70 L160 250 C160 270 145 285 100 285 C55 285 40 270 40 250 Z"
+                      fill="rgba(200,146,30,0.06)"
+                      stroke="#c8921e"
+                      strokeWidth="2.5"
+                    />
+
+                    {/* Barrel hoops */}
+                    <path d="M42 100 C42 88 55 78 100 78 C145 78 158 88 158 100" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="none"/>
+                    <path d="M40 155 C40 143 55 133 100 133 C145 133 160 143 160 155" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="none"/>
+                    <path d="M40 210 C40 198 55 188 100 188 C145 188 160 198 160 210" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="none"/>
+
+                    {/* Barrel top */}
+                    <ellipse cx="100" cy="35" rx="60" ry="14" fill="rgba(200,146,30,0.1)" stroke="#c8921e" strokeWidth="2"/>
+
+                    {/* Liquid fill (fixed at 30L level - 55% height) */}
+                    <defs>
+                      <linearGradient id="choppGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#f0a820" stopOpacity="0.9"/>
+                        <stop offset="50%" stopColor="#c8921e" stopOpacity="0.85"/>
+                        <stop offset="100%" stopColor="#8a5a0a" stopOpacity="0.95"/>
+                      </linearGradient>
+                      <clipPath id="barrelClip">
+                        <path d="M44 75 C44 58 57 45 100 45 C143 45 156 58 156 75 L156 245 C156 262 143 275 100 275 C57 275 44 262 44 245 Z"/>
+                      </clipPath>
+                    </defs>
+
+                    {/* Liquid inside barrel - at 30L level (155px from top = 55%) */}
+                    <g clipPath="url(#barrelClip)">
+                      {/* Main liquid body */}
+                      <rect x="44" y="155" width="112" height="120" fill="url(#choppGradient)" opacity="0.85"/>
+
+                      {/* Bubbles rising */}
+                      <motion.circle
+                        cx="70" cy="240" r="3" fill="#f0a820" opacity="0.6"
+                        animate={{ y: [0, -60, -100], opacity: [0.6, 0.8, 0] }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                      />
+                      <motion.circle
+                        cx="90" cy="250" r="2" fill="#f0a820" opacity="0.5"
+                        animate={{ y: [0, -70, -110], opacity: [0.5, 0.7, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+                      />
+                      <motion.circle
+                        cx="110" cy="245" r="2.5" fill="#f0a820" opacity="0.55"
+                        animate={{ y: [0, -65, -105], opacity: [0.55, 0.75, 0] }}
+                        transition={{ duration: 2.8, repeat: Infinity, ease: "easeOut", delay: 1 }}
+                      />
+                      <motion.circle
+                        cx="130" cy="255" r="2" fill="#f0a820" opacity="0.5"
+                        animate={{ y: [0, -55, -95], opacity: [0.5, 0.7, 0] }}
+                        transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut", delay: 1.5 }}
+                      />
+
+                      {/* Foam on top */}
+                      <ellipse cx="100" cy="155" rx="52" ry="8" fill="#faf8f4" opacity="0.8"/>
+                      <ellipse cx="85" cy="153" rx="15" ry="4" fill="#faf8f4" opacity="0.6"/>
+                      <ellipse cx="115" cy="154" rx="12" ry="3" fill="#faf8f4" opacity="0.5"/>
+                    </g>
+
+                    {/* Tap */}
+                    <rect x="155" y="145" width="28" height="18" rx="3" fill="#c8921e" stroke="#c8921e" strokeWidth="1.5"/>
+                    <rect x="180" y="150" width="12" height="8" rx="2" fill="#c8921e"/>
+                  </svg>
+
+                  {/* Drip from tap */}
+                  <motion.div
+                    className="absolute w-2 h-2 rounded-full"
+                    style={{ backgroundColor: "#c8921e", right: "28px", top: "165px" }}
+                    animate={{ y: [0, 30, 30], opacity: [1, 1, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeIn" }}
+                  />
+                </motion.div>
+
+                {/* Vertical line connecting ruler to barrel */}
+                <div className="absolute left-[calc(33.33%-60px)] top-[15%] bottom-[15%] w-px" style={{ backgroundColor: "rgba(200,146,30,0.15)" }} />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bottom tagline */}
           <motion.div
-            className="mt-10 text-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            className="mt-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="flex flex-wrap justify-center gap-4 text-sm" style={{ color: "rgba(200,185,145,0.5)" }}>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Chopp bem armazenado</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Entrega agendada</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Suporte em horário combinado</span>
-              </div>
-            </div>
+            <p className="text-base italic" style={{ color: "rgba(42,31,20,0.5)", fontFamily: "Playfair Display, serif" }}>
+              "Você não contrata só o chopp. Você leva estrutura, atendimento e segurança pra não passar perrengue no meio da festa."
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* ==============================
-         4. GROWLERS - Design Moderno e Premium
-         ============================== */}
-      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-10" style={{ background: "linear-gradient(180deg, rgba(200,146,30,0.4) 0%, transparent 100%)" }} />
-          <div className="absolute bottom-0 -left-20 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
-          <div className="absolute top-20 -right-20 w-[250px] h-[250px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)" }} />
-        </div>
+{/* ==============================
+          4. GROWLERS - Split Horizontal Layout
+          ============================== */}
+      <section className="py-16 lg:py-20 relative" style={{ backgroundColor: "#faf8f4" }}>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
           <motion.div
-            className="text-center mb-12"
+            className="text-center mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
               <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Linha Growlers</span>
               <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
             </div>
-            
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
-              <span style={{ color: "#2a1f14" }}>Growlers Imperador:</span>
-              <br />
-              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>chopp de qualidade em versão menor</span>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+              <span style={{ color: "#2a1f14" }}>Growlers Imperador</span>
+              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}> — chopp de qualidade na quantidade certa</span>
             </h2>
-            
-            <p className="text-lg max-w-2xl mx-auto mb-4" style={{ color: "#5a4a3a", lineHeight: 1.7 }}>
-              Nem todo momento pede barril, mas todo momento pode ficar melhor com chopp.
-            </p>
-            <p className="text-base max-w-2xl mx-auto" style={{ color: "rgba(90,74,58,0.7)", lineHeight: 1.6 }}>
-              Nossa linha de Growlers é perfeita pra quem quer levar chopp de qualidade pra casa, pra um jantar ou pra presentear alguém.
+
+            <p className="text-base max-w-xl mx-auto mt-3" style={{ color: "#7A6845", lineHeight: 1.6, fontFamily: "Playfair Display, serif" }}>
+              Pra qualquer momento.
             </p>
           </motion.div>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-4xl mx-auto mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            {[
-              { 
-                title: "Vinho Tinto", 
-                desc: "Encorpado e saboroso", 
-                ideal: ["Jantares", "Churrascos", "Presentear"],
-                highlight: true,
-                color: "#8B0000"
-              },
-              { 
-                title: "Vinho Branco", 
-                desc: "Leve e refrescante", 
-                ideal: ["Dias quentes", "Eventos informais", "Presentear"],
-                highlight: false,
-                color: "#DAA520"
-              },
-            ].map((item, i) => (
+          {/* Split Layout: Image + Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 lg:gap-12 items-center">
+            {/* Left Column - Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="relative overflow-hidden bg-gray-100" style={{ borderRadius: "16px", height: "500px" }}>
+                <img
+                  src="/Imperador/growlers.jpg"
+                  alt="Growlers Imperador"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 60%, rgba(42,31,20,0.1) 100%)" }} />
+              </div>
+            </motion.div>
+
+            {/* Right Column - Cards Stack */}
+            <motion.div
+              className="flex flex-col gap-4"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              {/* Card 1 - Tinto */}
               <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                whileHover={{ y: -8, boxShadow: item.highlight ? "0 25px 50px rgba(200,146,30,0.25)" : "0 20px 40px rgba(0,0,0,0.1)" }}
-                className={`relative rounded-3xl overflow-hidden ${item.highlight ? 'ring-2 ring-[#c8921e]' : ''}`}
-                style={{ 
-                  backgroundColor: "#fff", 
-                  border: item.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.2)",
-                  boxShadow: item.highlight ? "0 15px 40px rgba(200,146,30,0.15)" : "0 10px 30px rgba(0,0,0,0.05)"
+                className="group relative bg-white cursor-pointer"
+                style={{
+                  borderRadius: "14px",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                  padding: "24px 28px",
+                  border: "2px solid transparent",
+                  transition: "border-color 0.3s ease, box-shadow 0.3s ease"
+                }}
+                whileHover={{
+                  borderColor: "#c8921e",
+                  boxShadow: "0 4px 20px rgba(200,146,30,0.15)"
                 }}
               >
-                {item.highlight && (
-                  <div className="absolute top-0 left-0 right-0 py-2 text-center text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#fff", fontFamily: "Oswald, sans-serif", letterSpacing: "1px" }}>
-                    ★ MAIS PEDIDO
-                  </div>
-                )}
+                {/* Badge */}
+                <span className="inline-block text-xs font-bold uppercase" style={{
+                  backgroundColor: "rgba(200,146,30,0.12)",
+                  color: "#c8921e",
+                  borderRadius: "20px",
+                  padding: "4px 12px",
+                  letterSpacing: "0.1em"
+                }}>
+                  Tinto
+                </span>
 
-                <div className="p-8" style={{ marginTop: item.highlight ? '28px' : '0' }}>
-                  <div className="mb-6 flex justify-center">
-                    <svg className="w-28 h-32" viewBox="0 0 80 100" fill="none">
-                      <rect x="20" y="20" width="40" height="70" rx="6" stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5"/>
-                      <path d="M24 20V12c0-2 4-4 16-4s16 2 16 4v8" stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5"/>
-                      <path d="M20 40c0-4 8-8 20-8s20 4 20 8" stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2" strokeLinecap="round"/>
-                      <rect x="30" y="50" width="20" height="25" rx="2" fill={item.highlight ? "rgba(200,146,30,0.15)" : "rgba(139,115,72,0.1)"} stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
-                      <circle cx="40" cy="62" r="6" fill={item.color} fillOpacity="0.6" />
-                    </svg>
-                  </div>
+                {/* Title */}
+                <h3 className="text-2xl font-extrabold uppercase mt-3" style={{
+                  fontFamily: "Bebas Neue, sans-serif",
+                  color: "#1A1208",
+                  letterSpacing: "0.02em"
+                }}>
+                  Growler Tinto
+                </h3>
 
-                  <div className="text-center mb-5">
-                    <h3 className="text-2xl font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: item.highlight ? "#c8921e" : "#2a1f14" }}>
-                      Growler {item.title}
-                    </h3>
-                    <p className="text-sm" style={{ color: "rgba(42,31,20,0.6)" }}>
-                      {item.desc}
-                    </p>
-                  </div>
-
-                  <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: "#faf8f4" }}>
-                    <p className="text-xs font-semibold mb-3 text-center" style={{ color: "rgba(42,31,20,0.5)", fontFamily: "Oswald, sans-serif", letterSpacing: "2px" }}>IDEAL PARA</p>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {item.ideal.map((use, j) => (
-                        <span key={j} className="px-3 py-1.5 text-xs rounded-full font-medium" style={{ backgroundColor: item.highlight ? "rgba(200,146,30,0.15)" : "rgba(139,115,72,0.1)", color: "#2a1f14" }}>
-                          {use}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <motion.a
-                    href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre o Growler de ${item.title}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="block w-full py-3.5 text-sm font-semibold text-center rounded-xl transition-all"
-                    style={{ 
-                      backgroundColor: item.highlight ? "#c8921e" : "transparent", 
-                      color: item.highlight ? "#fff" : "#c8921e", 
-                      border: item.highlight ? "none" : "1px solid rgba(200,146,30,0.4)",
-                      fontFamily: "Oswald, sans-serif",
-                      letterSpacing: "1px"
-                    }}
-                  >
-                    QUERO ESTE
-                  </motion.a>
-                </div>
+                {/* Description */}
+                <p className="text-sm mt-2" style={{
+                  color: "#7A6845",
+                  lineHeight: 1.6
+                }}>
+                  Encorpado e saboroso, perfeito para jantares e churrascos.
+                </p>
               </motion.div>
-            ))}
-          </motion.div>
 
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <p className="text-base mb-6" style={{ color: "rgba(42,31,20,0.65)", fontStyle: "italic" }}>
-              Perfeito pra quem gosta de praticidade, qualidade e quer fugir do "mais do mesmo" na hora de beber bem.
-            </p>
-            
-            <motion.a
-              href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre os Growlers Imperador.`}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold rounded-xl"
-              style={{ backgroundColor: "#c8921e", color: "#fff", fontFamily: "Oswald, sans-serif" }}
-            >
-              <svg className="w-6 h-6" fill="#fff" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              Entre em contato e confira a disponibilidade
-            </motion.a>
-          </motion.div>
+              {/* Card 2 - Branco */}
+              <motion.div
+                className="group relative bg-white cursor-pointer"
+                style={{
+                  borderRadius: "14px",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                  padding: "24px 28px",
+                  border: "2px solid transparent",
+                  transition: "border-color 0.3s ease, box-shadow 0.3s ease"
+                }}
+                whileHover={{
+                  borderColor: "#c8921e",
+                  boxShadow: "0 4px 20px rgba(200,146,30,0.15)"
+                }}
+              >
+                {/* Badge */}
+                <span className="inline-block text-xs font-bold uppercase" style={{
+                  backgroundColor: "rgba(200,146,30,0.12)",
+                  color: "#c8921e",
+                  borderRadius: "20px",
+                  padding: "4px 12px",
+                  letterSpacing: "0.1em"
+                }}>
+                  Branco
+                </span>
+
+                {/* Title */}
+                <h3 className="text-2xl font-extrabold uppercase mt-3" style={{
+                  fontFamily: "Bebas Neue, sans-serif",
+                  color: "#1A1208",
+                  letterSpacing: "0.02em"
+                }}>
+                  Growler Branco
+                </h3>
+
+                {/* Description */}
+                <p className="text-sm mt-2" style={{
+                  color: "#7A6845",
+                  lineHeight: 1.6
+                }}>
+                  Leve e refrescante, ideal para dias quentes e eventos informais.
+                </p>
+              </motion.div>
+
+              {/* CTA Button */}
+              <motion.a
+                href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre os Growlers Imperador.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 self-start mt-6"
+                style={{
+                  backgroundColor: "#c8921e",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: "15px",
+                  borderRadius: "40px",
+                  padding: "14px 28px",
+                  fontFamily: "Oswald, sans-serif"
+                }}
+                whileHover={{ scale: 1.03, backgroundColor: "#b37d18" }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span>Conhecer linha completa</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </motion.a>
+            </motion.div>
+          </div>
         </div>
       </section>
+            
+            
 
       {/* ==============================
          5. PRODUTOS - Premium Design
@@ -745,14 +967,14 @@ function Home() {
               ].map((filter) => (
                 <motion.button
                   key={filter.id}
-                  onClick={() => {}}
+                  onClick={() => setActiveProductFilter(filter.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                   className="px-5 py-2.5 text-sm font-medium transition-all duration-200"
                   style={{
-                    backgroundColor: filter.id === 'all' ? "#CA8A04" : "rgba(255,255,255,0.05)",
-                    color: filter.id === 'all' ? "#1C1917" : "#FAFAF9",
-                    border: filter.id === 'all' ? "none" : "1px solid rgba(200,146,30,0.3)",
+                    backgroundColor: activeProductFilter === filter.id ? "#CA8A04" : "rgba(255,255,255,0.05)",
+                    color: activeProductFilter === filter.id ? "#1C1917" : "#FAFAF9",
+                    border: activeProductFilter === filter.id ? "none" : "1px solid rgba(200,146,30,0.3)",
                     fontFamily: "Oswald, sans-serif",
                     borderRadius: "8px",
                   }}
@@ -778,7 +1000,7 @@ function Home() {
               { name: "Growler Branco", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Leve e refrescante, perfeito para dias quentes." },
               { name: "Chopeira Premium", category: "acessorios", type: "Equipamento", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Estrutura completa com manutenção inclusa." },
               { name: "Kit Copos", category: "acessorios", type: "Kit", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Conjunto elegante para servir com estilo." },
-            ].map((product, i) => (
+            ].filter(p => activeProductFilter === 'all' || p.category === activeProductFilter).map((product, i) => (
               <motion.div
                 key={`${product.name}-${i}`}
                 initial={{ opacity: 0, y: 30 }}
@@ -1540,7 +1762,7 @@ function Home() {
       </section>
 
       {/* ==============================
-          9. REGIÃO DE ATENDIMENTO
+          9. REGIÃO DE ATENDIMENTO - OpenStreetMap Real (Light)
           ============================== */}
       <section
         className="py-16 lg:py-24 relative overflow-hidden"
@@ -1548,108 +1770,181 @@ function Home() {
       >
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
+          <div className="absolute top-32 right-0 w-[400px] h-[400px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.05) 0%, transparent 70%)" }} />
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
+        <div className="relative max-w-7xl mx-auto px-5 lg:px-8">
           <Scroll>
             <motion.div
-              className="text-center mb-12"
+              className="text-center mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }}></div>
-                <span className="text-xs font-medium uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "3px" }}>Atendimento</span>
-                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }}></div>
-              </div>
+              <motion.div 
+                className="inline-flex items-center gap-3 mb-4"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+              >
+                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }} />
+                <span className="text-xs font-medium uppercase tracking-[4px]" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif" }}>Atendimento</span>
+                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }} />
+              </motion.div>
+              
               <h2 className="text-4xl lg:text-5xl font-normal">
                 <span style={{ color: "#2a1f14" }}>Onde o </span>
                 <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Imperador</span>
-                <span style={{ color: "#2a1f14" }}> chega</span>
+                <span style={{ color: "#2a1f14" }}> Chega</span>
               </h2>
             </motion.div>
           </Scroll>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <Scroll>
-              <div className="space-y-4">
-                <p className="text-lg leading-relaxed" style={{ color: "rgba(42,31,20,0.7)" }}>
-                  Atendemos exclusivamente o <strong style={{ color: "#c8921e" }}>Paraná</strong>, em um raio de até <strong style={{ color: "#c8921e" }}>300 km de Cascavel</strong>.
-                </p>
-                <p className="text-base" style={{ color: "rgba(42,31,20,0.65)" }}>
-                  Com forte atuação nas seguintes cidades:
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {["Cascavel", "Foz do Iguaçu", "Guaíra", "Guarapuava", "Assis Chateaubriand", "Palotina", "Lindoeste", "Capitão Leônidas Marques"].map((cidade) => (
-                    <span
-                      key={cidade}
-                      className="px-3 py-1.5 text-sm"
-                      style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#2a1f14", borderRadius: "4px", fontFamily: "Oswald, sans-serif" }}
-                    >
-                      {cidade}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-base mt-4" style={{ color: "rgba(42,31,20,0.65)" }}>
-                  Também temos operação em <strong style={{ color: "#2a1f14" }}>Maringá</strong> e região, conforme disponibilidade.
-                </p>
-              </div>
-            </Scroll>
-
-            <Scroll delay={0.1}>
-              <motion.div
-                className="relative p-6 lg:p-8"
-                style={{ backgroundColor: "#2a1f14", borderRadius: "16px" }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-16" style={{ background: "linear-gradient(to bottom, #c8921e, transparent)" }}>
-                  <motion.div
-                    className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full"
-                    style={{ backgroundColor: "#c8921e", boxShadow: "0 0 15px #c8921e" }}
-                    animate={{ scale: [1, 1.2, 1], opacity: [1, 0.8, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                </div>
-                
-                <div className="text-center pt-6">
-                  <div className="text-5xl lg:text-6xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>300km</div>
-                  <div className="text-sm uppercase mb-6" style={{ color: "rgba(200,185,145,0.6)", fontFamily: "Oswald, sans-serif", letterSpacing: "2px" }}>Raio de atendimento</div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* LEFT SIDE - Text */}
+            <div className="lg:col-span-4">
+              <Scroll>
+                <motion.div
+                  className="p-6 lg:p-8"
+                  style={{ backgroundColor: "#ffffff", borderRadius: "20px", border: "1px solid rgba(200,146,30,0.2)", boxShadow: "0 10px 40px rgba(0,0,0,0.06)" }}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <h3 className="text-2xl lg:text-3xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}>
+                    Nossa Rede de <span style={{ color: "#c8921e" }}>Sedes</span>
+                  </h3>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg" style={{ backgroundColor: "rgba(200,146,30,0.1)" }}>
-                      <div className="text-2xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#e8e0d0" }}>8+</div>
-                      <div className="text-xs" style={{ color: "rgba(200,185,145,0.5)" }}>Cidades</div>
+                  <p className="text-base leading-relaxed mb-6" style={{ color: "rgba(42,31,20,0.7)" }}>
+                    O Imperador do Chopp atua em todo o Paraná com <strong style={{ color: "#c8921e" }}>4 sedes estratégicas</strong>, garantindo atendimento rápido e qualidade em cada região.
+                  </p>
+
+                  <div className="space-y-4 mb-6">
+                    {headquarters.map((sede) => (
+                      <div key={sede.id} className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: "#c8921e", boxShadow: "0 0 8px rgba(200,146,30,0.6)" }}></div>
+                        <div>
+                          <span className="font-medium" style={{ color: "#2a1f14", fontFamily: "Oswald, sans-serif" }}>{sede.name}</span>
+                          <span className="ml-2 text-sm" style={{ color: "rgba(42,31,20,0.5)" }}>- {sede.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="p-4 rounded-xl text-center" style={{ backgroundColor: "rgba(200,146,30,0.1)" }}>
+                      <div className="text-3xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>4</div>
+                      <div className="text-xs uppercase" style={{ color: "rgba(42,31,20,0.6)", fontFamily: "Oswald, sans-serif" }}>Sedes</div>
                     </div>
-                    <div className="p-4 rounded-lg" style={{ backgroundColor: "rgba(200,146,30,0.1)" }}>
-                      <div className="text-2xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#e8e0d0" }}>2</div>
-                      <div className="text-xs" style={{ color: "rgba(200,185,145,0.5)" }}>Estados</div>
+                    <div className="p-4 rounded-xl text-center" style={{ backgroundColor: "rgba(200,146,30,0.1)" }}>
+                      <div className="text-3xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>300km</div>
+                      <div className="text-xs uppercase" style={{ color: "rgba(42,31,20,0.6)", fontFamily: "Oswald, sans-serif" }}>Raio</div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            </Scroll>
-          </div>
 
-          <motion.div
-            className="text-center mt-10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <a
-              href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de saber se vocês atendem na minha cidade`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 text-base font-medium"
-              style={{ backgroundColor: "#c8921e", color: "#2a1f14", fontFamily: "Oswald, sans-serif", borderRadius: "6px" }}
-            >
-              Verificar atendimento na minha cidade
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </motion.div>
+                  <motion.a
+                    href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de saber se vocês atendem na minha cidade`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center justify-center gap-2 w-full py-3 text-base font-semibold"
+                    style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif", borderRadius: "8px" }}
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.027 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Verificar minha cidade
+                  </motion.a>
+                </motion.div>
+              </Scroll>
+            </div>
+
+            {/* RIGHT SIDE - Map */}
+            <div className="lg:col-span-8">
+              <Scroll delay={0.1}>
+                <motion.div
+                  className="relative rounded-2xl overflow-hidden"
+                  style={{ border: "1px solid rgba(200,146,30,0.25)", height: "500px", boxShadow: "0 10px 40px rgba(0,0,0,0.08)" }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                >
+                  <MapContainer
+                    center={[-24.5, -52.0]}
+                    zoom={7}
+                    style={{ height: "100%", width: "100%", background: "#faf8f4" }}
+                    zoomControl={false}
+                    attributionControl={false}
+                  >
+                    <TileLayer
+                      url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    />
+                    {headquarters.map((sede) => (
+                      <Marker
+                        key={sede.id}
+                        position={[sede.lat, sede.lng]}
+                        icon={createPulseIcon()}
+                      >
+                        <Popup>
+                          <div style={{ 
+                            background: '#ffffff', 
+                            padding: '12px', 
+                            borderRadius: '8px',
+                            color: '#2a1f14',
+                            minWidth: '180px',
+                            border: '1px solid rgba(200,146,30,0.2)'
+                          }}>
+                            <div style={{ 
+                              fontFamily: 'Bebas Neue, sans-serif', 
+                              fontSize: '18px', 
+                              color: '#c8921e',
+                              marginBottom: '4px'
+                            }}>
+                              {sede.name}
+                            </div>
+                            <div style={{ 
+                              fontFamily: 'Oswald, sans-serif', 
+                              fontSize: '12px',
+                              color: 'rgba(42,31,20,0.7)',
+                              marginBottom: '8px'
+                            }}>
+                              {sede.type}
+                            </div>
+                            <div style={{ 
+                              fontFamily: 'Oswald, sans-serif', 
+                              fontSize: '11px',
+                              color: 'rgba(42,31,20,0.5)'
+                            }}>
+                              {sede.description}
+                            </div>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
+                  </MapContainer>
+                  
+                  {/* Map Overlay Badge */}
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: "#ffffff", border: "1px solid rgba(200,146,30,0.3)", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#c8921e" }}></div>
+                    <span className="text-xs" style={{ color: "#2a1f14", fontFamily: "Oswald, sans-serif" }}>4 Sedes ativas</span>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    <div className="flex items-center gap-2 px-2 py-1 rounded" style={{ backgroundColor: "#ffffff", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#c8921e" }}></div>
+                      <span className="text-xs" style={{ color: "#2a1f14", fontFamily: "Oswald, sans-serif" }}>Sede</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-2 py-1 rounded" style={{ backgroundColor: "#ffffff", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#c8921e", opacity: 0.5 }}></div>
+                      <span className="text-xs" style={{ color: "#2a1f14", fontFamily: "Oswald, sans-serif" }}>Filial</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </Scroll>
+            </div>
+          </div>
         </div>
       </section>
 

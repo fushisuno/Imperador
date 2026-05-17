@@ -1,0 +1,5 @@
+nome,tipo,endereco,cidade,estado,cep,telefone,email,horario_funcionamento,status,data_cadastro,observacoes
+Imperador do Chopp - Cascavel,Sede,Rua Paraná 1234,Cascavel,PR,85801010,(45) 3306-5776,contato@imperador.com,Seg-Sex: 08h-18h,Ativo,2024-01-15,Sede principal
+Bar do João,Parceiro,Rua das Flores 123,Cascavel,PR,85802020,(45) 99999-0001,joao@bardojoao.com,Qua-Sab: 18h-02h,Ativo,2024-02-20,Parceiro premium
+Choperia Central,Parceiro,Av Brasil 456,Foz do Iguaçu,PR,85801010,(45) 99999-0002,central@choperia.com,Ter-Dom: 17h-00h,Ativo,2024-03-10,Novo parceiro
+Ponto do Chopp,Parceiro,Av Paraná 890,Guarapuava,PR,85010000,(42) 99999-0004,ponto@chopp.com,Qua-Dom: 18h-01h,Pendente,2024-04-05,Aguardando verificação
