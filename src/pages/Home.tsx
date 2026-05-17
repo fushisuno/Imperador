@@ -1,10 +1,8 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { useIsMobile } from "../hooks/useMedia";
+import { useState, useRef, useEffect } from "react";
 import {
   GSAPScrollReveal as Scroll,
 } from "../components/AnimationsGSAP";
-import { BeerMug } from "../components/BeerMug";
 import { config } from "../config";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -166,163 +164,180 @@ function Home() {
   const [activeTab, setActiveTab] = useState("social");
   const [activeChopeiraTab, setActiveChopeiraTab] = useState("moto");
   const [activeProductFilter, setActiveProductFilter] = useState("all");
-  const isMobile = useIsMobile();
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentDot, setCurrentDot] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const allProducts = [
+    { name: "Pilsen", category: "chopp", type: "Clássica", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", desc: "Leve e refrescante" },
+    { name: "Weiss", category: "chopp", type: "Trigo", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Aromática e citrus" },
+    { name: "Vienna", category: "chopp", type: "Amber", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Malte caramelizado" },
+    { name: "IPA", category: "chopp", type: "American", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Lúpulo intenso" },
+    { name: "Stout", category: "chopp", type: "Escura", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Torra marcada" },
+    { name: "Barril 20L", category: "barril", type: "Pequeno", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Eventos pequenos" },
+    { name: "Barril 30L", category: "barril", type: "Médio", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Festas médias", highlight: true },
+    { name: "Barril 50L", category: "barril", type: "Grande", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Grandes eventos" },
+    { name: "Growler Tinto", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Encorpado", highlight: true },
+    { name: "Growler Branco", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Leve e refrescante" },
+    { name: "Chopeira Premium", category: "acessorios", type: "Equipamento", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Estrutura completa" },
+    { name: "Kit Copos", category: "acessorios", type: "Kit", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Conjunto elegante" },
+  ];
+
+  const getFilteredProducts = () => allProducts.filter(p => activeProductFilter === 'all' || p.category === activeProductFilter);
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = 200;
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollToDot = (index: number) => {
+    if (carouselRef.current) {
+      const cardWidth = 196;
+      carouselRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth'
+      });
+      setCurrentDot(index);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isPaused && carouselRef.current) {
+        const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+        if (carouselRef.current.scrollLeft >= maxScroll - 10) {
+          carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+          setCurrentDot(0);
+        } else {
+          scrollCarousel('right');
+          setCurrentDot(prev => Math.min(prev + 1, getFilteredProducts().length - 1));
+        }
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, activeProductFilter]);
+
   const currentContent = eventTypes.find((t) => t.id === activeTab) || eventTypes[0];
 
   return (
     <div>
-      {/* ==============================
-         1. HERO
-         ============================== */}
+{/* ==============================
+          1. HERO - Video Background
+          ============================== */}
       <section
-        className="relative min-h-screen flex items-center overflow-hidden"
-        style={{ backgroundColor: "#1a1208" }}
+        className="relative h-[90vh] flex items-center overflow-hidden"
       >
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/Imperador/video_canecaenxendo.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
         <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            background: "linear-gradient(to right, rgba(20, 12, 0, 0.95) 0%, rgba(20, 12, 0, 0.8) 50%, rgba(20, 12, 0, 0.6) 100%)"
           }}
         />
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute bottom-0 left-0 w-[600px] h-[400px]"
-            style={{
-              background:
-                "radial-gradient(ellipse at center bottom, rgba(200, 146, 30, 0.25) 0%, rgba(26, 18, 8, 0) 70%)",
-            }}
-          />
-          <div
-            className="absolute top-1/2 right-0 w-[500px] h-[600px]"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(240, 168, 32, 0.15) 0%, rgba(26, 18, 8, 0) 70%)",
-            }}
-          />
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full opacity-30"
-            style={{
-              background: "radial-gradient(circle, #c8921e 0%, transparent 70%)",
-              filter: "blur(60px)",
-            }}
-          />
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none overflow-hidden">
-          <div
-            className="absolute bottom-0 left-0 right-0 h-px"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(200, 146, 30, 0.3), transparent)",
-            }}
-          />
-          <div
-            className="absolute bottom-8 left-0 right-0 h-px"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(200, 146, 30, 0.15), transparent)",
-            }}
-          />
-        </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-12 lg:gap-8 items-center">
-            <div className="text-left">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-8 border"
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+          <motion.div
+            className="flex flex-col items-center text-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-8 border"
+              style={{
+                borderColor: "rgba(200, 146, 30, 0.4)",
+                backgroundColor: "rgba(200, 146, 30, 0.1)",
+                color: "#c8921e",
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: "#c8921e" }}
+              ></span>
+              Desde 2017
+            </motion.div>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-normal tracking-tight leading-tight mb-4">
+              <span style={{ color: "#e8e0d0" }}>Seu evento,</span>
+              <br />
+              <span
                 style={{
-                  borderColor: "rgba(200, 146, 30, 0.4)",
-                  backgroundColor: "rgba(200, 146, 30, 0.1)",
-                  color: "#c8921e",
+                  background:
+                    "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #d4860e 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
                 }}
               >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: "#c8921e" }}
-                ></span>
-                Desde 2017
-              </motion.div>
+                nosso chopp
+              </span>
+            </h1>
 
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-normal tracking-tight leading-none mb-2">
-                <span style={{ color: "#e8e0d0" }}>Seu evento,</span>
-                <br />
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #d4860e 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  nosso chopp
-                </span>
-              </h1>
+            <p className="text-base sm:text-lg max-w-lg leading-relaxed mb-8 text-white">
+              Chopp gelado, chopeira montada, suporte garantido até as 22h. Você só cuidar de brindar o resto é com o Imperador.
+            </p>
 
-              <p className="text-lg sm:text-xl mt-6 mb-8 max-w-lg leading-relaxed" style={{ color: "#b8985a" }}>
-                Chopp gelado, chopeira montada, suporte garantido até as 22h. Você
-                só cuidar de brindar – o resto é com o Imperador.
-              </p>
-
-<div className="flex flex-col sm:flex-row gap-4">
-                <motion.a
-                  href={`https://wa.me/${config.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold"
-                  style={{
-                    backgroundColor: "#c8921e",
-                    color: "#1a1208",
-                    borderRadius: "4px",
-                    fontFamily: "Oswald, sans-serif",
-                  }}
-                >
-                  <svg
-                    className="w-7 h-7"
-                    fill="#c8921e"
-                    viewBox="0 0 24 24"
-                  >
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                  Quero chopp pro meu evento
-                </motion.a>
-                <motion.a
-                  href={`https://wa.me/${config.whatsapp}?text=Olá! Quero ser um revendedor Imperador do Chopp`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-medium"
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "#c8921e",
-                    border: "1px solid rgba(200, 146, 30, 0.4)",
-                    borderRadius: "4px",
-                    fontFamily: "Oswald, sans-serif",
-                  }}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                  </svg>
-                  Quero revender Imperador
-                </motion.a>
-              </div>q
-            </div>
-
-            {!isMobile && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
+            <div className="flex flex-col sm:flex-row gap-4">
+              <motion.a
+                href={`https://wa.me/${config.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold"
+                style={{
+                  backgroundColor: "#c8921e",
+                  color: "#1a1208",
+                  borderRadius: "4px",
+                  fontFamily: "Oswald, sans-serif",
+                }}
               >
-                <BeerMug />
-              </motion.div>
-            )}
-          </div>
+                <svg
+                  className="w-6 h-6"
+                  fill="#1a1208"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Quero chopp pro meu evento
+              </motion.a>
+              <motion.a
+                href={`https://wa.me/${config.whatsapp}?text=Olá! Quero ser um revendedor Imperador do Chopp`}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-medium"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#c8921e",
+                  border: "1px solid rgba(200, 146, 30, 0.4)",
+                  borderRadius: "4px",
+                  fontFamily: "Oswald, sans-serif",
+                }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Quero revender Imperador
+              </motion.a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -516,17 +531,13 @@ function Home() {
       </section>
 
 {/* ==============================
-          3. DELIVERY - Split Layout com Barril e Régua
+          3. DELIVERY - Dark Theme com barril.png
           ============================== */}
-      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 70%)" }} />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.1) 0%, transparent 70%)" }} />
-        </div>
+      <section className="py-10 lg:py-20 relative" style={{ backgroundColor: "#1a1208" }}>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-12 lg:gap-16 items-center">
-            {/* LEFT SIDE - Content (40%) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* LEFT SIDE - Content (50%) */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -538,40 +549,46 @@ function Home() {
                 <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Delivery</span>
               </div>
 
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-6" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
-                <span style={{ color: "#2a1f14" }}>Chopp na sua casa,</span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+                <span style={{ color: "#e8e0d0" }}>Chopp na sua casa,</span>
                 <br />
-                <span style={{ color: "#2a1f14" }}>no seu evento,</span>
+                <span style={{ color: "#e8e0d0" }}>na sua empresa ou</span>
                 <br />
                 <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>onde a festa acontecer</span>
               </h2>
 
-              <p className="text-base mb-8 leading-relaxed" style={{ color: "#5a4a3a", fontFamily: "Playfair Display, serif" }}>
-                Jantar em família, aniversário na garagem ou confraternização da firma — o Imperador leva o chopp até você com a mesma qualidade dos grandes eventos.
+              <p className="text-base mb-2 leading-relaxed text-white" style={{fontFamily: "Playfair Display, serif" }}>
+                Pra um jantar em família, aniversário na garagem ou confraternização da firma, o Imperador leva o chopp até você com a mesma qualidade que usamos nos grandes eventos.
               </p>
 
-              {/* Benefits */}
-              <div className="space-y-4 mb-8">
+              <p className="text-sm font-medium mb-6" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "1px" }}>
+                BARRIS DO TAMANHO DA SUA COMEMORAÇÃO
+              </p>
+
+              {/* Benefits with titles and subtitles */}
+              <div className="space-y-5 mb-8">
                 {[
-                  { icon: "M5 13l4 4L19 7", text: "Chopp Premium bem armazenado" },
-                  { icon: "M5 13l4 4L19 7", text: "Chopeira montada e regulada" },
-                  { icon: "M5 13l4 4L19 7", text: "Suporte técnico até as 22h" },
-                  { icon: "M5 13l4 4L19 7", text: "Entrega e retirada agendadas" },
+                  { title: "Barris de 20L, 30L e 50L", subtitle: "Escolha o tamanho ideal pro seu evento" },
+                  { title: "Chopp sempre bem armazenado", subtitle: "Temperatura ideal do início ao fim" },
+                  { title: "Entrega agendada e suporte", subtitle: "Sem surpresa de logística no dia" },
                 ].map((item, i) => (
                   <motion.div
                     key={i}
-                    className="flex items-center gap-3"
+                    className="flex items-start gap-4"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
                   >
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(200,146,30,0.15)" }}>
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="#c8921e" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: "#c8921e" }}>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="#1a1208" strokeWidth="3" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-sm" style={{ color: "rgba(42,31,20,0.8)" }}>{item.text}</span>
+                    <div>
+                      <span className="text-sm font-semibold block" style={{ color: "#e8e0d0" }}>{item.title}</span>
+                      <span className="text-xs block" style={{ color: "#9A8870" }}>{item.subtitle}</span>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -580,46 +597,45 @@ function Home() {
                 href={`https://wa.me/${config.whatsapp}?text=Olá! Quero chopp no meu próximo evento.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.03, backgroundColor: "#9A6F25" }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold"
-                style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif", borderRadius: "8px", boxShadow: "0 4px 20px rgba(200,146,30,0.3)" }}
+                className="inline-flex items-center gap-3 px-8 py-4 text-base font-bold"
+                style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif", borderRadius: "8px" }}
               >
                 <svg className="w-6 h-6" fill="#1a1208" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
-                Falar no WhatsApp
+                Pedir meu barril
               </motion.a>
             </motion.div>
 
-            {/* RIGHT SIDE - Barrel with Ruler (60%) */}
+            {/* RIGHT SIDE - Large barril.png with levels indicator */}
             <motion.div
-              className="relative flex items-center justify-center"
+              className="relative flex items-center justify-end"
+              style={{ height: "550px" }}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              <div className="relative flex items-center gap-8">
-                {/* Vertical Ruler - Left Side */}
-                <div className="relative flex flex-col items-end gap-0" style={{ height: "420px" }}>
+              <div className="relative flex items-center justify-end w-full h-full">
+                {/* Vertical Ruler - Left Side of barrel */}
+                <div className="relative flex flex-col items-end justify-around h-full py-8 mr-4">
                   {/* 50L Marker */}
                   <motion.div
-                    className="absolute flex items-center gap-3"
-                    style={{ bottom: "calc(85% - 20px)" }}
+                    className="flex items-center gap-3"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.5 }}
                   >
-                    <span className="text-sm font-medium" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(42,31,20,0.5)" }}>50L</span>
-                    <div className="w-8 h-0.5" style={{ backgroundColor: "rgba(200,146,30,0.4)" }} />
+                    <span className="text-sm font-semibold" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(200,185,145,0.5)" }}>50L</span>
+                    <div className="w-8 h-0.5" style={{ backgroundColor: "rgba(200,146,30,0.3)" }} />
                   </motion.div>
 
                   {/* 30L Marker - Highlighted */}
                   <motion.div
-                    className="absolute flex items-center gap-3"
-                    style={{ bottom: "calc(55% - 20px)" }}
+                    className="flex items-center gap-3"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -631,119 +647,45 @@ function Home() {
 
                   {/* 20L Marker */}
                   <motion.div
-                    className="absolute flex items-center gap-3"
-                    style={{ bottom: "calc(30% - 20px)" }}
+                    className="flex items-center gap-3"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.9 }}
                   >
-                    <span className="text-sm font-medium" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(42,31,20,0.5)" }}>20L</span>
-                    <div className="w-8 h-0.5" style={{ backgroundColor: "rgba(200,146,30,0.4)" }} />
+                    <span className="text-sm font-semibold" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(200,185,145,0.5)" }}>20L</span>
+                    <div className="w-8 h-0.5" style={{ backgroundColor: "rgba(200,146,30,0.3)" }} />
                   </motion.div>
                 </div>
 
-                {/* Central Barrel SVG */}
+                {/* Large Barrel Image */}
                 <motion.div
-                  className="relative"
-                  animate={{ y: [0, -8, 0] }}
+                  className="relative flex items-center justify-center h-full"
+                  animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <svg className="w-48 lg:w-56 h-auto" viewBox="0 0 200 320" fill="none" style={{ filter: "drop-shadow(0 15px 30px rgba(200,146,30,0.25))" }}>
-                    {/* Shadow */}
-                    <ellipse cx="100" cy="310" rx="70" ry="8" fill="rgba(200,146,30,0.15)" />
-
-                    {/* Barrel body */}
-                    <path
-                      d="M40 70 C40 50 55 35 100 35 C145 35 160 50 160 70 L160 250 C160 270 145 285 100 285 C55 285 40 270 40 250 Z"
-                      fill="rgba(200,146,30,0.06)"
-                      stroke="#c8921e"
-                      strokeWidth="2.5"
-                    />
-
-                    {/* Barrel hoops */}
-                    <path d="M42 100 C42 88 55 78 100 78 C145 78 158 88 158 100" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                    <path d="M40 155 C40 143 55 133 100 133 C145 133 160 143 160 155" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                    <path d="M40 210 C40 198 55 188 100 188 C145 188 160 198 160 210" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="none"/>
-
-                    {/* Barrel top */}
-                    <ellipse cx="100" cy="35" rx="60" ry="14" fill="rgba(200,146,30,0.1)" stroke="#c8921e" strokeWidth="2"/>
-
-                    {/* Liquid fill (fixed at 30L level - 55% height) */}
-                    <defs>
-                      <linearGradient id="choppGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#f0a820" stopOpacity="0.9"/>
-                        <stop offset="50%" stopColor="#c8921e" stopOpacity="0.85"/>
-                        <stop offset="100%" stopColor="#8a5a0a" stopOpacity="0.95"/>
-                      </linearGradient>
-                      <clipPath id="barrelClip">
-                        <path d="M44 75 C44 58 57 45 100 45 C143 45 156 58 156 75 L156 245 C156 262 143 275 100 275 C57 275 44 262 44 245 Z"/>
-                      </clipPath>
-                    </defs>
-
-                    {/* Liquid inside barrel - at 30L level (155px from top = 55%) */}
-                    <g clipPath="url(#barrelClip)">
-                      {/* Main liquid body */}
-                      <rect x="44" y="155" width="112" height="120" fill="url(#choppGradient)" opacity="0.85"/>
-
-                      {/* Bubbles rising */}
-                      <motion.circle
-                        cx="70" cy="240" r="3" fill="#f0a820" opacity="0.6"
-                        animate={{ y: [0, -60, -100], opacity: [0.6, 0.8, 0] }}
-                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-                      />
-                      <motion.circle
-                        cx="90" cy="250" r="2" fill="#f0a820" opacity="0.5"
-                        animate={{ y: [0, -70, -110], opacity: [0.5, 0.7, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
-                      />
-                      <motion.circle
-                        cx="110" cy="245" r="2.5" fill="#f0a820" opacity="0.55"
-                        animate={{ y: [0, -65, -105], opacity: [0.55, 0.75, 0] }}
-                        transition={{ duration: 2.8, repeat: Infinity, ease: "easeOut", delay: 1 }}
-                      />
-                      <motion.circle
-                        cx="130" cy="255" r="2" fill="#f0a820" opacity="0.5"
-                        animate={{ y: [0, -55, -95], opacity: [0.5, 0.7, 0] }}
-                        transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut", delay: 1.5 }}
-                      />
-
-                      {/* Foam on top */}
-                      <ellipse cx="100" cy="155" rx="52" ry="8" fill="#faf8f4" opacity="0.8"/>
-                      <ellipse cx="85" cy="153" rx="15" ry="4" fill="#faf8f4" opacity="0.6"/>
-                      <ellipse cx="115" cy="154" rx="12" ry="3" fill="#faf8f4" opacity="0.5"/>
-                    </g>
-
-                    {/* Tap */}
-                    <rect x="155" y="145" width="28" height="18" rx="3" fill="#c8921e" stroke="#c8921e" strokeWidth="1.5"/>
-                    <rect x="180" y="150" width="12" height="8" rx="2" fill="#c8921e"/>
-                  </svg>
-
-                  {/* Drip from tap */}
-                  <motion.div
-                    className="absolute w-2 h-2 rounded-full"
-                    style={{ backgroundColor: "#c8921e", right: "28px", top: "165px" }}
-                    animate={{ y: [0, 30, 30], opacity: [1, 1, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeIn" }}
+                  <img
+                    src="/Imperador/barril.png"
+                    alt="Barril de chopp Imperador"
+                    className="h-full w-auto object-contain"
+                    style={{ maxWidth: "none", filter: "drop-shadow(0 25px 50px rgba(200,146,30,0.35))" }}
                   />
                 </motion.div>
-
-                {/* Vertical line connecting ruler to barrel */}
-                <div className="absolute left-[calc(33.33%-60px)] top-[15%] bottom-[15%] w-px" style={{ backgroundColor: "rgba(200,146,30,0.15)" }} />
               </div>
             </motion.div>
           </div>
 
-          {/* Bottom tagline */}
+          {/* Commercial highlight quote */}
           <motion.div
-            className="mt-16 text-center"
+            className="mt-16 pt-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
+            style={{ borderTop: "1px solid rgba(200,146,30,0.15)" }}
           >
-            <p className="text-base italic" style={{ color: "rgba(42,31,20,0.5)", fontFamily: "Playfair Display, serif" }}>
-              "Você não contrata só o chopp. Você leva estrutura, atendimento e segurança pra não passar perrengue no meio da festa."
+            <p className="text-base italic max-w-xl mx-auto" style={{ color: "rgba(232,224,208,0.6)", fontFamily: "Playfair Display, serif" }}>
+              Você não contrata "só o chopp". Você leva junto estrutura, atendimento e segurança pra não passar perrengue no meio da festa.
             </p>
           </motion.div>
         </div>
@@ -769,13 +711,16 @@ function Home() {
               <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
-              <span style={{ color: "#2a1f14" }}>Growlers Imperador</span>
-              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}> — chopp de qualidade na quantidade certa</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}> chopp de qualidade em versão menor</span>
             </h2>
 
-            <p className="text-base max-w-xl mx-auto mt-3" style={{ color: "#7A6845", lineHeight: 1.6, fontFamily: "Playfair Display, serif" }}>
-              Pra qualquer momento.
+            <p className="text-base max-w-2xl mx-auto" style={{ color: "#5a4a3a", lineHeight: 1.7, fontFamily: "Playfair Display, serif" }}>
+              Nem todo momento pede barril, mas todo momento pode ficar melhor com chopp.
+            </p>
+
+            <p className="text-sm max-w-2xl mx-auto mt-3" style={{ color: "#7A6845", lineHeight: 1.6, fontFamily: "Playfair Display, serif" }}>
+              Nossa linha de Growlers é perfeita pra quem quer levar chopp de qualidade pra casa, pra um jantar ou pra presentear alguém.
             </p>
           </motion.div>
 
@@ -924,16 +869,16 @@ function Home() {
             
             
 
-      {/* ==============================
-         5. PRODUTOS - Premium Design
-         ============================== */}
-      <section className="py-14 lg:py-20 relative overflow-hidden" style={{ backgroundColor: "#1C1917" }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(ellipse at 20% 50%, rgba(200,146,30,0.08) 0%, transparent 50%)" }} />
-        
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+{/* ==============================
+          5. PRODUTOS - Carrossel Horizontal
+          ============================== */}
+      <section className="py-14 lg:py-20 relative" style={{ backgroundColor: "#1C1917" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(ellipse at 50% 50%, rgba(200,146,30,0.05) 0%, transparent 60%)" }} />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <Scroll>
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
               <div className="flex items-center justify-center gap-4 mb-4">
                 <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }}></div>
                 <span className="text-xs uppercase tracking-[0.3em]" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>Catálogo</span>
@@ -943,16 +888,13 @@ function Home() {
                 <span style={{ color: "#FAFAF9" }}>Nossos </span>
                 <span style={{ color: "#CA8A04" }}>Produtos</span>
               </h2>
-              <p className="text-sm lg:text-base max-w-2xl mx-auto" style={{ color: "rgba(250,250,249,0.65)", fontFamily: "Playfair Display, serif" }}>
-                Linha completa de chopps artesanais premium. Cada chopp é produzida com ingredientes selecionados para garantir o melhor sabor.
-              </p>
             </motion.div>
           </Scroll>
 
           {/* Filtros por categoria */}
           <Scroll delay={0.1}>
             <motion.div
-              className="flex flex-wrap justify-center gap-3 mb-10"
+              className="flex flex-wrap justify-center gap-3 mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -970,13 +912,13 @@ function Home() {
                   onClick={() => setActiveProductFilter(filter.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-5 py-2.5 text-sm font-medium transition-all duration-200"
+                  className="px-2 py-0.5 text-[9px] font-medium transition-all duration-200"
                   style={{
                     backgroundColor: activeProductFilter === filter.id ? "#CA8A04" : "rgba(255,255,255,0.05)",
                     color: activeProductFilter === filter.id ? "#1C1917" : "#FAFAF9",
                     border: activeProductFilter === filter.id ? "none" : "1px solid rgba(200,146,30,0.3)",
                     fontFamily: "Oswald, sans-serif",
-                    borderRadius: "8px",
+                    borderRadius: "6px",
                   }}
                 >
                   {filter.label}
@@ -985,78 +927,122 @@ function Home() {
             </motion.div>
           </Scroll>
 
-          {/* Grid de Produtos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { name: "Pilsen", category: "chopp", type: "Clássica", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", desc: "Leve e refrescante, perfeita para qualquer ocasião." },
-              { name: "Weiss", category: "chopp", type: "Trigo", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Aromática e citrus, com notas de banana e cravo." },
-              { name: "Vienna", category: "chopp", type: "Amber", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Malte caramelizado, sabor encorpado e rico." },
-              { name: "IPA", category: "chopp", type: "American", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Lúpulo intenso, cítrica e bem equilibrada." },
-              { name: "Stout", category: "chopp", type: "Escura", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Torra marcada, cremosa e sofisticada." },
-              { name: "Barril 20L", category: "barril", type: "Pequeno", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Ideal para eventos pequenos e encontros íntimos." },
-              { name: "Barril 30L", category: "barril", type: "Médio", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Perfeito para festas de médio porte.", highlight: true },
-              { name: "Barril 50L", category: "barril", type: "Grande", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Para grandes celebrações e eventos corporativos." },
-              { name: "Growler Tinto", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Encorpado e saboroso, ideal para jantares.", highlight: true },
-              { name: "Growler Branco", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Leve e refrescante, perfeito para dias quentes." },
-              { name: "Chopeira Premium", category: "acessorios", type: "Equipamento", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Estrutura completa com manutenção inclusa." },
-              { name: "Kit Copos", category: "acessorios", type: "Kit", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Conjunto elegante para servir com estilo." },
-            ].filter(p => activeProductFilter === 'all' || p.category === activeProductFilter).map((product, i) => (
-              <motion.div
-                key={`${product.name}-${i}`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer"
-                whileHover={{ scale: 1.03, zIndex: 10 }}
-                style={{ boxShadow: product.highlight ? "0 0 0 2px #CA8A04" : "none" }}
-              >
-                {/* Nome no fundo (watermark) */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-                  <span className="text-[4rem] sm:text-[5rem] lg:text-[6rem] font-bold whitespace-nowrap" style={{ fontFamily: "Bebas Neue, sans-serif", color: "rgba(250,250,249,0.03)", transform: "rotate(-15deg)" }}>
-                    {product.name}
-                  </span>
-                </div>
+          {/* Carrossel */}
+          <div className="relative">
+            {/* Setas de navegação */}
+            <button
+              onClick={() => scrollCarousel('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "rgba(200,146,30,0.9)", color: "#1C1917" }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
 
-                {/* Imagem */}
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+            <button
+              onClick={() => scrollCarousel('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "rgba(200,146,30,0.9)", color: "#1C1917" }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
 
-                {/* Overlay gradiente */}
-                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 30%, rgba(28,25,23,0.95) 100%)" }}></div>
+            {/* Container do carrossel */}
+            <div
+              ref={carouselRef}
+              className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-8"
+              style={{
+                scrollSnapType: 'x mandatory',
+                scrollBehavior: 'smooth',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              {[
+                { name: "Pilsen", category: "chopp", type: "Clássica", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", desc: "Leve e refrescante" },
+                { name: "Weiss", category: "chopp", type: "Trigo", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Aromática e citrus" },
+                { name: "Vienna", category: "chopp", type: "Amber", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Malte caramelizado" },
+                { name: "IPA", category: "chopp", type: "American", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Lúpulo intenso" },
+                { name: "Stout", category: "chopp", type: "Escura", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Torra marcada" },
+                { name: "Barril 20L", category: "barril", type: "Pequeno", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Eventos pequenos" },
+                { name: "Barril 30L", category: "barril", type: "Médio", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Festas médias", highlight: true },
+                { name: "Barril 50L", category: "barril", type: "Grande", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Grandes eventos" },
+                { name: "Growler Tinto", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Encorpado", highlight: true },
+                { name: "Growler Branco", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Leve e refrescante" },
+                { name: "Chopeira Premium", category: "acessorios", type: "Equipamento", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Estrutura completa" },
+                { name: "Kit Copos", category: "acessorios", type: "Kit", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Conjunto elegante" },
+              ].filter(p => activeProductFilter === 'all' || p.category === activeProductFilter).map((product, i) => (
+                <motion.div
+                  key={`${product.name}-${i}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="relative flex-shrink-0 w-[180px] rounded-xl overflow-hidden group cursor-pointer"
+                  style={{
+                    scrollSnapAlign: 'start',
+                    backgroundColor: "rgba(255,255,255,0.03)",
+                    border: product.highlight ? "2px solid #CA8A04" : "1px solid rgba(200,146,30,0.15)",
+                    transition: "all 0.3s ease"
+                  }}
+                  whileHover={{ scale: 1.03, borderColor: "#CA8A04" }}
+                >
+                  {/* Badge Popular */}
+                  {product.highlight && (
+                    <div className="absolute top-2 right-2 z-10 px-2 py-1 rounded-full text-[10px] font-bold" style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif" }}>
+                      Popular
+                    </div>
+                  )}
 
-                {/* Badge se destacado */}
-                {product.highlight && (
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif" }}>
-                    Popular
+                  {/* Imagem */}
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, rgba(28,25,23,0.9) 100%)" }} />
                   </div>
-                )}
 
-                {/* Conteúdo */}
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <span className="text-xs uppercase tracking-wider mb-1 block" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>
-                    {product.type}
-                  </span>
-                  <h4 className="text-xl lg:text-2xl font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#FAFAF9" }}>
-                    {product.name}
-                  </h4>
-                  <p className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: "rgba(250,250,249,0.7)", fontFamily: "Playfair Display, serif" }}>
-                    {product.desc}
-                  </p>
-                </div>
+                  {/* Conteúdo */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <span className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>
+                      {product.type}
+                    </span>
+                    <h4 className="text-base font-normal truncate" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#FAFAF9" }}>
+                      {product.name}
+                    </h4>
+                    <p className="text-[11px] truncate" style={{ color: "rgba(250,250,249,0.6)", fontFamily: "Playfair Display, serif" }}>
+                      {product.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
 
-                {/* Hover effect - barra dourada no topo */}
-                <div className="absolute top-0 left-0 right-0 h-1 transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300" style={{ backgroundColor: "#CA8A04" }}></div>
-              </motion.div>
-            ))}
+            {/* Indicadores (dots) */}
+            <div className="flex justify-center gap-1 mt-2 mb-1">
+              {getFilteredProducts().map((_, i) => (
+                <button
+                  key={i}
+                  className="w-0.5 h-0.5 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: currentDot === i ? "#CA8A04" : "rgba(200,146,30,0.3)"
+                  }}
+                  onClick={() => scrollToDot(i)}
+                />
+              ))}
+            </div>
           </div>
 
           {/* CTA */}
           <motion.div
-            className="text-center mt-12"
+            className="text-center mt-10"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -1084,7 +1070,7 @@ function Home() {
          ============================== */}
       <section className="relative overflow-hidden" style={{ backgroundColor: "#1C1917" }}>
         {/* HERO */}
-        <div className="relative h-[65vh] lg:h-[75vh] overflow-hidden">
+        <div className="relative h-[40vh] lg:h-[50vh] overflow-hidden">
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=1920&h=1080&fit=crop"
