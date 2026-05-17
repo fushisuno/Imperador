@@ -51,7 +51,7 @@ function Header() {
           <div className="flex items-center justify-between h-20 border-b" style={{ borderColor: 'rgba(200,146,30,0.2)' }}>
             <Link to="/" className="flex items-center gap-3 cursor-pointer group">
               <motion.img 
-                src="/imperador_logo.png"
+                src={`${import.meta.env.BASE_URL}imperador_logo.png`}
                 alt="Imperador do Chopp"
                 className="h-12 w-auto"
                 style={{ filter: 'brightness(0) saturate(100%) invert(80%) sepia(30%) hue-rotate(5deg)' }}
@@ -173,7 +173,7 @@ function Header() {
               <div className="flex flex-col h-full p-6">
                 <div className="flex items-center justify-between mb-10">
                   <img 
-                    src="/imperador_logo.png"
+                    src={`${import.meta.env.BASE_URL}imperador_logo.png`}
                     alt="Imperador do Chopp"
                     className="h-10 w-auto"
                     style={{ filter: 'brightness(0) saturate(100%) invert(80%) sepia(30%) hue-rotate(5deg)' }}

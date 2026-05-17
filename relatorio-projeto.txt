@@ -13,3 +13,7 @@ Implementação de SEO para buscas, criação de páginas de conteúdo adicional
 Se existe algum bloqueio:
 
 Não há bloqueios significativos. O projeto está funcional e com build aprovada.
+
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6ImNhZTExNTY3NjY4MzM4MGE5NjExNDA1MzNiNTRiZjFjMzVmMjJiNTkxNjJiMGY5ZDA5Y2JiY2IzZDJhNjAyMWNjMTY1NzE5ZmJiNDJjMTBlNDNiYzFkMzg0YjIyNzgzZCIsInVzZXJJZCI6Imdvb2dsZS1vYXV0aDJ8MTAzNjUwMjc4OTIyNTkyMjkzMTY4IiwibmFtZSI6Im9wZW5jb2RlIiwiaWF0IjoxNzc5MDMwNTc2LCJleHAiOjE5MzY3MTA1NzZ9.ilP0iiwSwCkGGJG2jTZ1j-ZMltcSoC9LsZr1PwKVYlw

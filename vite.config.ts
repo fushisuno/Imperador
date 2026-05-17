@@ -1,26 +1,27 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/Imperador/",
   server: {
     port: 5173,
-    open: false
+    open: false,
   },
   build: {
-    minify: 'esbuild',
+    minify: "esbuild",
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-router': ['react-router-dom'],
-        }
-      }
-    }
+          "vendor-react": ["react", "react-dom"],
+          "vendor-motion": ["framer-motion"],
+          "vendor-router": ["react-router-dom"],
+        },
+      },
+    },
   },
   esbuild: {
-    drop: ['console', 'debugger']
-  }
-})
+    drop: ["console", "debugger"],
+  },
+});

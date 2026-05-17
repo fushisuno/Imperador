@@ -1,13 +1,10 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useIsMobile } from "../hooks/useMedia";
 import {
-  GSAPFadeIn,
   GSAPScrollReveal as Scroll,
 } from "../components/AnimationsGSAP";
 import { BeerMug } from "../components/BeerMug";
-import { Carousel } from "../components/Carousel";
 import { config } from "../config";
 
 const eventTypes = [
@@ -23,6 +20,10 @@ const eventTypes = [
       "Suporte técnico durante o evento",
       "Quantidade ideal garantida",
     ],
+    images: [
+      "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&h=450&fit=crop",
+      "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=600&h=450&fit=crop",
+    ],
   },
   {
     id: "corporativo",
@@ -35,6 +36,10 @@ const eventTypes = [
       "Pontualidade na entrega",
       "Estrutura completa",
       "Atendimento até as 22h",
+    ],
+    images: [
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=450&fit=crop",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop",
     ],
   },
   {
@@ -49,6 +54,9 @@ const eventTypes = [
       "Manutenção inclusa",
       "Atendimento prioritário",
     ],
+    images: [
+      "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=450&fit=crop",
+    ],
   },
   {
     id: "casamento",
@@ -62,11 +70,16 @@ const eventTypes = [
       "Montagem antecipada",
       "Equipe completa",
     ],
+    images: [
+      "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=450&fit=crop",
+      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=450&fit=crop",
+    ],
   },
 ];
 
 function Home() {
   const [activeTab, setActiveTab] = useState("social");
+  const [activeChopeiraTab, setActiveChopeiraTab] = useState("moto");
   const isMobile = useIsMobile();
   const currentContent = eventTypes.find((t) => t.id === activeTab) || eventTypes[0];
 
@@ -210,14 +223,7 @@ function Home() {
                   </svg>
                   Quero revender Imperador
                 </motion.a>
-              </div>
-
-              <p
-                className="mt-8 text-sm"
-                style={{ color: "rgba(200, 185, 145, 0.5)" }}
-              >
-                Desde 2017, entregando chopp de qualidade em Cascavel e região, com atendimento próximo, honesto e estrutura completa pra você não se preocupar com nada.
-              </p>
+              </div>q
             </div>
 
             {!isMobile && (
@@ -235,284 +241,363 @@ function Home() {
       </section>
 
       {/* ==============================
-         2. QUEM SOMOS - Melhorado
+         2. QUEM SOMOS - Design Enxuto e Light
          ============================== */}
-      <section
-        className="py-16 lg:py-24 relative overflow-hidden"
-        style={{ backgroundColor: "#faf8f4" }}
-      >
+      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-10" style={{ background: "linear-gradient(180deg, rgba(200,146,30,0.4) 0%, transparent 100%)" }} />
+          <div className="absolute top-20 -left-20 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
+          <div className="absolute bottom-20 -right-20 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)" }} />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Scroll>
-            <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }}></div>
-                <span className="text-xs font-medium uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "3px" }}>Nossa História</span>
-                <div className="h-px w-12" style={{ backgroundColor: "#c8921e" }}></div>
-              </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal">
-                <span style={{ color: "#2a1f14" }}>A gente </span>
-                <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>resolve</span>
-                <span style={{ color: "#2a1f14" }}> seu problema</span>
-              </h2>
-            </div>
-          </Scroll>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <Scroll>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="flex flex-col items-center text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="mb-8">
               <div className="relative">
-                <motion.div 
-                  className="relative rounded-2xl overflow-hidden" 
-                  style={{ backgroundColor: "#2a1f14" }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="aspect-[4/3] flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(circle at 50% 50%, rgba(200,146,30,0.3) 0%, transparent 70%)" }}></div>
-                    <div className="text-center relative z-10 p-8">
-                      <div className="text-7xl lg:text-8xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>2017</div>
-                      <div className="text-lg" style={{ color: "#e8e0d0", fontFamily: "Oswald, sans-serif" }}>O ANO QUE TUDO COMEÇOU</div>
-                      <div className="w-16 h-1 mx-auto mt-6" style={{ backgroundColor: "#c8921e" }}></div>
-                      <p className="mt-6 text-sm max-w-xs mx-auto leading-relaxed" style={{ color: "rgba(200,185,145,0.7)" }}>
-                        Nasceu a resposta para uma pergunta que todo mundo fazia: "Como ter chopp bom, gelado e sem dor de cabeça no evento?"
-                      </p>
+                <div className="w-44 h-44 lg:w-52 lg:h-52 rounded-3xl overflow-hidden relative" style={{ backgroundColor: "#fff", boxShadow: "0 20px 60px rgba(200,146,30,0.1)" }}>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-7xl lg:text-8xl font-black" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e", lineHeight: 1 }}>2017</div>
+                      <div className="mt-2 text-xs" style={{ color: "#b8985a", letterSpacing: "4px", fontFamily: "Oswald, sans-serif" }}>DESDE ENTÃO</div>
                     </div>
                   </div>
-                </motion.div>
-              </div>
-            </Scroll>
-
-            <Scroll delay={0.1}>
-              <div className="space-y-6">
-                <div>
-                  <p className="text-lg leading-relaxed" style={{ color: "#2a1f14" }}>
-                    Fundado em <strong style={{ color: "#c8921e" }}>Cascavel</strong> em 2017, o Imperador do Chopp nasceu pra resolver um problema simples.
-                  </p>
+                  <div className="absolute inset-0 border-2 rounded-3xl" style={{ borderColor: "rgba(200,146,30,0.2)" }} />
                 </div>
-
-                <motion.div 
-                  className="p-6 rounded-xl"
-                  style={{ backgroundColor: "#fff", border: "1px solid rgba(200,146,30,0.2)" }}
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: "rgba(200,146,30,0.1)" }}>
-                      <svg className="w-6 h-6" fill="none" stroke="#c8921e" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}>Hoje</h4>
-                      <p className="text-sm" style={{ color: "rgba(42,31,20,0.65)" }}>
-                        Referência em chopp na região. Delivery, eventos, pontos fixos e subdistribuidores.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { title: "Anos de história", value: "8+" },
-                    { title: "Eventos realizados", value: "5000+" },
-                    { title: "Cidades atendidas", value: "9" },
-                    { title: "Raio de atendimento", value: "300km" },
-                  ].map((stat, i) => (
-                    <div key={i} className="p-4 text-center" style={{ backgroundColor: "#fff", border: "1px solid rgba(200,146,30,0.15)" }}>
-                      <div className="text-2xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>{stat.value}</div>
-                      <div className="text-xs" style={{ color: "rgba(42,31,20,0.6)" }}>{stat.title}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {["Qualidade", "Estrutura", "Suporte 22h", "Próximo"].map((item) => (
-                    <span key={item} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#c8921e", fontFamily: "Oswald, sans-serif" }}>
-                      {item}
-                    </span>
-                  ))}
+                <div className="absolute -bottom-3 -right-3 w-20 h-20 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#c8921e", boxShadow: "0 8px 24px rgba(200,146,30,0.3)" }}>
+                  <span className="text-2xl font-black" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#fff" }}>8+</span>
                 </div>
               </div>
-            </Scroll>
-          </div>
-
-          <Scroll delay={0.2}>
-            <div className="mt-12">
-              <div className="text-center mb-6">
-                <span className="text-sm" style={{ color: "rgba(42,31,20,0.6)" }}>Onde chegamos</span>
-              </div>
-              <div className="flex flex-wrap justify-center gap-2 lg:gap-3">
-                {["Cascavel", "Foz do Iguaçu", "Guaíra", "Guarapuava", "Assis Chateaubriand", "Palotina", "Lindoeste", "Capitão Leônidas", "Maringá"].map((cidade) => (
-                  <motion.div 
-                    key={cidade}
-                    whileHover={{ scale: 1.05 }}
-                    className="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer"
-                    style={{ backgroundColor: "#fff", border: "1px solid rgba(200,146,30,0.2)", color: "#2a1f14" }}
-                  >
-                    {cidade}
-                  </motion.div>
-                ))}
-              </div>
-              <p className="text-center mt-4 text-sm" style={{ color: "rgba(42,31,20,0.5)" }}>
-                Raio de até 300km de Cascavel + operação em Maringá
-              </p>
             </div>
-          </Scroll>
-        </div>
-      </section>
 
-      {/* ==============================
-         3. DELIVERY - Cards estilo planos
-         ============================== */}
-      <section className="py-16 lg:py-24 relative overflow-hidden" style={{ backgroundColor: "#1a1208" }}>
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 70%)" }} />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Scroll>
-            <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <svg className="w-5 h-5" fill="none" stroke="#c8921e" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                <span className="text-xs font-medium uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "3px" }}>Delivery</span>
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
-                <span style={{ color: "#e8e0d0" }}>Chopp no seu evento,</span>
-                <br />
-                <span style={{ color: "#e8e0d0" }}>do seu jeito</span>
-              </h2>
-              <p className="mt-3 max-w-xl mx-auto text-sm" style={{ color: "#b8985a" }}>
-                Escolha o tamanho ideal. A gente entrega tudo: chopp, chopeira e suporte.
-              </p>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
+              <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Quem Somos</span>
+              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
             </div>
-          </Scroll>
+            
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-6" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+              <span style={{ color: "#2a1f14" }}>Nascemos pra resolver </span>
+              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>seu problema</span>
+            </h2>
+            
+            <p className="text-lg mb-10 max-w-2xl" style={{ color: "#5a4a3a", lineHeight: 1.7 }}>
+              Desde 2017 entregando chopp de qualidade em Cascavel e região. Atendimento honesto, estrutura completa e suporte até as 22h.
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 max-w-5xl mx-auto">
-            {[
-              { size: "20L", pessoas: "10-15", label: "Jantar em família", desc: "Ideal para encontros pequenos", features: ["Chopp Premium", "Chopeira included", "Suporte básico"], price: "A partir de", highlight: false },
-              { size: "30L", pessoas: "15-25", label: "Aniversário", desc: "O mais pedido!", features: ["Chopp Premium", "Chopeira included", "Suporte priority", "Copos Imperador"], price: "A partir de", highlight: true },
-              { size: "50L", pessoas: "25-40", label: "Grande evento", desc: "Para multidões", features: ["Chopp Premium", "Chopeira Pro", "Suporte completo", "Copos Imperador"], price: "A partir de", highlight: false },
-            ].map((barril, i) => (
-              <motion.div
-                key={barril.size}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6, boxShadow: barril.highlight ? "0 25px 50px rgba(200,146,30,0.4)" : "0 20px 40px rgba(0,0,0,0.3)" }}
-                className={`relative rounded-2xl overflow-hidden text-center ${barril.highlight ? 'ring-2 ring-[#c8921e]' : ''}`}
-                style={{ 
-                  backgroundColor: barril.highlight ? "#2a2015" : "#252019", 
-                  border: barril.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.15)",
-                  transform: barril.highlight ? "scale(1.05)" : "scale(1)"
-                }}
-              >
-                {barril.highlight && (
-                  <div className="absolute top-0 left-0 right-0 py-1.5 text-center text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif" }}>
-                    ★ MAIS PEDIDO
-                  </div>
-                )}
-
-                <div className="p-6 lg:p-8" style={{ marginTop: barril.highlight ? '24px' : '0' }}>
-                  <div className="mb-4">
-                    <svg className="w-16 h-16 mx-auto" viewBox="0 0 64 80" fill="none">
-                      <rect x="12" y="16" width="40" height="56" rx="4" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5"/>
-                      <path d="M20 16V8h24v8" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5"/>
-                      <rect x="18" y="20" width="28" height="8" rx="1" fill={barril.highlight ? "#c8921e" : "#3d3420"} stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
-                      <ellipse cx="32" cy="52" rx="14" ry="4" fill={barril.highlight ? "rgba(200,146,30,0.2)" : "rgba(139,115,72,0.1)"} stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
-                    </svg>
-                  </div>
-
-                  <div className="text-4xl lg:text-5xl font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: barril.highlight ? "#c8921e" : "#e8e0d0" }}>
-                    {barril.size}
-                  </div>
-                  <div className="text-sm font-medium mb-1" style={{ color: barril.highlight ? "#c8921e" : "#e8e0d0", fontFamily: "Oswald, sans-serif" }}>
-                    {barril.label}
-                  </div>
-                  <div className="text-xs mb-4" style={{ color: barril.highlight ? "rgba(200,146,30,0.7)" : "#8a7348" }}>
-                    {barril.desc}
-                  </div>
-
-                  <div className="py-3 mb-4 rounded-lg" style={{ backgroundColor: barril.highlight ? "rgba(200,146,30,0.1)" : "rgba(139,115,72,0.1)" }}>
-                    <span className="text-lg font-semibold" style={{ color: barril.highlight ? "#e8e0d0" : "#e8e0d0" }}>
-                      {barril.pessoas}
-                    </span>
-                    <span className="text-xs ml-1" style={{ color: barril.highlight ? "rgba(200,146,30,0.7)" : "#8a7348" }}>pessoas</span>
-                  </div>
-
-                  <ul className="space-y-2 mb-6 text-left">
-                    {barril.features.map((feat, j) => (
-                      <li key={j} className="flex items-center gap-2 text-xs">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span style={{ color: barril.highlight ? "rgba(200,185,145,0.8)" : "rgba(200,185,145,0.6)" }}>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer"
-                    className={`block w-full py-3 text-sm font-semibold transition-all duration-200 ${barril.highlight ? 'hover:brightness-110' : 'hover:bg-[#c8921e] hover:text-[#1a1208]'}`}
-                    style={{ 
-                      backgroundColor: barril.highlight ? "#c8921e" : "transparent", 
-                      color: barril.highlight ? "#1a1208" : "#c8921e", 
-                      border: barril.highlight ? "none" : "1px solid #c8921e",
-                      fontFamily: "Oswald, sans-serif"
-                    }}
-                  >
-                    {barril.highlight ? 'Quero Este' : 'Solicitar'}
-                  </a>
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              {[
+                { icon: "M5 13l4 4L19 7", text: "Qualidade garantida" },
+                { icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z", text: "Estrutura completa" },
+                { icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", text: "Suporte até 22h" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 px-5 py-2.5 rounded-full" style={{ backgroundColor: "#fff", border: "1px solid rgba(200,146,30,0.25)", boxShadow: "0 4px 12px rgba(200,146,30,0.08)" }}>
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#c8921e" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: "#2a1f14" }}>{item.text}</span>
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <motion.div className="text-center mt-8" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <p className="text-sm mb-3" style={{ color: "rgba(200,185,145,0.6)" }}>Não sabe qual escolher?</p>
-            <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium transition-all hover:gap-3"
-              style={{ backgroundColor: "transparent", color: "#c8921e", border: "1px solid rgba(200,146,30,0.3)", fontFamily: "Oswald, sans-serif" }}>
-              <span>Falar no WhatsApp</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </a>
+            <motion.a
+              href="/sobre"
+              whileHover={{ y: 2 }}
+              className="inline-flex items-center gap-2 text-sm font-medium group px-6 py-3 rounded-xl"
+              style={{ backgroundColor: "#c8921e", color: "#fff" }}
+            >
+              <span>Conheça nossa história completa</span>
+              <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </motion.a>
           </motion.div>
         </div>
       </section>
 
       {/* ==============================
-         4. GROWLERS (versão melhorada)
+         3. DELIVERY - Design Moderno e Clean
          ============================== */}
-      <section className="py-14 lg:py-20 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(ellipse at 80% 30%, rgba(200,146,30,0.06) 0%, transparent 50%)" }} />
+      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#1a1208" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] opacity-10" style={{ background: "linear-gradient(180deg, rgba(200,146,30,0.4) 0%, transparent 100%)" }} />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
+          <div className="absolute top-20 right-0 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)" }} />
+        </div>
 
-        <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
-          <Scroll>
-            <motion.div className="text-center mb-8" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <span className="text-xs font-medium uppercase px-3 py-1 rounded-full" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "2px" }}>Nova linha</span>
-              </div>
-              <h3 className="text-3xl lg:text-4xl font-normal">
-                <span style={{ color: "#2a1f14" }}>Growlers </span>
-                <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Imperador</span>
-              </h3>
-              <p className="mt-3 max-w-lg mx-auto text-sm leading-relaxed" style={{ color: "rgba(42,31,20,0.65)" }}>
-                Nem todo momento pede barril, mas todo momento pode ficar melhor com chopp. 
-                <strong style={{ color: "#c8921e" }}>Prático, moderno e perfeito pra presentear.</strong>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
+              <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Delivery</span>
+              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
+            </div>
+            
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+              <span style={{ color: "#e8e0d0" }}>Chopp na sua casa,</span>
+              <br />
+              <span style={{ color: "#e8e0d0" }}>no seu evento,</span>
+              <br />
+              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>onde a festa acontecer</span>
+            </h2>
+            
+            <p className="text-lg max-w-2xl mx-auto" style={{ color: "rgba(200,185,145,0.7)", lineHeight: 1.7 }}>
+              Jantar em família, aniversário na garagem ou confraternização da firma — o Imperador leva o chopp até você com a mesma qualidade dos grandes eventos.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <h3 className="text-center text-sm font-medium mb-8" style={{ color: "rgba(200,185,145,0.5)", fontFamily: "Oswald, sans-serif", letterSpacing: "3px" }}>
+              BARRIS DO TAMANHO DA SUA COMEMORAÇÃO
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {[
+                { 
+                  size: "20L", 
+                  pessoas: "10-15", 
+                  label: "Jantar em família",
+                  highlight: false 
+                },
+                { 
+                  size: "30L", 
+                  pessoas: "15-25", 
+                  label: "Aniversário",
+                  highlight: true 
+                },
+                { 
+                  size: "50L", 
+                  pessoas: "25-40", 
+                  label: "Grande evento",
+                  highlight: false 
+                },
+              ].map((barril, i) => (
+                <motion.div
+                  key={barril.size}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -8, scale: barril.highlight ? 1.02 : 1 }}
+                  className={`relative rounded-3xl overflow-hidden ${barril.highlight ? 'ring-2 ring-[#c8921e]' : ''}`}
+                  style={{ 
+                    backgroundColor: barril.highlight ? "#2a2015" : "#252019", 
+                    border: barril.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.15)",
+                    boxShadow: barril.highlight ? "0 20px 50px rgba(200,146,30,0.2)" : "none"
+                  }}
+                >
+                  {barril.highlight && (
+                    <div className="absolute top-0 left-0 right-0 py-2 text-center text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif", letterSpacing: "1px" }}>
+                      ★ MAIS PEDIDO
+                    </div>
+                  )}
+
+                  <div className="p-8" style={{ marginTop: barril.highlight ? '28px' : '0' }}>
+                    <div className="flex items-center justify-center mb-6">
+                      <svg className="w-20 h-24" viewBox="0 0 64 80" fill="none">
+                        <rect x="12" y="16" width="40" height="56" rx="4" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2"/>
+                        <path d="M20 16V8h24v8" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2"/>
+                        <rect x="18" y="20" width="28" height="8" rx="1" fill={barril.highlight ? "#c8921e" : "#3d3420"} stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
+                        <ellipse cx="32" cy="52" rx="14" ry="4" fill={barril.highlight ? "rgba(200,146,30,0.2)" : "rgba(139,115,72,0.1)"} stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
+                      </svg>
+                    </div>
+
+                    <div className="text-center mb-4">
+                      <div className="text-5xl lg:text-6xl font-black mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: barril.highlight ? "#c8921e" : "#e8e0d0", lineHeight: 1 }}>
+                        {barril.size}
+                      </div>
+                      <div className="text-sm font-medium" style={{ color: barril.highlight ? "rgba(200,146,30,0.7)" : "#8a7348", fontFamily: "Oswald, sans-serif" }}>
+                        {barril.label}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-2 py-3 mb-6 rounded-xl" style={{ backgroundColor: barril.highlight ? "rgba(200,146,30,0.08)" : "rgba(139,115,72,0.08)" }}>
+                      <span className="text-2xl font-bold" style={{ color: barril.highlight ? "#e8e0d0" : "#e8e0d0" }}>
+                        {barril.pessoas}
+                      </span>
+                      <span className="text-sm" style={{ color: barril.highlight ? "rgba(200,146,30,0.6)" : "#8a7348" }}>pessoas</span>
+                    </div>
+
+                    <div className="space-y-3 mb-8">
+                      {[
+                        "Chopp Premium",
+                        "Chopeira inclusa",
+                        "Suporte técnico"
+                      ].map((feat, j) => (
+                        <div key={j} className="flex items-center gap-3">
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: barril.highlight ? "rgba(200,146,30,0.15)" : "rgba(139,115,72,0.1)" }}>
+                            <svg className="w-3 h-3" fill="none" stroke={barril.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm" style={{ color: barril.highlight ? "rgba(200,185,145,0.8)" : "rgba(200,185,145,0.6)" }}>{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <motion.a
+                      href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre o barril de ${barril.size}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="block w-full py-4 text-center text-sm font-semibold rounded-xl transition-all"
+                      style={{ 
+                        backgroundColor: barril.highlight ? "#c8921e" : "transparent", 
+                        color: barril.highlight ? "#1a1208" : "#c8921e", 
+                        border: barril.highlight ? "none" : "1px solid rgba(200,146,30,0.4)",
+                        fontFamily: "Oswald, sans-serif",
+                        letterSpacing: "1px"
+                      }}
+                    >
+                      SOLICITAR ORÇAMENTO
+                    </motion.a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="relative rounded-2xl p-8 lg:p-10 text-center overflow-hidden"
+            style={{ backgroundColor: "rgba(200,146,30,0.08)", border: "1px solid rgba(200,146,30,0.2)" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="relative z-10">
+              <p className="text-xl lg:text-2xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#e8e0d0" }}>
+                Você não contrata "só o chopp".
               </p>
-            </motion.div>
-          </Scroll>
+              <p className="text-lg mb-6" style={{ color: "rgba(200,185,145,0.7)" }}>
+                Você leva junto estrutura, atendimento e segurança pra não passar perrengue no meio da festa.
+              </p>
+              
+              <motion.a
+                href={`https://wa.me/${config.whatsapp}?text=Olá! Quero chopp no meu próximo evento.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold rounded-xl"
+                style={{ backgroundColor: "#c8921e", color: "#1a1208", fontFamily: "Oswald, sans-serif" }}
+              >
+                <svg className="w-6 h-6" fill="#1a1208" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Quer chopp no seu próximo encontro? Fale com a gente
+              </motion.a>
+            </div>
+          </motion.div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-5 lg:gap-8 max-w-3xl mx-auto">
+          <motion.div
+            className="mt-10 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="flex flex-wrap justify-center gap-4 text-sm" style={{ color: "rgba(200,185,145,0.5)" }}>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Chopp bem armazenado</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Entrega agendada</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Suporte em horário combinado</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ==============================
+         4. GROWLERS - Design Moderno e Premium
+         ============================== */}
+      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-10" style={{ background: "linear-gradient(180deg, rgba(200,146,30,0.4) 0%, transparent 100%)" }} />
+          <div className="absolute bottom-0 -left-20 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
+          <div className="absolute top-20 -right-20 w-[250px] h-[250px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.06) 0%, transparent 70%)" }} />
+        </div>
+
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
+              <span className="text-xs font-semibold uppercase" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "4px" }}>Linha Growlers</span>
+              <div className="w-10 h-px" style={{ backgroundColor: "#c8921e" }} />
+            </div>
+            
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+              <span style={{ color: "#2a1f14" }}>Growlers Imperador:</span>
+              <br />
+              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>chopp de qualidade em versão menor</span>
+            </h2>
+            
+            <p className="text-lg max-w-2xl mx-auto mb-4" style={{ color: "#5a4a3a", lineHeight: 1.7 }}>
+              Nem todo momento pede barril, mas todo momento pode ficar melhor com chopp.
+            </p>
+            <p className="text-base max-w-2xl mx-auto" style={{ color: "rgba(90,74,58,0.7)", lineHeight: 1.6 }}>
+              Nossa linha de Growlers é perfeita pra quem quer levar chopp de qualidade pra casa, pra um jantar ou pra presentear alguém.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-4xl mx-auto mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             {[
               { 
                 title: "Vinho Tinto", 
                 desc: "Encorpado e saboroso", 
                 ideal: ["Jantares", "Churrascos", "Presentear"],
-                highlight: true 
+                highlight: true,
+                color: "#8B0000"
               },
               { 
                 title: "Vinho Branco", 
                 desc: "Leve e refrescante", 
                 ideal: ["Dias quentes", "Eventos informais", "Presentear"],
-                highlight: false 
+                highlight: false,
+                color: "#DAA520"
               },
             ].map((item, i) => (
               <motion.div
@@ -521,202 +606,354 @@ function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(200,146,30,0.2)" }}
-                className="relative flex-1 max-w-sm mx-auto w-full"
+                whileHover={{ y: -8, boxShadow: item.highlight ? "0 25px 50px rgba(200,146,30,0.25)" : "0 20px 40px rgba(0,0,0,0.1)" }}
+                className={`relative rounded-3xl overflow-hidden ${item.highlight ? 'ring-2 ring-[#c8921e]' : ''}`}
                 style={{ 
                   backgroundColor: "#fff", 
-                  border: item.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.15)",
-                  borderRadius: "16px",
-                  overflow: "hidden"
+                  border: item.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.2)",
+                  boxShadow: item.highlight ? "0 15px 40px rgba(200,146,30,0.15)" : "0 10px 30px rgba(0,0,0,0.05)"
                 }}
               >
                 {item.highlight && (
-                  <div className="absolute top-0 right-0 px-3 py-1 text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#2a1f14", fontFamily: "Oswald, sans-serif", borderBottomLeftRadius: "8px" }}>
-                    Mais pedido
+                  <div className="absolute top-0 left-0 right-0 py-2 text-center text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#fff", fontFamily: "Oswald, sans-serif", letterSpacing: "1px" }}>
+                    ★ MAIS PEDIDO
                   </div>
                 )}
 
-                <div className="p-5 lg:p-6">
-                  <div className="mb-4 flex justify-center">
-                    <svg className="w-20 h-20" viewBox="0 0 80 100" fill="none">
+                <div className="p-8" style={{ marginTop: item.highlight ? '28px' : '0' }}>
+                  <div className="mb-6 flex justify-center">
+                    <svg className="w-28 h-32" viewBox="0 0 80 100" fill="none">
                       <rect x="20" y="20" width="40" height="70" rx="6" stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5"/>
                       <path d="M24 20V12c0-2 4-4 16-4s16 2 16 4v8" stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2.5"/>
                       <path d="M20 40c0-4 8-8 20-8s20 4 20 8" stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="2" strokeLinecap="round"/>
                       <rect x="30" y="50" width="20" height="25" rx="2" fill={item.highlight ? "rgba(200,146,30,0.15)" : "rgba(139,115,72,0.1)"} stroke={item.highlight ? "#c8921e" : "#8a7348"} strokeWidth="1.5"/>
+                      <circle cx="40" cy="62" r="6" fill={item.color} fillOpacity="0.6" />
                     </svg>
                   </div>
 
-                  <div className="text-center mb-3">
-                    <h4 className="text-xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: item.highlight ? "#c8921e" : "#2a1f14" }}>
+                  <div className="text-center mb-5">
+                    <h3 className="text-2xl font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: item.highlight ? "#c8921e" : "#2a1f14" }}>
                       Growler {item.title}
-                    </h4>
-                    <p className="text-sm mt-1" style={{ color: "rgba(42,31,20,0.6)" }}>
+                    </h3>
+                    <p className="text-sm" style={{ color: "rgba(42,31,20,0.6)" }}>
                       {item.desc}
                     </p>
                   </div>
 
-                  <div className="mb-5 p-3 rounded-lg" style={{ backgroundColor: "#faf8f4" }}>
-                    <p className="text-xs font-medium mb-2" style={{ color: "rgba(42,31,20,0.5)", fontFamily: "Oswald, sans-serif" }}>IDEAL PARA:</p>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
+                  <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: "#faf8f4" }}>
+                    <p className="text-xs font-semibold mb-3 text-center" style={{ color: "rgba(42,31,20,0.5)", fontFamily: "Oswald, sans-serif", letterSpacing: "2px" }}>IDEAL PARA</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
                       {item.ideal.map((use, j) => (
-                        <span key={j} className="px-2 py-0.5 text-xs rounded" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#2a1f14" }}>
+                        <span key={j} className="px-3 py-1.5 text-xs rounded-full font-medium" style={{ backgroundColor: item.highlight ? "rgba(200,146,30,0.15)" : "rgba(139,115,72,0.1)", color: "#2a1f14" }}>
                           {use}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer"
-                    className="block w-full py-2.5 text-sm font-semibold text-center transition-all hover:brightness-110"
+                  <motion.a
+                    href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre o Growler de ${item.title}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="block w-full py-3.5 text-sm font-semibold text-center rounded-xl transition-all"
                     style={{ 
                       backgroundColor: item.highlight ? "#c8921e" : "transparent", 
-                      color: item.highlight ? "#2a1f14" : "#c8921e", 
-                      border: item.highlight ? "none" : "1px solid #c8921e",
+                      color: item.highlight ? "#fff" : "#c8921e", 
+                      border: item.highlight ? "none" : "1px solid rgba(200,146,30,0.4)",
                       fontFamily: "Oswald, sans-serif",
-                      borderRadius: "8px"
+                      letterSpacing: "1px"
                     }}
                   >
-                    Quero Este
-                  </a>
+                    QUERO ESTE
+                  </motion.a>
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          <motion.div className="text-center mt-8" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium transition-all hover:gap-3"
-              style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif" }}>
-              <span>🎁 Presentear alguém especial?</span>
-              <span className="underline">Ver opções</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </a>
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <p className="text-base mb-6" style={{ color: "rgba(42,31,20,0.65)", fontStyle: "italic" }}>
+              Perfeito pra quem gosta de praticidade, qualidade e quer fugir do "mais do mesmo" na hora de beber bem.
+            </p>
+            
+            <motion.a
+              href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre os Growlers Imperador.`}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold rounded-xl"
+              style={{ backgroundColor: "#c8921e", color: "#fff", fontFamily: "Oswald, sans-serif" }}
+            >
+              <svg className="w-6 h-6" fill="#fff" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Entre em contato e confira a disponibilidade
+            </motion.a>
           </motion.div>
         </div>
       </section>
 
       {/* ==============================
-         5. PRODUTOS
+         5. PRODUTOS - Premium Design
          ============================== */}
-      <GSAPFadeIn direction="up" delay={0.2}>
-        <section
-          className="relative overflow-hidden"
-          style={{ backgroundColor: "#faf8f4", minHeight: "auto" }}
-        >
-          <div className="px-4 py-10 lg:px-16 lg:py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
-              <div className="flex flex-col justify-center">
-                <div className="flex items-center gap-4 mb-5">
-                  <div
-                    className="h-px w-6"
-                    style={{ backgroundColor: "#c8921e" }}
-                  ></div>
-                  <span
-                    className="text-xs font-medium"
-                    style={{
-                      color: "#c8921e",
-                      fontFamily: "Oswald, sans-serif",
-                      letterSpacing: "3px",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Catálogo
+      <section className="py-14 lg:py-20 relative overflow-hidden" style={{ backgroundColor: "#1C1917" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(ellipse at 20% 50%, rgba(200,146,30,0.08) 0%, transparent 50%)" }} />
+        
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          {/* Header */}
+          <Scroll>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }}></div>
+                <span className="text-xs uppercase tracking-[0.3em]" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>Catálogo</span>
+                <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }}></div>
+              </div>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal mb-4" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
+                <span style={{ color: "#FAFAF9" }}>Nossos </span>
+                <span style={{ color: "#CA8A04" }}>Produtos</span>
+              </h2>
+              <p className="text-sm lg:text-base max-w-2xl mx-auto" style={{ color: "rgba(250,250,249,0.65)", fontFamily: "Playfair Display, serif" }}>
+                Linha completa de chopps artesanais premium. Cada chopp é produzida com ingredientes selecionados para garantir o melhor sabor.
+              </p>
+            </motion.div>
+          </Scroll>
+
+          {/* Filtros por categoria */}
+          <Scroll delay={0.1}>
+            <motion.div
+              className="flex flex-wrap justify-center gap-3 mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              {[
+                { id: 'all', label: 'Todos' },
+                { id: 'chopp', label: 'Chopp' },
+                { id: 'barril', label: 'Barril' },
+                { id: 'growler', label: 'Growler' },
+                { id: 'acessorios', label: 'Acessórios' },
+              ].map((filter) => (
+                <motion.button
+                  key={filter.id}
+                  onClick={() => {}}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-5 py-2.5 text-sm font-medium transition-all duration-200"
+                  style={{
+                    backgroundColor: filter.id === 'all' ? "#CA8A04" : "rgba(255,255,255,0.05)",
+                    color: filter.id === 'all' ? "#1C1917" : "#FAFAF9",
+                    border: filter.id === 'all' ? "none" : "1px solid rgba(200,146,30,0.3)",
+                    fontFamily: "Oswald, sans-serif",
+                    borderRadius: "8px",
+                  }}
+                >
+                  {filter.label}
+                </motion.button>
+              ))}
+            </motion.div>
+          </Scroll>
+
+          {/* Grid de Produtos */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: "Pilsen", category: "chopp", type: "Clássica", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", desc: "Leve e refrescante, perfeita para qualquer ocasião." },
+              { name: "Weiss", category: "chopp", type: "Trigo", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Aromática e citrus, com notas de banana e cravo." },
+              { name: "Vienna", category: "chopp", type: "Amber", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Malte caramelizado, sabor encorpado e rico." },
+              { name: "IPA", category: "chopp", type: "American", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Lúpulo intenso, cítrica e bem equilibrada." },
+              { name: "Stout", category: "chopp", type: "Escura", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Torra marcada, cremosa e sofisticada." },
+              { name: "Barril 20L", category: "barril", type: "Pequeno", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Ideal para eventos pequenos e encontros íntimos." },
+              { name: "Barril 30L", category: "barril", type: "Médio", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Perfeito para festas de médio porte.", highlight: true },
+              { name: "Barril 50L", category: "barril", type: "Grande", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Para grandes celebrações e eventos corporativos." },
+              { name: "Growler Tinto", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1505236858219-9a1753776f75?w=400&h=400&fit=crop", desc: "Encorpado e saboroso, ideal para jantares.", highlight: true },
+              { name: "Growler Branco", category: "growler", type: "Vinho", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Leve e refrescante, perfeito para dias quentes." },
+              { name: "Chopeira Premium", category: "acessorios", type: "Equipamento", image: "https://images.unsplash.com/photo-1560132587-2e828a067b2c?w=400&h=400&fit=crop", desc: "Estrutura completa com manutenção inclusa." },
+              { name: "Kit Copos", category: "acessorios", type: "Kit", image: "https://images.unsplash.com/photo-1519671482749-fd09a3885e67?w=400&h=400&fit=crop", desc: "Conjunto elegante para servir com estilo." },
+            ].map((product, i) => (
+              <motion.div
+                key={`${product.name}-${i}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer"
+                whileHover={{ scale: 1.03, zIndex: 10 }}
+                style={{ boxShadow: product.highlight ? "0 0 0 2px #CA8A04" : "none" }}
+              >
+                {/* Nome no fundo (watermark) */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+                  <span className="text-[4rem] sm:text-[5rem] lg:text-[6rem] font-bold whitespace-nowrap" style={{ fontFamily: "Bebas Neue, sans-serif", color: "rgba(250,250,249,0.03)", transform: "rotate(-15deg)" }}>
+                    {product.name}
                   </span>
                 </div>
-                <h2 className="text-5xl lg:text-6xl font-normal leading-none mb-4">
-                  <span style={{ color: "#1a1610" }}>Nossos</span>
-                  <br />
-                  <span
-                    style={{
-                      background:
-                        "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    Produtos
-                  </span>
-                </h2>
-                <div
-                  className="w-9 h-px mb-6"
-                  style={{
-                    background: "linear-gradient(to right, #c8921e, rgba(200,146,30,0.3))",
-                  }}
-                ></div>
-                <p
-                  className="text-sm mb-8 leading-7"
-                  style={{ color: "rgba(26,22,16,0.7)", fontWeight: 300 }}
-                >
-                  Linha completa de chopps artesanais premium. Cada chopp é
-                  produzida com ingredientes selecionados para garantir o melhor sabor.
-                </p>
-                <Link
-                  to="/produtos"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:brightness-110 w-fit"
-                  style={{
-                    backgroundColor: "#c8921e",
-                    color: "#2a1f14",
-                    fontFamily: "Oswald, sans-serif",
-                    clipPath: "polygon(7px 0%, 100% 0%, calc(100% - 7px) 100%, 0% 100%)",
-                  }}
-                >
-                  Ver Todos
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </Link>
-              </div>
-              <div className="pr-4 lg:pr-16 mt-6 lg:mt-0">
-                <Carousel
-                  products={[
-                    { name: "Chopp Pilsen", type: "Clássica", highlight: false },
-                    { name: "Chopp Weiss", type: "Trigo", highlight: false },
-                    { name: "Chopp Vienna", type: "Amber", highlight: false },
-                    { name: "Chopp IPA", type: "American", highlight: false },
-                    { name: "Chopp Stout", type: "Escura", highlight: false },
-                  ]}
+
+                {/* Imagem */}
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-              </div>
-            </div>
+
+                {/* Overlay gradiente */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 30%, rgba(28,25,23,0.95) 100%)" }}></div>
+
+                {/* Badge se destacado */}
+                {product.highlight && (
+                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif" }}>
+                    Popular
+                  </div>
+                )}
+
+                {/* Conteúdo */}
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <span className="text-xs uppercase tracking-wider mb-1 block" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>
+                    {product.type}
+                  </span>
+                  <h4 className="text-xl lg:text-2xl font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#FAFAF9" }}>
+                    {product.name}
+                  </h4>
+                  <p className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: "rgba(250,250,249,0.7)", fontFamily: "Playfair Display, serif" }}>
+                    {product.desc}
+                  </p>
+                </div>
+
+                {/* Hover effect - barra dourada no topo */}
+                <div className="absolute top-0 left-0 right-0 h-1 transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300" style={{ backgroundColor: "#CA8A04" }}></div>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      </GSAPFadeIn>
+
+          {/* CTA */}
+          <motion.div
+            className="text-center mt-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <motion.a
+              href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de conhecer a linha completa de produtos`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold"
+              style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif", borderRadius: "8px" }}
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 35px rgba(200,146,30,0.4)" }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span>Conhecer linha completa</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </motion.a>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ==============================
-         6. EVENTOS (tamanho normal, sem espaços)
+         6. EVENTOS - Premium Redesign
          ============================== */}
-      <GSAPFadeIn direction="up" delay={0.2}>
-        <section className="py-14 lg:py-18 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Scroll>
-              <div className="mb-8 flex items-center gap-3">
-                <div className="h-7 w-1" style={{ backgroundColor: "#c8921e" }}></div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal">
-                  <span style={{ color: "#2a1f14" }}>Tipos de </span>
-                  <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Evento</span>
+      <section className="relative overflow-hidden" style={{ backgroundColor: "#1C1917" }}>
+        {/* HERO */}
+        <div className="relative h-[65vh] lg:h-[75vh] overflow-hidden">
+          <div className="absolute inset-0">
+            <img
+              src="https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=1920&h=1080&fit=crop"
+              alt="Chopeira em ação"
+              className="w-full h-full object-cover"
+              style={{ filter: "brightness(0.35)" }}
+            />
+          </div>
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(28,25,23,0.2) 0%, rgba(28,25,23,0.6) 50%, rgba(28,25,23,0.95) 100%)" }}></div>
+          <div className="relative h-full flex flex-col justify-end pb-14 lg:pb-20">
+            <div className="max-w-6xl mx-auto px-6 lg:px-8 w-full">
+              <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="h-px w-16" style={{ backgroundColor: "#CA8A04" }}></div>
+                  <span className="text-xs uppercase tracking-[0.3em]" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>Eventos</span>
+                </div>
+                <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-normal leading-[0.95] mb-4" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
+                  <span style={{ color: "#FAFAF9" }}>Seu evento, </span>
+                  <span style={{ color: "#CA8A04" }}>nosso chopp</span>
                 </h2>
-              </div>
+                <p className="text-lg lg:text-xl max-w-2xl mb-4" style={{ fontFamily: "Playfair Display, serif", fontStyle: "italic", color: "rgba(250,250,249,0.85)" }}>
+                  Sem dor de cabeça.
+                </p>
+                <p className="text-sm lg:text-base max-w-xl mb-8" style={{ color: "rgba(250,250,249,0.65)", fontFamily: "Playfair Display, serif" }}>
+                  Chopp gelado, chopeira montada, suporte garantido até as 22h. Você só cuida de brindar – o resto é com o Imperador.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <motion.a href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de informações sobre eventos`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 px-7 py-3 text-sm font-semibold"
+                    style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif", borderRadius: "4px" }}
+                    whileHover={{ scale: 1.02, boxShadow: "0 8px 30px rgba(200,146,30,0.4)" }}
+                    whileTap={{ scale: 0.98 }}>
+                    Quero chopp pro meu evento
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </motion.a>
+                  <motion.a href={`https://wa.me/${config.whatsapp}?text=Olá! Quero revender Imperador`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 px-7 py-3 text-sm font-semibold"
+                    style={{ backgroundColor: "transparent", color: "#CA8A04", fontFamily: "Oswald, sans-serif", borderRadius: "4px", border: "1px solid #CA8A04" }}
+                    whileHover={{ scale: 1.02, backgroundColor: "rgba(200,146,30,0.1)" }}
+                    whileTap={{ scale: 0.98 }}>
+                    Quero revender Imperador
+                  </motion.a>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+          <div className="absolute bottom-6 right-8 lg:right-16 hidden lg:block">
+            <span className="text-[10rem] xl:text-[12rem] font-bold leading-none" style={{ fontFamily: "Bebas Neue, sans-serif", color: "rgba(200,146,30,0.06)" }}>06</span>
+          </div>
+        </div>
+
+        {/* ATENDEMOS + TIPOS DE EVENTOS */}
+        <div className="py-14 lg:py-18" style={{ backgroundColor: "#FAFAF9" }}>
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <Scroll>
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="h-5 w-1" style={{ backgroundColor: "#CA8A04" }}></div>
+                  <span className="text-xs uppercase tracking-[0.25em]" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>Conheça</span>
+                </div>
+                <h3 className="text-2xl lg:text-3xl mb-6" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#1C1917" }}>Cada evento é único</h3>
+                
+                {/* Atendemos Tags */}
+                <div className="mb-8">
+                  <p className="text-xs uppercase tracking-wider mb-4" style={{ fontFamily: "Oswald, sans-serif", color: "rgba(28,25,23,0.6)" }}>Atendemos:</p>
+                  <div className="flex flex-wrap gap-3">
+                    {["Festas de aniversário", "Casamentos", "Formaturas", "Eventos corporativos", "Churrascos e confraternizações", "Festas de comunidade"].map((item, i) => (
+                      <motion.span key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                        className="px-4 py-2 rounded-full text-xs font-medium cursor-default"
+                        style={{ backgroundColor: "rgba(200,146,30,0.1)", border: "1px solid rgba(200,146,30,0.2)", color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}
+                        whileHover={{ backgroundColor: "rgba(200,146,30,0.15)", y: -2 }}>
+                        {item}
+                      </motion.span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </Scroll>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
-              <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
+              {/* Tabs verticais */}
+              <div className="flex flex-col gap-3">
                 {eventTypes.map((tab) => (
                   <motion.button key={tab.id} onClick={() => setActiveTab(tab.id)} whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}
                     className="w-full text-left px-5 py-4 font-medium cursor-pointer group relative overflow-hidden text-sm"
-                    style={{ fontFamily: "Oswald, sans-serif", letterSpacing: "1px", textTransform: "uppercase", backgroundColor: activeTab === tab.id ? "#c8921e" : "#ffffff", border: activeTab === tab.id ? "none" : "1px solid rgba(200,150,30,0.2)", color: activeTab === tab.id ? "#2a1f14" : "#2a1f14", borderRadius: "8px" }}
-                  >
+                    style={{ fontFamily: "Oswald, sans-serif", letterSpacing: "1px", textTransform: "uppercase", backgroundColor: activeTab === tab.id ? "#CA8A04" : "#ffffff", border: activeTab === tab.id ? "none" : "1px solid rgba(200,150,30,0.2)", color: activeTab === tab.id ? "#1C1917" : "#1C1917", borderRadius: "10px" }}>
                     <span className="relative z-10 flex items-center justify-between">
                       {tab.label}
-                      <svg className="w-4 h-4 transition-transform duration-300" style={{ transform: activeTab === tab.id ? "rotate(90deg)" : "rotate(0deg)", color: activeTab === tab.id ? "#2a1f14" : "rgba(200,146,30,0.5)" }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 transition-transform duration-300" style={{ transform: activeTab === tab.id ? "rotate(90deg)" : "rotate(0deg)", color: activeTab === tab.id ? "#1C1917" : "rgba(200,146,30,0.5)" }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                       </svg>
                     </span>
@@ -724,24 +961,25 @@ function Home() {
                 ))}
               </div>
 
-              <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
-                className="relative p-6 lg:p-8" style={{ backgroundColor: "#ffffff", border: "1px solid rgba(200,150,30,0.15)", borderRadius: "12px" }}>
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr] gap-5">
+              {/* Conteúdo do tab */}
+              <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+                className="relative p-6 lg:p-8" style={{ backgroundColor: "#ffffff", border: "1px solid rgba(200,150,30,0.15)", borderRadius: "16px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                  {/* Texto */}
                   <div>
-                    <span className="inline-block text-xs font-medium mb-3 px-3 py-1.5" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "2px", textTransform: "uppercase" }}>
-                      {currentContent.badge}
-                    </span>
-                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-3" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
-                      <span style={{ color: "#c8921e" }}>{currentContent.title}</span>
-                      <span style={{ color: "#2a1f14" }}>{currentContent.title2}</span>
-                    </h3>
-                    <p className="text-base mb-5 leading-relaxed max-w-lg" style={{ color: "rgba(42,31,20,0.65)" }}>{currentContent.description}</p>
-
-                    <ul className="space-y-2 mb-5">
+                    <span className="inline-block text-xs font-medium mb-3 px-4 py-1.5 rounded-full" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#CA8A04", fontFamily: "Oswald, sans-serif", letterSpacing: "2px", textTransform: "uppercase" }}>{currentContent.badge}</span>
+                    <h4 className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-3" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
+                      <span style={{ color: "#CA8A04" }}>{currentContent.title}</span>
+                      <span style={{ color: "#1C1917" }}>{currentContent.title2}</span>
+                    </h4>
+                    <p className="text-base mb-5 leading-relaxed" style={{ color: "rgba(42,31,20,0.65)", fontFamily: "Playfair Display, serif" }}>{currentContent.description}</p>
+                    
+                    {/* Benefícios */}
+                    <ul className="space-y-2.5 mb-6">
                       {currentContent.benefits.map((item, i) => (
                         <li key={i} className="flex items-center gap-3 text-sm">
                           <div className="w-5 h-5 flex items-center justify-center rounded-full" style={{ backgroundColor: "rgba(200,146,30,0.1)" }}>
-                            <svg className="w-3 h-3" fill="none" stroke="#c8921e" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                            <svg className="w-3 h-3" fill="none" stroke="#CA8A04" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                           </div>
                           <span style={{ color: "rgba(42,31,20,0.7)" }}>{item}</span>
                         </li>
@@ -749,279 +987,555 @@ function Home() {
                     </ul>
 
                     <a href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de informações sobre ${currentContent.badge}`} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold" style={{ backgroundColor: "#c8921e", color: "#2a1f14", fontFamily: "Oswald, sans-serif", borderRadius: "6px" }}>
+                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold"
+                      style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif", borderRadius: "6px" }}>
                       Solicitar Orçamento
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                     </a>
+                  </div>
+
+                  {/* Imagem representativa */}
+                  <div className="relative rounded-xl overflow-hidden aspect-[4/3]">
+                    <img 
+                      src={currentContent.images?.[0] || "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&h=450&fit=crop"} 
+                      alt={currentContent.badge}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(200,146,30,0.1) 0%, transparent 50%)" }}></div>
                   </div>
                 </div>
               </motion.div>
             </div>
           </div>
-        </section>
-      </GSAPFadeIn>
+        </div>
 
-      {/* ==============================
-         7. CHOPEIRAS TEMÁTICAS (versão melhorada)
-         ============================== */}
-      <section className="py-14 lg:py-20 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #1a1208 0%, #252019 50%, #1a1208 100%)" }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(ellipse at 50% 50%, rgba(200,146,30,0.1) 0%, transparent 60%)" }} />
-
-        <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
-          <Scroll>
-            <motion.div className="text-center mb-10" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <span className="text-xs font-medium uppercase px-3 py-1 rounded-full" style={{ backgroundColor: "rgba(200,146,30,0.15)", color: "#c8921e", fontFamily: "Oswald, sans-serif", letterSpacing: "2px" }}>Diferencial Imperador</span>
-              </div>
-              <h3 className="text-3xl lg:text-4xl font-normal">
-                <span style={{ color: "#e8e0d0" }}>Chopeiras que </span>
-                <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>viram atração</span>
-              </h3>
-              <p className="mt-3 max-w-lg mx-auto text-sm leading-relaxed" style={{ color: "rgba(200,185,145,0.65)" }}>
-                Além da qualidade do chopp, a gente também custa da experiência visual. 
-                <strong style={{ color: "#e8e0d0" }}>Deixa seu evento muito mais bonito.</strong>
-              </p>
-            </motion.div>
-          </Scroll>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-            {[
-              { 
-                title: "Moto Chopper", 
-                desc: "Point garantido de foto!", 
-                icon: "🏍️",
-                benefits: ["Vira point de foto", "Estilo único", "Conversa garantida"],
-                highlight: true 
-              },
-              { 
-                title: "Clássica", 
-                desc: "Elegante e eficiente", 
-                icon: "🍺",
-                benefits: ["Tradicional", "Fácil de usar", "Para qualquer evento"],
-                highlight: false 
-              },
-              { 
-                title: "Personalizada", 
-                desc: "Criamos sob medida", 
-                icon: "✨",
-                benefits: ["Exclusiva", "Tema da festa", "Memória inesquecível"],
-                highlight: false 
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                whileHover={{ y: -6 }}
-                className="relative"
-                style={{ 
-                  backgroundColor: item.highlight ? "rgba(200,146,30,0.15)" : "#3d2e1a", 
-                  border: item.highlight ? "2px solid #c8921e" : "1px solid rgba(200,146,30,0.15)",
-                  borderRadius: "16px",
-                  overflow: "hidden"
-                }}
-              >
-                {item.highlight && (
-                  <div className="absolute top-0 right-0 px-3 py-1 text-xs font-bold" style={{ backgroundColor: "#c8921e", color: "#1f1810", fontFamily: "Oswald, sans-serif", borderBottomLeftRadius: "8px" }}>
-                    Mais Procurada
-                  </div>
-                )}
-
-                <div className="p-5 lg:p-6">
-                  <div className="text-4xl mb-3">{item.icon}</div>
-                  
-                  <h4 className="text-xl font-normal mb-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: item.highlight ? "#c8921e" : "#e8e0d0" }}>
-                    {item.title}
-                  </h4>
-                  <p className="text-sm mb-4" style={{ color: item.highlight ? "rgba(200,185,145,0.8)" : "rgba(200,185,145,0.65)" }}>
-                    {item.desc}
-                  </p>
-
-                  <div className="space-y-2 mb-5">
-                    <p className="text-xs font-medium" style={{ color: "rgba(200,185,145,0.5)", fontFamily: "Oswald, sans-serif" }}>POR QUE É ESPECIAL:</p>
-                    {item.benefits.map((ben, j) => (
-                      <div key={j} className="flex items-center gap-2 text-xs">
-                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{ color: "#c8921e" }}>
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        <span style={{ color: "rgba(200,185,145,0.7)" }}>{ben}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer"
-                    className="block w-full py-2.5 text-sm font-semibold text-center transition-all hover:brightness-110"
-                    style={{ 
-                      backgroundColor: item.highlight ? "#c8921e" : "transparent", 
-                      color: item.highlight ? "#1f1810" : "#c8921e", 
-                      border: item.highlight ? "none" : "1px solid #c8921e",
-                      fontFamily: "Oswald, sans-serif",
-                      borderRadius: "8px"
-                    }}
-                  >
-                    Quero Esta
-                  </a>
+        {/* VÍDEOS */}
+        <div className="py-14 lg:py-18" style={{ backgroundColor: "#FAFAF9" }}>
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <Scroll>
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }}></div>
+                  <span className="text-xs uppercase tracking-[0.25em]" style={{ color: "#CA8A04", fontFamily: "Oswald, sans-serif" }}>Galeria</span>
+                  <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }}></div>
                 </div>
+                <h4 className="text-2xl lg:text-3xl mb-3" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#1C1917" }}>Veja nossos eventos</h4>
+                <p className="text-sm" style={{ color: "rgba(28,25,23,0.6)", fontFamily: "Playfair Display, serif" }}>Momentos únicos servidos com qualidade Imperador</p>
               </motion.div>
-            ))}
-          </div>
+            </Scroll>
 
-          <motion.div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            {[
-              { icon: "📸", text: "Deixa o bar do evento muito mais bonito" },
-              { icon: "🎯", text: "Vira ponto de foto e conversa" },
-              { icon: "✨", text: "Reforça a sensação de cuidado e capricho" },
-            ].map((ben, i) => (
-              <div key={i} className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(200,146,30,0.08)" }}>
-                <span className="text-xl mr-2">{ben.icon}</span>
-                <span className="text-sm" style={{ color: "rgba(200,185,145,0.8)" }}>{ben.text}</span>
-              </div>
-            ))}
+            {/* Videos em loop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+              {[
+                { label: "Eventos Sociais", videoId: "wQcE4GGk7M4", thumbnail: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&h=800&fit=crop" },
+                { label: "Corporativos", videoId: "3Z6qJEKoRqE", thumbnail: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=800&fit=crop" },
+                { label: "Casamentos", videoId: "tQ91R8fQT3M", thumbnail: "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=800&fit=crop" },
+                { label: "Bares & Restaurantes", videoId: "wQcE4GGk7M4", thumbnail: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=800&fit=crop" }
+              ].map((video, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="relative aspect-[9/12] rounded-2xl overflow-hidden group cursor-pointer" whileHover={{ scale: 1.03 }}>
+                  {/* Thumbnail */}
+                  <img src={video.thumbnail} alt={video.label} className="w-full h-full object-cover" />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 100%)" }}></div>
+                  
+                  {/* Play indicator */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(200,146,30,0.9)" }}>
+                      <svg className="w-8 h-8" fill="#1C1917" stroke="none" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* Label */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <span className="text-sm uppercase tracking-wider font-medium" style={{ fontFamily: "Oswald, sans-serif", color: "#CA8A04" }}>
+                      {video.label}
+                    </span>
+                  </div>
+                  
+                  {/* Badge de loop */}
+                  <div className="absolute top-3 right-3 px-2.5 py-1.5 rounded-full text-xs flex items-center gap-1.5" style={{ backgroundColor: "rgba(0,0,0,0.7)", color: "#fff", fontFamily: "Oswald, sans-serif" }}>
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Loop</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* FECHAMENTO */}
+        <div className="py-14 lg:py-18" style={{ backgroundColor: "#1C1917" }}>
+          <div className="max-w-4xl mx-auto px-6 lg:px-8">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center">
+              <p className="text-lg lg:text-xl max-w-2xl mx-auto mb-8 leading-relaxed" style={{ fontFamily: "Playfair Display, serif", fontStyle: "italic", color: "rgba(250,250,249,0.9)" }}>
+                "Você não precisa virar 'técnico de chopeira' da própria festa. Nós cuidamos disso pra você aproveitar do primeiro ao último brinde."
+              </p>
+              <motion.a href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de fazer um orçamento para evento`} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 text-base font-bold"
+                style={{ backgroundColor: "#CA8A04", color: "#1C1917", fontFamily: "Oswald, sans-serif", borderRadius: "6px" }}
+                whileHover={{ scale: 1.05, boxShadow: "0 10px 35px rgba(200,146,30,0.4)" }}
+                whileTap={{ scale: 0.98 }}>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span>Fale com a gente no WhatsApp</span>
+              </motion.a>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+{/* ==============================
+         7. DIFERENCIAL IMPERADOR - Tabs Design Compacto
+         ============================== */}
+      <section className="py-14 lg:py-20 relative overflow-hidden" style={{ backgroundColor: "#faf8f4" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-10" style={{ background: "linear-gradient(180deg, rgba(200,146,30,0.4) 0%, transparent 100%)" }} />
+          <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.08) 0%, transparent 70%)" }} />
+        </div>
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-10" style={{ backgroundColor: "#c8921e" }} />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif" }}>Diferencial Imperador</span>
+              <div className="h-px w-10" style={{ backgroundColor: "#c8921e" }} />
+            </div>
+            
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal mb-3" style={{ fontFamily: "Bebas Neue, sans-serif", lineHeight: 1.1 }}>
+              <span style={{ color: "#2a1f14" }}>Chopeiras que </span>
+              <span style={{ background: "linear-gradient(180deg, #f0a820 0%, #d4860e 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>viraram atração do evento</span>
+            </h2>
+            
+            <p className="text-sm max-w-xl mx-auto" style={{ color: "#5a4a3a", lineHeight: 1.6 }}>
+              Além da qualidade do chopp, a gente também cuida da experiência visual do seu evento.
+            </p>
           </motion.div>
 
-          <motion.div className="text-center mt-8" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium transition-all hover:gap-3"
-              style={{ backgroundColor: "#c8921e", color: "#1f1810", fontFamily: "Oswald, sans-serif", borderRadius: "8px" }}>
-              <span>Ver opções disponíveis</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </a>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <div className="flex justify-center gap-2 mb-8">
+              {[
+                { id: "moto", label: "Moto Chopper", icon: "🏍️" },
+                { id: "classica", label: "Clássica", icon: "🍺" },
+                { id: "personalizada", label: "Personalizada", icon: "✨" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveChopeiraTab(tab.id)}
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2"
+                  style={{
+                    backgroundColor: activeChopeiraTab === tab.id ? "#c8921e" : "#fff",
+                    color: activeChopeiraTab === tab.id ? "#fff" : "#2a1f14",
+                    border: `1px solid ${activeChopeiraTab === tab.id ? "#c8921e" : "rgba(200,146,30,0.3)"}`,
+                    fontFamily: "Oswald, sans-serif",
+                    boxShadow: activeChopeiraTab === tab.id ? "0 4px 15px rgba(200,146,30,0.3)" : "0 2px 8px rgba(0,0,0,0.05)"
+                  }}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="relative rounded-3xl overflow-hidden" style={{ backgroundColor: "#fff", border: "1px solid rgba(200,146,30,0.2)", boxShadow: "0 15px 40px rgba(200,146,30,0.1)" }}>
+              {activeChopeiraTab === "moto" && (
+                <motion.div
+                  key="moto"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-0"
+                >
+                  <div className="p-8 lg:p-10 flex flex-col justify-center">
+                    <h3 className="text-3xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>
+                      Moto Chopper
+                    </h3>
+                    <p className="text-sm mb-4" style={{ color: "#5a4a3a" }}>
+                      Point garantido de foto!
+                    </p>
+                    <p className="text-sm mb-6 leading-relaxed" style={{ color: "rgba(42,31,20,0.7)" }}>
+                      A queridinha dos eventos! Modelo temático em formato de moto que chama atenção e vira o point de foto da festa.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {["Vira point de foto", "Estilo único", "Conversa garantida"].map((tag) => (
+                        <span key={tag} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ backgroundColor: "rgba(200,146,30,0.1)", color: "#2a1f14" }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <motion.a
+                      href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre a Chopeira Moto Chopper.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl self-start"
+                      style={{ backgroundColor: "#c8921e", color: "#fff", fontFamily: "Oswald, sans-serif" }}
+                    >
+                      Quero esta
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </motion.a>
+                  </div>
+                  <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 p-8 lg:p-10 flex items-center justify-center" style={{ minHeight: "280px" }}>
+                    <svg className="w-48 h-48" viewBox="0 0 100 100" fill="none">
+                      <ellipse cx="50" cy="90" rx="40" ry="6" fill="none" stroke="#c8921e" strokeWidth="1.5" opacity="0.3"/>
+                      <circle cx="22" cy="80" r="12" stroke="#c8921e" strokeWidth="2.5" fill="none"/>
+                      <circle cx="22" cy="80" r="5" fill="#c8921e" fillOpacity="0.4"/>
+                      <circle cx="78" cy="80" r="12" stroke="#c8921e" strokeWidth="2.5" fill="none"/>
+                      <circle cx="78" cy="80" r="5" fill="#c8921e" fillOpacity="0.4"/>
+                      <path d="M15 62c0-18 18-28 35-28s35 10 35 28" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" fill="rgba(200,146,30,0.1)"/>
+                      <path d="M12 45h76v15c0 8-15 15-38 15S12 68 12 60V45z" stroke="#c8921e" strokeWidth="3" fill="none"/>
+                      <path d="M18 45V30c0-6 10-12 32-12s32 6 32 12v15" stroke="#c8921e" strokeWidth="3" fill="none"/>
+                      <rect x="30" y="15" width="40" height="18" rx="4" stroke="#c8921e" strokeWidth="2.5" fill="rgba(200,146,30,0.15)"/>
+                      <path d="M38 30h8v12H38" stroke="#c8921e" strokeWidth="2"/>
+                      <path d="M54 30h8v12H54" stroke="#c8921e" strokeWidth="2"/>
+                      <circle cx="50" cy="60" r="8" fill="rgba(200,146,30,0.2)" stroke="#c8921e" strokeWidth="2"/>
+                    </svg>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeChopeiraTab === "classica" && (
+                <motion.div
+                  key="classica"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-0"
+                >
+                  <div className="p-8 lg:p-10 flex flex-col justify-center">
+                    <h3 className="text-3xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}>
+                      Clássica
+                    </h3>
+                    <p className="text-sm mb-4" style={{ color: "#5a4a3a" }}>
+                      Elegante e eficiente
+                    </p>
+                    <p className="text-sm mb-6 leading-relaxed" style={{ color: "rgba(42,31,20,0.7)" }}>
+                      A escolha certeira pra qualquer evento. Tradicional, fácil de usar e combina com tudo.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {["Tradicional", "Fácil de usar", "Para qualquer evento"].map((tag) => (
+                        <span key={tag} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ backgroundColor: "rgba(139,115,72,0.1)", color: "#2a1f14" }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <motion.a
+                      href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre a Chopeira Clássica.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl self-start"
+                      style={{ backgroundColor: "transparent", color: "#c8921e", border: "1px solid #c8921e", fontFamily: "Oswald, sans-serif" }}
+                    >
+                      Quero esta
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </motion.a>
+                  </div>
+                  <div className="bg-gradient-to-br from-stone-50 to-stone-100/50 p-8 lg:p-10 flex items-center justify-center" style={{ minHeight: "280px" }}>
+                    <svg className="w-40 h-48" viewBox="0 0 100 120" fill="none">
+                      <ellipse cx="50" cy="112" rx="35" ry="5" fill="none" stroke="#8a7348" strokeWidth="1.5" opacity="0.3"/>
+                      <rect x="18" y="45" width="64" height="55" rx="6" stroke="#8a7348" strokeWidth="3" fill="rgba(139,115,72,0.08)"/>
+                      <path d="M25 45V30c0-7 14-14 25-14s25 7 25 14v15" stroke="#8a7348" strokeWidth="3" fill="none"/>
+                      <rect x="32" y="55" width="36" height="25" rx="3" stroke="#8a7348" strokeWidth="2" fill="rgba(139,115,72,0.1)"/>
+                      <path d="M40 80l20 22M60 80L40 102" stroke="#8a7348" strokeWidth="3" strokeLinecap="round"/>
+                      <circle cx="50" cy="67" r="6" fill="rgba(139,115,72,0.3)"/>
+                      <ellipse cx="50" cy="28" rx="12" ry="3" stroke="#8a7348" strokeWidth="1.5" fill="rgba(139,115,72,0.1)"/>
+                    </svg>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeChopeiraTab === "personalizada" && (
+                <motion.div
+                  key="personalizada"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-0"
+                >
+                  <div className="p-8 lg:p-10 flex flex-col justify-center">
+                    <h3 className="text-3xl font-normal mb-2" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}>
+                      Personalizada
+                    </h3>
+                    <p className="text-sm mb-4" style={{ color: "#5a4a3a" }}>
+                      Criamos sob medida
+                    </p>
+                    <p className="text-sm mb-6 leading-relaxed" style={{ color: "rgba(42,31,20,0.7)" }}>
+                      Tem uma ideia? A gente cria! do tema da festa ao branding do seu negócio, fazemos sob medida.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {["Exclusiva", "Tema da festa", "Memória inesquecível"].map((tag) => (
+                        <span key={tag} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ backgroundColor: "rgba(139,115,72,0.1)", color: "#2a1f14" }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <motion.a
+                      href={`https://wa.me/${config.whatsapp}?text=Olá! Quero saber mais sobre a Chopeira Personalizada.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl self-start"
+                      style={{ backgroundColor: "transparent", color: "#c8921e", border: "1px solid #c8921e", fontFamily: "Oswald, sans-serif" }}
+                    >
+                      Quero esta
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </motion.a>
+                  </div>
+                  <div className="bg-gradient-to-br from-amber-50 to-stone-100/50 p-8 lg:p-10 flex items-center justify-center" style={{ minHeight: "280px" }}>
+                    <svg className="w-40 h-48" viewBox="0 0 100 120" fill="none">
+                      <ellipse cx="50" cy="112" rx="35" ry="5" fill="none" stroke="#8a7348" strokeWidth="1.5" opacity="0.3"/>
+                      <rect x="18" y="45" width="64" height="55" rx="6" stroke="#8a7348" strokeWidth="3" fill="rgba(139,115,72,0.08)"/>
+                      <path d="M25 45V30c0-7 14-14 25-14s25 7 25 14v15" stroke="#8a7348" strokeWidth="3" fill="none"/>
+                      <rect x="32" y="55" width="36" height="25" rx="3" stroke="#8a7348" strokeWidth="2" fill="rgba(139,115,72,0.1)"/>
+                      <path d="M42 67l5 5 10-10" stroke="#c8921e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M32 22l18-12 18 12" stroke="#c8921e" strokeWidth="2" strokeLinecap="round"/>
+                      <circle cx="50" cy="6" r="5" fill="#c8921e"/>
+                      <path d="M50 30V18" stroke="#c8921e" strokeWidth="1.5" strokeDasharray="2 2"/>
+                      <path d="M10 58l-6-5M90 58l6-5" stroke="#8a7348" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            <motion.div
+              className="mt-6 text-center"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <p className="text-sm mb-4" style={{ color: "rgba(42,31,20,0.6)" }}>
+                Quer uma chopeira que seja a cara do seu evento?
+              </p>
+              <motion.a
+                href={`https://wa.me/${config.whatsapp}?text=Olá! Quero uma chopeira que seja a cara do meu evento.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl"
+                style={{ backgroundColor: "#c8921e", color: "#fff", fontFamily: "Oswald, sans-serif" }}
+              >
+                <svg className="w-5 h-5" fill="#fff" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Fale com a gente
+              </motion.a>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* ==============================
-         8. POR QUE ESCOLHER (unificado com Sobre)
+         8. POR QUE ESCOLHER - Redesign Dark Manifesto
          ============================== */}
       <section
-        className="py-20 lg:py-24 relative overflow-hidden"
-        style={{ backgroundColor: "#faf8f4" }}
+        className="py-20 lg:py-28 relative overflow-hidden"
+        style={{ backgroundColor: "#1a1208" }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse at 30% 20%, rgba(200,146,30,0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(200,146,30,0.05) 0%, transparent 50%)",
-          }}
-        />
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />
+        
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 60%)" }} />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.1) 0%, transparent 60%)" }} />
+        </div>
+
+        <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10">
           <Scroll>
             <motion.div
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div
-                  className="h-px w-12"
-                  style={{ backgroundColor: "#c8921e" }}
-                ></div>
-                <span
-                  className="text-xs font-medium uppercase"
-                  style={{
-                    color: "#c8921e",
-                    fontFamily: "Oswald, sans-serif",
-                    letterSpacing: "3px",
-                  }}
-                >
-                  Diferenciais
+              <motion.div 
+                className="inline-flex items-center gap-3 mb-6"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
+                <div className="h-px w-16" style={{ backgroundColor: "rgba(200,146,30,0.5)" }} />
+                <span className="text-xs font-medium uppercase tracking-[4px]" style={{ color: "#c8921e", fontFamily: "Oswald, sans-serif" }}>
+                  Por que escolher
                 </span>
-                <div
-                  className="h-px w-12"
-                  style={{ backgroundColor: "#c8921e" }}
-                ></div>
-              </div>
-              <h2 className="text-5xl lg:text-6xl font-normal">
-                <span style={{ color: "#2a1f14" }}>Por que escolher o </span>
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Imperador?
+                <div className="h-px w-16" style={{ backgroundColor: "rgba(200,146,30,0.5)" }} />
+              </motion.div>
+              
+              <h2 className="text-5xl lg:text-7xl font-normal leading-tight">
+                <span style={{ color: "#faf8f4" }}>O </span>
+                <span style={{ 
+                  background: "linear-gradient(180deg, #d4a420 0%, #c8921e 50%, #a67814 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                  Imperador
                 </span>
+                <span style={{ color: "#faf8f4" }}>?</span>
               </h2>
+              <p className="mt-4 text-lg max-w-2xl mx-auto" style={{ color: "rgba(250,248,244,0.6)", fontFamily: "Oswald, sans-serif" }}>
+                Cinco razões para você não se preocupar com nada no seu evento
+              </p>
             </motion.div>
           </Scroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
             {[
               {
+                num: "01",
                 title: "Qualidade",
-                desc: "Chopp sempre bem armazenado, bem tirado e na temperatura certa.",
+                desc: "Chopp sempre bem armazenado, bem tirado e servido na temperatura certa.",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+                    <path d="M12 10v4M10 12h4" />
+                  </svg>
+                )
               },
               {
-                title: "Atendimento Honesto",
-                desc: "Indicamos a quantidade ideal. Sem surpresas.",
+                num: "02",
+                title: "Atendimento",
+                desc: "A gente indica a quantidade ideal e explica tudo. Sem surpresas no meio do evento.",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                  </svg>
+                )
               },
               {
-                title: "Estrutura Completa",
-                desc: "Barris, chopeiras, montagem, regulagem e suporte.",
+                num: "03",
+                title: "Estrutura",
+                desc: "Barris, chopeiras diferenciadas, montagem, regulagem e suporte.",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
+                  </svg>
+                )
               },
               {
-                title: "Suporte até 22h",
+                num: "04",
+                title: "Suporte 22h",
                 desc: "Deu dúvida? A gente atende. Você não fica na mão.",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
+                  </svg>
+                )
               },
               {
+                num: "05",
                 title: "Experiência",
-                desc: "Presentes nos mais variados tipos de festa.",
-              },
-              {
-                title: "Próximo",
-                desc: "Atendimento humanizado e transparente.",
+                desc: "Estamos presentes nos mais variados tipos de festa, de aniversário em casa a grandes eventos na região.",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                )
               },
             ].map((item, i) => (
               <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
+                key={item.num}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="group p-6 cursor-pointer overflow-hidden"
+                transition={{ delay: i * 0.12, duration: 0.5, ease: "easeOut" }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="group relative p-6 lg:p-7 cursor-pointer"
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid rgba(200,146,30,0.2)",
+                  backgroundColor: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(200,146,30,0.15)",
+                  borderRadius: "16px",
                 }}
               >
-                <div
-                  className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-                  style={{ backgroundColor: "rgba(200,146,30,0.1)" }}
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="#c8921e"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                    />
-                  </svg>
+                <div className="absolute inset-0 rounded-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(135deg, rgba(200,146,30,0.1) 0%, transparent 60%)" }} />
+                
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-4">
+                    <span className="text-5xl lg:text-6xl font-normal leading-none" style={{ 
+                      fontFamily: "Bebas Neue, sans-serif", 
+                      color: "rgba(200,146,30,0.2)",
+                      WebkitTextStroke: "1px rgba(200,146,30,0.3)"
+                    }}>
+                      {item.num}
+                    </span>
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: "rgba(200,146,30,0.15)" }}>
+                      <div className="w-5 h-5" style={{ color: "#c8921e" }}>{item.icon}</div>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl lg:text-2xl font-normal mb-3 group-hover:text-[#c8921e] transition-colors duration-300" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#faf8f4" }}>
+                    {item.title}
+                  </h3>
+                  
+                  <p className="text-sm leading-relaxed group-hover:text-white transition-colors duration-300" style={{ color: "rgba(250,248,244,0.55)" }}>
+                    {item.desc}
+                  </p>
                 </div>
-                <h3
-                  className="text-xl font-normal mb-2"
-                  style={{ fontFamily: "Bebas Neue, sans-serif", color: "#2a1f14" }}
-                >
-                  {item.title}
-                </h3>
-                <p
-                  className="text-sm"
-                  style={{ color: "rgba(42,31,20,0.7)" }}
-                >
-                  {item.desc}
-                </p>
+                
+                <div className="absolute -bottom-px left-1/2 -translate-x-1/2 w-0 h-0.5 group-hover:w-full transition-all duration-500 rounded-full" style={{ backgroundColor: "#c8921e" }} />
               </motion.div>
             ))}
           </div>
+
+          <motion.div 
+            className="mt-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <p className="text-lg mb-6" style={{ color: "rgba(250,248,244,0.7)", fontFamily: "Oswald, sans-serif" }}>
+              Pronto para fazer seu evento sem preocupação?
+            </p>
+            <motion.a
+              href={`https://wa.me/${config.whatsapp}`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold"
+              style={{ 
+                backgroundColor: "#c8921e", 
+                color: "#1a1208", 
+                fontFamily: "Oswald, sans-serif",
+                borderRadius: "8px",
+                boxShadow: "0 4px 20px rgba(200,146,30,0.3)"
+              }}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.027 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Falar no WhatsApp
+            </motion.a>
+          </motion.div>
         </div>
       </section>
 
@@ -1140,413 +1654,192 @@ function Home() {
       </section>
 
 {/* ==============================
-          10. PARCERIAS (Ponto Fixo + Subdistribuidor)
+          10. SEA UM DISTRIBUIDOR - Redesign Premium Partnership
           ============================== */}
       <section
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(180deg, #2a1f14 0%, #1a1610 50%, #2a1f14 100%)",
-        }}
+        className="py-20 lg:py-28 relative overflow-hidden"
+        style={{ backgroundColor: "#0f0c08" }}
       >
-        {/* Diagonal contrast on right side */}
-        <div
-          className="absolute top-0 right-0 h-full hidden lg:block"
-          style={{
-            backgroundColor: "#0d0a04",
-            clipPath: "polygon(12% 0, 100% 0, 100% 100%, 0% 100%)",
-            width: "50%",
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />
+        
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full opacity-15" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.2) 0%, transparent 60%)" }} />
+          <div className="absolute bottom-0 right-0 w-[600px] h-[400px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 60%)" }} />
+        </div>
 
-        {/* Metallic edge lines */}
-        <div
-          className="absolute top-0 h-full w-px hidden lg:block"
-          style={{
-            left: "12%",
-            background:
-              "linear-gradient(to bottom, #c8921e, rgba(200,146,30,0.7), rgba(200,146,30,0.3))",
-          }}
-        />
-        <div
-          className="absolute top-0 h-full w-px hidden lg:block"
-          style={{
-            left: "calc(12% + 3px)",
-            background:
-              "linear-gradient(to bottom, rgba(200,146,30,0.3), rgba(200,146,30,0.15), transparent)",
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-12 lg:px-16 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Left Column - Text */}
-            <Scroll>
-              <div className="flex flex-col justify-center">
-                {/* Eyebrow */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div
-                    className="w-6 h-px"
-                    style={{ backgroundColor: "#c8921e" }}
-                  ></div>
-                  <span
-                    className="text-xs font-medium"
-                    style={{
-                      color: "#c8921e",
-                      fontFamily: "Oswald, sans-serif",
-                      letterSpacing: "3px",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Oportunidade
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h2
-                  className="text-5xl lg:text-7xl font-normal leading-none mb-4"
-                  style={{ fontFamily: "Bebas Neue, sans-serif" }}
-                >
-                  <span style={{ color: "#e8e0d0" }}>Seja um</span>
-                  <br />
-                  <span
-                    style={{
-                      background:
-                        "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    Distribuidor
-                  </span>
-                </h2>
-
-                {/* Separator */}
-                <div
-                  className="w-10 h-px mb-6"
-                  style={{
-                    background:
-                      "linear-gradient(to right, #c8921e, transparent)",
-                  }}
-                ></div>
-
-                {/* Description */}
-                <p
-                  className="text-sm mb-8 leading-7"
-                  style={{
-                    color: "rgba(200,185,145,0.65)",
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 300,
-                  }}
-                >
-                  Torne-se parte da maior rede de distribuição de chopp premium
-                  do Paraná. Oferecemos suporte completo, treinamento e
-                  condições exclusivas para parceiros.
-                </p>
-
-                {/* Benefits List */}
-                <ul className="space-y-4 mb-10">
-                  {[
-                    { name: "Margens", desc: "competitivas" },
-                    { name: "Suporte", desc: "técnico especializado" },
-                    { name: "Marca", desc: "reconhecida no mercado" },
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div
-                        className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
-                        style={{
-                          backgroundColor: "#c8921e",
-                          boxShadow: "0 0 8px rgba(200,146,30,0.6)",
-                        }}
-                      ></div>
-                      <span
-                        style={{
-                          color: "rgba(200,185,145,0.75)",
-                          fontFamily: "Inter, sans-serif",
-                          fontWeight: 300,
-                        }}
-                      >
-                        <strong style={{ color: "#d4a820" }}>
-                          {item.name}
-                        </strong>{" "}
-                        {item.desc}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href={`https://wa.me/${config.whatsapp}?text=Olá! Quero ser um distribuidor`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:brightness-110"
-                    style={{
-                      backgroundColor: "#c8921e",
-                      color: "#2a1f14",
-                      clipPath:
-                        "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
-                    }}
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                    </svg>
-                    Quero Ser Distribuidor
-                  </a>
-                  <a
-                    href="/contato"
-                    className="inline-flex items-center text-base font-medium py-3 px-2"
-                    style={{
-                      color: "#c8921e",
-                      borderBottom: "1px solid #c8921e",
-                    }}
-                  >
-                    Falar com consultor
-                  </a>
-                </div>
-              </div>
-            </Scroll>
-
-            {/* Right Column - Mockup Card */}
+        <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10">
+          <Scroll>
             <motion.div
-              className="flex items-center justify-center lg:justify-end group"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
-              <div
-                className="relative transition-all duration-500"
-                style={{ maxWidth: "340px" }}
+              <motion.div 
+                className="inline-flex items-center gap-3 mb-6"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.5 }}
               >
-                {/* Glow effect on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background:
-                      "radial-gradient(circle, rgba(200,146,30,0.15) 0%, transparent 70%)",
-                    filter: "blur(20px)",
-                    transform: "scale(1.1)",
-                  }}
-                ></div>
-
-                {/* Corner decorations */}
-                <div className="absolute -top-1 -left-1 w-8 h-8 border-l-2 border-t-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
-                <div className="absolute -top-1 -right-1 w-8 h-8 border-r-2 border-t-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
-                <div className="absolute -bottom-1 -left-1 w-8 h-8 border-l-2 border-b-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 border-r-2 border-b-2 border-[#c8921e] transition-all duration-300 group-hover:w-10 group-hover:h-10"></div>
-
-                {/* Card */}
-                <motion.div
-                  className="p-6 transition-all duration-300 group-hover:shadow-2xl"
-                  style={{
-                    backgroundColor: "#1a1610",
-                    border: "1px solid rgba(200,150,30,0.25)",
-                  }}
-                  whileHover={{ borderColor: "rgba(200,146,30,0.5)" }}
-                >
-                  {/* Spotlight */}
-                  <div
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-12"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, #c8921e, transparent)",
-                    }}
-                  >
-                    <motion.div
-                      className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full"
-                      style={{
-                        backgroundColor: "#c8921e",
-                        boxShadow: "0 0 10px #c8921e",
-                      }}
-                      animate={{
-                        boxShadow: [
-                          "0 0 10px #c8921e",
-                          "0 0 20px #c8921e",
-                          "0 0 10px #c8921e",
-                        ],
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  </div>
-
-                  {/* Header */}
-                  <div className="text-center mb-6 pt-4">
-                    <motion.div
-                      className="text-3xl font-normal mb-2 transition-all duration-300"
-                      style={{
-                        fontFamily: "Bebas Neue, sans-serif",
-                        color: "#e8e0d0",
-                      }}
-                      whileHover={{ color: "#c8921e" }}
-                    >
-                      IMPERADOR
-                    </motion.div>
-                    <span
-                      className="text-xs px-3 py-1 transition-all duration-300 hover:bg-[#c8921e] hover:text-[#2a1f14]"
-                      style={{
-                        backgroundColor: "rgba(200,146,30,0.2)",
-                        color: "#c8921e",
-                        fontFamily: "Oswald, sans-serif",
-                        letterSpacing: "1px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      50+ Unidades
-                    </span>
-                  </div>
-
-                  {/* Body */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div
-                      className="flex items-center justify-center p-4 transition-all duration-300 hover:bg-[#2a1f14]"
-                      style={{ backgroundColor: "#2a1f14" }}
-                    >
-                      <motion.span
-                        className="hidden lg:block"
-                        style={{
-                          fontFamily: "Bebas Neue, sans-serif",
-                          color: "rgba(200,185,145,0.5)",
-                          writingMode: "vertical-rl",
-                          textOrientation: "mixed",
-                          transform: "rotate(180deg)",
-                        }}
-                      >
-                        IMPERADOR DO CHOPP
-                      </motion.span>
-                    </div>
-                    <motion.div
-                      className="flex items-center justify-center p-4 transition-all duration-300"
-                      style={{ backgroundColor: "#221d16" }}
-                      whileHover={{ backgroundColor: "rgba(200,146,30,0.1)" }}
-                    >
-                      <div className="text-center">
-                        <span
-                          style={{
-                            fontFamily: "Bebas Neue, sans-serif",
-                            fontSize: "1.5rem",
-                            color: "#e8e0d0",
-                          }}
-                        >
-                          Descubra seu
-                        </span>
-                        <br />
-                        <span
-                          style={{
-                            fontFamily: "Bebas Neue, sans-serif",
-                            fontSize: "1.5rem",
-                            background:
-                              "linear-gradient(180deg, #f0a820 0%, #e8c040 50%, #c8800e 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                          }}
-                        >
-                          chopp preferido
-                        </span>
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="text-center">
-                    <div
-                      className="text-xs mb-3"
-                      style={{
-                        color: "#b8985a",
-                        fontFamily: "Oswald, sans-serif",
-                        letterSpacing: "2px",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Seja um parceiro
-                    </div>
-                    <motion.div
-                      className="flex justify-center gap-2"
-                      animate={{ gap: [2, 4, 2] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <motion.div
-                        className="w-2 h-2 rounded-full transition-all duration-300"
-                        style={{ backgroundColor: "#c8921e" }}
-                        whileHover={{ scale: 1.5 }}
-                      />
-                      <motion.div
-                        className="w-2 h-2 rounded-full transition-all duration-300"
-                        style={{ backgroundColor: "rgba(200,146,30,0.3)" }}
-                        whileHover={{ scale: 1.5, backgroundColor: "#c8921e" }}
-                      />
-                      <motion.div
-                        className="w-2 h-2 rounded-full transition-all duration-300"
-                        style={{ backgroundColor: "rgba(200,146,30,0.3)" }}
-                        whileHover={{ scale: 1.5, backgroundColor: "#c8921e" }}
-                      />
-                    </motion.div>
-                  </div>
-                </motion.div>
-
-                {/* Floating Stats */}
-                <motion.div
-                  className="absolute -top-3 -left-8 px-4 py-2 cursor-pointer transition-all duration-300"
-                  style={{
-                    backgroundColor: "#1a1610",
-                    border: "1px solid rgba(200,146,30,0.3)",
-                  }}
-                  whileHover={{ scale: 1.1, borderColor: "#c8921e" }}
-                >
-                  <div
-                    className="text-2xl font-normal"
-                    style={{
-                      fontFamily: "Bebas Neue, sans-serif",
-                      color: "#c8921e",
-                    }}
-                  >
-                    15+
-                  </div>
-                  <div
-                    className="text-[10px] uppercase"
-                    style={{
-                      color: "#8a7348",
-                      fontFamily: "Oswald, sans-serif",
-                      letterSpacing: "1px",
-                    }}
-                  >
-                    Anos no mercado
-                  </div>
-                </motion.div>
-                <motion.div
-                  className="absolute -bottom-3 -right-8 px-4 py-2 cursor-pointer transition-all duration-300"
-                  style={{
-                    backgroundColor: "#1a1610",
-                    border: "1px solid rgba(200,146,30,0.3)",
-                  }}
-                  whileHover={{ scale: 1.1, borderColor: "#c8921e" }}
-                >
-                  <div
-                    className="text-2xl font-normal"
-                    style={{
-                      fontFamily: "Bebas Neue, sans-serif",
-                      color: "#c8921e",
-                    }}
-                  >
-                    4°C
-                  </div>
-                  <div
-                    className="text-[10px] uppercase"
-                    style={{
-                      color: "#8a7348",
-                      fontFamily: "Oswald, sans-serif",
-                      letterSpacing: "1px",
-                    }}
-                  >
-                    Temperatura ideal
-                  </div>
-                </motion.div>
-              </div>
+                <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }} />
+                <span className="text-xs font-medium uppercase tracking-[4px]" style={{ color: "rgba(200,146,30,0.7)", fontFamily: "Oswald, sans-serif" }}>
+                  Oportunidade
+                </span>
+                <div className="h-px w-12" style={{ backgroundColor: "rgba(200,146,30,0.4)" }} />
+              </motion.div>
+              
+              <h2 className="text-5xl lg:text-7xl font-normal leading-tight">
+                <span style={{ color: "#faf8f4" }}>Quer trabalhar </span>
+                <span style={{ 
+                  background: "linear-gradient(180deg, #d4a420 0%, #c8921e 50%, #a67814 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                  revendendo
+                </span>
+              </h2>
+              <h2 className="text-5xl lg:text-7xl font-normal leading-tight mt-2">
+                <span style={{ color: "#faf8f4" }}>chopp na sua </span>
+                <span style={{ 
+                  background: "linear-gradient(180deg, #d4a420 0%, #c8921e 50%, #a67814 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                  região?
+                </span>
+              </h2>
+              
+              <p className="mt-6 text-lg max-w-2xl mx-auto" style={{ color: "rgba(250,248,244,0.5)", fontFamily: "Oswald, sans-serif" }}>
+                Torne-se parte da maior rede de distribuição de chopp premium do Paraná
+              </p>
             </motion.div>
+          </Scroll>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {[
+              {
+                title: "Você revende",
+                subtitle: "na sua região",
+                desc: "Tenha seu próprio negócio revendendo chopp Imperador na cidade onde você mora",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20" />
+                  </svg>
+                )
+              },
+              {
+                title: "Conta com",
+                subtitle: "suporte da marca",
+                desc: "treinamento, gestão e apoio constante para você decolar com segurança",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                )
+              },
+              {
+                title: "Trabalha com",
+                subtitle: "produto de qualidade",
+                desc: "chopp premium com boa aceitação no mercado e margem competitiva",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                  </svg>
+                )
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, duration: 0.5, ease: "easeOut" }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="group p-7 cursor-pointer"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(200,146,30,0.15)",
+                  borderRadius: "20px",
+                }}
+              >
+                <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: "rgba(200,146,30,0.12)" }}>
+                    <div className="w-7 h-7" style={{ color: "#c8921e" }}>{item.icon}</div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <span className="text-xl font-normal" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#faf8f4" }}>{item.title}</span>
+                    <span className="text-xl ml-1" style={{ fontFamily: "Bebas Neue, sans-serif", color: "#c8921e" }}>{item.subtitle}</span>
+                  </div>
+                  
+                  <p className="text-sm leading-relaxed" style={{ color: "rgba(250,248,244,0.5)" }}>
+                    {item.desc}
+                  </p>
+                </div>
+                
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 group-hover:w-3/4 transition-all duration-500 rounded-full" style={{ backgroundColor: "#c8921e" }} />
+              </motion.div>
+            ))}
           </div>
+
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 mb-8">
+            <motion.a
+              href={`https://wa.me/${config.whatsapp}?text=Olá! Quero ser distribuidor Imperador do Chopp`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-10 py-5 text-lg font-semibold"
+              style={{ 
+                backgroundColor: "#c8921e", 
+                color: "#0f0c08", 
+                fontFamily: "Oswald, sans-serif",
+                borderRadius: "8px",
+                boxShadow: "0 8px 30px rgba(200,146,30,0.35)"
+              }}
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.027 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Quero ser distribuidor
+            </motion.a>
+            
+            <motion.a
+              href={`https://wa.me/${config.whatsapp}?text=Olá! Gostaria de falar com um consultor sobre distribuição`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-10 py-5 text-lg font-medium"
+              style={{ 
+                border: "2px solid rgba(200,146,30,0.4)", 
+                color: "#c8921e", 
+                fontFamily: "Oswald, sans-serif",
+                borderRadius: "8px",
+              }}
+            >
+              Falar com especialista
+            </motion.a>
+          </div>
+
+          <motion.p 
+            className="text-center text-sm italic"
+            style={{ color: "rgba(250,248,244,0.35)", fontFamily: "Playfair Display, serif" }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.7 }}
+          >
+            * Parcerias sob análise de disponibilidade de região
+          </motion.p>
         </div>
       </section>
 

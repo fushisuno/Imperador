@@ -7,7 +7,7 @@ import {
   GSAPScrollReveal as Scroll,
 } from "../components/AnimationsGSAP";
 
-const products = produtos.map((p, i) => ({
+const produtosData = produtos.map((p, i) => ({
   id: i + 1,
   name: p.nome,
   category: p.categoria,
@@ -166,7 +166,15 @@ function Produtos() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
   const isMobile = useIsMobile();
 
-  const categorias = ["Todos", "Chopps", "Barris", "Equipamentos"];
+  const categorias = ["Todos", "Chopps", "Barris", "Growlers", "Equipamentos"];
+
+  const filteredProducts = produtosData.filter((product) => {
+    if (categoriaSelecionada === "Todos") return true;
+    if (categoriaSelecionada === "Chopps") return product.category === "Chopp";
+    if (categoriaSelecionada === "Barris") return product.category === "Barril";
+    if (categoriaSelecionada === "Growlers") return product.category === "Growler";
+    return true;
+  });
 
   const showEquipment =
     categoriaSelecionada === "Equipamentos" || categoriaSelecionada === "Todos";
@@ -373,7 +381,7 @@ function Produtos() {
               </Scroll>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center">
-                {products.map((product, index) => (
+                {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
                     initial={{ opacity: 0 }}

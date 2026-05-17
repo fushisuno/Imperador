@@ -29,7 +29,7 @@ function Footer() {
           <div>
             <Link to="/" className="inline-block cursor-pointer mb-6">
               <img 
-                src="/imperador_logo.png" 
+                src={`${import.meta.env.BASE_URL}imperador_logo.png`} 
                 alt="Imperador do Chopp" 
                 className="h-14 w-auto"
                 style={{ filter: 'brightness(0) saturate(100%) invert(80%) sepia(30%) hue-rotate(5deg)' }}

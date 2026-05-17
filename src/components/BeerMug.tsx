@@ -8,7 +8,7 @@ export function BeerMug() {
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <img
-        src="/copos_chopp_hero.png"
+        src={`${import.meta.env.BASE_URL}copos_chopp_hero.png`}
         alt="Imperador do Chopp - Copos de chopp premium"
         className="w-full h-full object-contain"
         style={{

@@ -11,6 +11,7 @@ import Contato from './pages/Contato'
 import Pedido from './pages/Pedido'
 import Localizacao from './pages/Localizacao'
 import Componentes from './pages/Componentes'
+import Bares from './pages/Bares'
 import NotFound from './pages/404'
 
 function ScrollToTop() {
@@ -67,6 +68,7 @@ function AnimatedRoutes() {
         <Route path="/contato" element={<Contato />} />
         <Route path="/pedido" element={<Pedido />} />
         <Route path="/localizacao" element={<Localizacao />} />
+        <Route path="/bares" element={<Bares />} />
         <Route path="/componentes" element={<Componentes />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
